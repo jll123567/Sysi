@@ -1,0 +1,4 @@
+Todo
+  add newer files
+  rename ram (and ram dependancies)
+  figure out what the f**k i'm doing
