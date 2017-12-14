@@ -1,4 +1,3 @@
 Todo
-  add newer files
-  rename ram (and ram dependancies)
-  figure out what the f**k i'm doing
+	add newer files(ongoing)
+	~~rename ram (and ram dependancies)~~
