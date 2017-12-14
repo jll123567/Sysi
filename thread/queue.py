@@ -1,25 +1,25 @@
 #import
-#import obj
-#code
+import object
+#setup
 #queue
 #format[task one,two,[sub one,sub two]]
 # instruction="i/e : task"
 # e is for exact code like tasks and i is for inexact string or english like tasks
-def load(obj,memeory):
+def load(obj,memory):
     obj.trd["que"]=obj.mem[0][memory].d
     
 def close(obj):
         obj.trd["que"]=[]
     
 def save(obj,tags):
-    lastQueue=data(obj.trd["que"],tags)
+    lastQueue=object.data(obj.trd["que"],tags)
     obj.mem[0].append(lastQueue)
     print("queue saved to: ",lastQueue,"@",obj.tag["name"],".mem")
     
 def add(obj,task):
     obj.trd["que"].append(task)
     
-def interupt(que,task,index):
+def interupt(obj,task,index):
     obj.trd["que"].insert(index,task)
         
 def complete(obj,i):
@@ -41,10 +41,6 @@ def run(obj,indent):
                 print("Not a valid task type")
 
     
-    #runtime
+#runtime
 if __name__ == "__main__":
     print("queue v10.0")
-#notes
-
-#auth
-"""by jacob ledbetter"""

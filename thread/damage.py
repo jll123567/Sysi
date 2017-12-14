@@ -1,6 +1,6 @@
 #import
-
-#code
+from random import randint
+#setup
 #dmg
 def phys(wep,obj):
         apl=wep.dmg[1]-obj.tag["stat"]["defence"]
@@ -9,6 +9,8 @@ def phys(wep,obj):
         obj.tag["health"]-=apl
     
 def energy(wep,obj):
+    dmg_set=False
+    apl=0
     for i in wep.dmg[2]:
         for f in obj.tag["stat"]["resist"]:
             if i==f[0]:
@@ -36,7 +38,7 @@ def internal(wep,obj):
     else:
         print("unsupported")
 
-def stat(wep,obj)
+def stat(wep,obj):
     for i in obj.tag["stat"]:
         for f in wep.dmg[2]:
             if i==f:

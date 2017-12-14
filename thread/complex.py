@@ -1,8 +1,8 @@
 #import
-import math
-#code
-#complex
-#[[p0,p1],result]    
+
+#setup
+#[[p0,p1],result]
+
 def newProblem(obj,problem):
         obj.trd["cpx"][0].append(problem)
 
@@ -13,10 +13,6 @@ def solve(obj):
     for i in obj.trd["cpx"][0]:
         post(obj,i)
     
-    #runtime
+#runtime
 if __name__ == "__main__":
     print("complex logic v10.0")
-#notes
-
-#auth
-"""by jacob ledbetter"""

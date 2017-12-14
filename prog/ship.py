@@ -1,3 +1,6 @@
+#import
+
+#setup
 #ship db
     #[[u0,u1,type],ship,ship]
     #4 true love/Nemisis
@@ -17,8 +20,6 @@ def dispDb(db):
     for i in db.d:
         print(i[0],",",i[1],",",i[2],",")
     
-
+#runtime
 if __name__ == "__main__":
     print("shipping v10.0 \n please dont use this for serious reasons...")
-
-# by Jacob Ledbetter

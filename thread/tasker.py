@@ -1,41 +1,46 @@
 #import
-#code
+import time
+#setup
     #tasker
     #tsk=[profile,profile,profile,...]
         #profile=[f0,f1,f2,...]
-def run(funct):
-    print(funct)
+    #first profile is current profile
 
-def runProfile(prof):
-    for i in prof:
-        run(i)
+def step(usr):
+    print(usr.trd["tsk"][0][0])
+    usr.trd["tsk"][0].pop(0)
+    if usr.trd["tsk"][0]==[]:
+        usr.trd["tsk"].pop(0)
+
+def run(usr):
+    for i in usr.trd["tsk"][0]:
+        print(i)
+    usr.trd["tsk"].pop(0)
+    
         
-def react(var,val,funct):
+def react(var,val,usr,index):
     if var==val:
-        run(funct)
+        newMain=usr.trd["tsk"][index]
+        usr.trd["tsk"].pop(index)
+        usr.trd["tsk"].insert(index,newMain)
+        run(usr)
 
-def await(var,val,funct,awaitProf):
+def await(var,val,usr,awaitProf):
     waiting=True
     count=0
     while waiting:
         if var==val:
-            waiting=Flase
-            run(funct)
+            waiting=False
+            run(usr)            
         else:
-            run(awaitProf[count])
-            if count < len(awaitProf):
-                count+=1
-            else:
-                count=0
-def wait(t,funct):
+            usr.trd["tsk"].insert(0,awaitProf)
+            step(usr)
+            
+def wait(t,usr):
     time.sleep(t)
-    run(funct)
+    run(usr)
 
     
-    #runtime
+#runtime
 if __name__ == "__main__":
     print("tasker v10.0")
-#notes
-
-#auth
-"""by jacob ledbetter"""

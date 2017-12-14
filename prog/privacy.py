@@ -1,3 +1,6 @@
+#import
+
+#setup
 #obj.tag
 #    {"priv":[]}
 #        [[obj is public to(they know)],[objects public to obj(i know)]]
@@ -15,8 +18,6 @@ def makePublic(o0,o1):
 
 def intrude(o0,o1):
     o0.tag["priv"][1].append(o1)
-    
+#runtime
 if __name__ == "__main__":
     print(" privacy v10.0")
-
-# by Jacob Ledbettervf

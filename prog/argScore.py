@@ -1,3 +1,6 @@
+#import
+
+#setup
 def evidence():
     working=True
     one=0
@@ -33,9 +36,7 @@ def opinion():
     
     
         
-
+#runtime
 if __name__ == "__main__":
     print("argument score v10.0")
     evidence()
-
-# by Jacob Ledbettervf

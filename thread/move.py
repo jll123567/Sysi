@@ -1,6 +1,6 @@
 #import
 
-#code
+#setup
 #move
 #    [x pos,y pos,z pos,x accel,y accel, z accel, new x,new y,new z] 
 def warp(obj,x,y,z):
@@ -33,11 +33,7 @@ def moveTo(obj,x,y,z):
             obj.trd["mov"][2]-=obj.trd["mov"][5]
         else:
             obj.trd["mov"][2]=obj.trd["mov"][2]
-    
-    #runtime
+
+#runtime
 if __name__ == "__main__":
     print("move thread bolck v10.0")
-#notes
-
-#auth
-"""by jacob ledbetter"""

@@ -1,17 +1,21 @@
+#import
+
+#setup
 class object:
     def __init__(self, mod, trd, tag):
         self.mod = mod
-        # model of object
+        # {“block1”:[...],...}
         self.trd = trd
-        # must have a move block w/ location([cont,"x,y,z,p,ya,r"])
+        # must have a name(“name”)
+        # must have a location([cont,”x,y,z,p,ya,r”])
         self.tag = tag
-        # necessary tags for all objects
-        # name=all usable names
+        # necessary tags
+        # name=all useable names
         # relevant_cont=smallest relevant container
-        # uni=Host universes
-        # id="type","id (derived from creation time)"
+        # uni=Host universs
+        # id=“type”,”id (dervied from creation time)”
         # event_log=[log of events]
-        # terms=relevant terms
+        # terms=guess
 
 
 class user:
@@ -19,14 +23,16 @@ class user:
         self.mod = mod
         self.tag = tag
         self.trd = trd
+        # working on it
         self.prs = prs
+        # [internal,real,storeage]
+        # [obj,obj,...]timesort
         self.mem = mem
-        # [internal,real,storage]
-        # [obj,obj,...]time sorted
 
     def get(var):
         return var
 
+    # noinspection PyMethodFirstArgAssignment
     def usershipQuery(obj):
         print("can get info from and modify $HostUni")
         rww = input("y/n")
@@ -54,7 +60,7 @@ class user:
                     print(obj.tag["name"], "is Now Object")
                 else:
                     print(obj.tag["name"], "is Object")
-        if fail == False:
+        if not fail:
             if type(obj) == object(0, 0, 0):
                 obj = user(obj.mod, obj.trd, obj.tag["notes"][0], obj.tag["notes"][1], obj.tag)
                 print(obj.tag["name"], "is Now User")
@@ -81,56 +87,52 @@ class weapon:
 class data:
     def __init__(self, d, tag):
         self.tag = tag
-        # literally fucking anything
+        # literaly fucking anything
         self.d = d
 
 
 class container:
     def __init__(self, org, bnd, tag):
-        self.org = org
         # [supercont,x,y,z]
+        self.org = org
+        # [“(h/s)xyz-xyz”]
         self.bnd = bnd
-        # ["(h/s)xyz-xyz"]
         self.tag = tag
 
 
 class scene:
     def __init__(self, scp, obj, loc, tag):
-        self.scp = scp
         # [time(time,tl branch),command0,command1,...]
-        self.obj = obj
+        self.scp = scp
         # [obj0,obj1,...]
-        self.loc = loc
+        self.obj = obj
         # cont
         # use a super cont that will contain all relevant containers
+        self.loc = loc
         self.tag = tag
 
 
 class universe:
     def __init__(self, tl, scn, obj, cont, funct, rule, tag):
+        # time line(wip)
         self.tl = tl
-        # time line
-        self.scn = scn
         # scene list in order like(0,0)(0,1)(1,0)(1,1)
+        self.scn = scn
+        # objlist
+        # [usr,wep,dev,obj,dta]
         self.obj = obj
-        # object list
-        # [obj,usr,dev,wep,dta]
+        # containor struct
         self.cont = cont
-        # container structure
-        self.funct = funct
         # functions unique to uni
+        self.funct = funct
+        # pisx and other functions to always run while in uni
         self.rule = rule
-        # phisx and other functions to always run while in uni
+        # tags
         self.tag = tag
+#    necesary tags
+#        relevancy
+#        name
 
-    # necessary tags
-    # relevancy
-    # name
-
-    # runtime
-
-
+#runtime
 if __name__ == "__main__":
     print("object definitions v10.0")
-
-    # Made by Jacob Ledbetter

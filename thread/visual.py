@@ -1,6 +1,6 @@
 #import
 
-#code
+#setup
 #visual
 #feed=[raw,pitch,yaw,roll,[obj]]
 def capture(usr):
@@ -12,10 +12,7 @@ def target(obj,p,y,r):
     obj.trd["vis"][1]=p
     obj.trd["vis"][2]=y
     obj.trd["vis"][3]=r
-    
-    #runtime
 
-#notes
-
-#auth
-"""by jacob ledbetter"""
+#runtime
+if __name__ == "__main__":
+    print("visuals v10.0")

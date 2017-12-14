@@ -1,7 +1,7 @@
 #import
-#import obj,move
-#code
-    #def
+from . import move
+
+#setup
 def attract(o0,o1,force):
     if o0.trd["mov"][0]>o1.trd["mov"][0]:
         o0.trd["mov"][3]=(force*-1)
@@ -21,7 +21,7 @@ def attract(o0,o1,force):
         o0.trd["mov"][5]=force
     else:
         o0.trd["mov"][5]=0
-    move(o0)
+    move.move(o0)
     
 def repel(o0,o1,force):
     if o0.trd["mov"][0]>o1.trd["mov"][0]:
@@ -42,12 +42,8 @@ def repel(o0,o1,force):
         o0.trd["mov"][5]=force*-1
     else:
         o0.trd["mov"][5]=0
-    move(o0)
+    move.move(o0)
 
-    #runtime
+#runtime
 if __name__ == "__main__":
     print("physx v10.0")
-#notes
-
-#auth
-"""by jacob ledbetter"""
