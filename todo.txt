@@ -1,3 +1,4 @@
 Todo
-	add newer files(ongoing)
+	add saveTo and loadFrom module
+	~~add newer files(ongoing)~~
 	~~rename ram (and ram dependancies)~~
