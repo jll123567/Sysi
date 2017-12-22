@@ -1,6 +1,4 @@
-#import
-
-#setup
+# setup
 class object:
     def __init__(self, mod, trd, tag):
         self.mod = mod
@@ -53,17 +51,19 @@ class user:
                 break
             if i == 'n':
                 fail = True
-                if type(obj) == type(user(0, 0, 0, 0, 0)):
+                if isinstance(obj, user):
                     oldUsrDta = obj.prs + obj.mem
                     obj = object(obj.mod, obj.trd, obj.tag)
                     obj.tag["notes"] = oldUsrDta
                     print(obj.tag["name"], "is Now Object")
+                    return obj
                 else:
                     print(obj.tag["name"], "is Object")
         if not fail:
-            if type(obj) == object(0, 0, 0):
+            if isinstance(obj,object):
                 obj = user(obj.mod, obj.trd, obj.tag["notes"][0], obj.tag["notes"][1], obj.tag)
                 print(obj.tag["name"], "is Now User")
+                return obj
             else:
                 print(obj.tag["name"], "is User")
 
@@ -121,7 +121,7 @@ class universe:
         # objlist
         # [usr,wep,dev,obj,dta]
         self.obj = obj
-        # containor struct
+        # container struct
         self.cont = cont
         # functions unique to uni
         self.funct = funct
@@ -129,10 +129,12 @@ class universe:
         self.rule = rule
         # tags
         self.tag = tag
-#    necesary tags
+
+
+# necessary tags
 #        relevancy
 #        name
 
-#runtime
+# runtime
 if __name__ == "__main__":
     print("object definitions v10.0")
