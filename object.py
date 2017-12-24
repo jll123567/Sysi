@@ -87,7 +87,7 @@ class weapon:
 class data:
     def __init__(self, d, tag):
         self.tag = tag
-        # literaly fucking anything
+        # literally fucking anything
         self.d = d
 
 

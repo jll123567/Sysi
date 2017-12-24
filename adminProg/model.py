@@ -1,10 +1,12 @@
-#setup
-#   Model format=[[scale,"x,y,z-x,y,z","..."],[scale,["x,y,z",["x,y,z","..."],["x,y,z","..."]],[that,all,again]],[scale,[[["origial skpos","new pos","next"],[data for next point]],[next animation]]],[texture,[physx properties]]]
+# setup
+#   Model format=[[scale,"x,y,z-x,y,z","..."],[scale,["x,y,z",["x,y,z","..."],["x,y,z","..."]],[that,all,again]],[scale,[[["original skpos","new pos","next"],[data for next point]],[next animation]]],[texture,[physx properties]]]
 #   assem [[scale,["x,y,z,p,ya,r",obj] and material = "assem"
 
-def make_model(model,obj,material):
-    obj.mod[0]=model
-    obj.mod[3]=material
+
+def make_model(model, obj, material):
+    obj.mod[0] = model
+    obj.mod[3] = material
+    return obj
     """else:
         points=[[]]
         working=True
@@ -31,22 +33,29 @@ def make_model(model,obj,material):
                 working=False
         object.mod[0]=points"""
 
-def rig_model(rigging,obj):
-    obj.mod[1]=rigging
 
-def set_animations(obj,ani):
-    obj.mod[2]=ani
-    
-def add_animation(animation,obj):
+def rig_model(rigging, obj):
+    obj.mod[1] = rigging
+    return obj
+
+
+def set_animations(obj, ani):
+    obj.mod[2] = ani
+    return obj
+
+
+def add_animation(animation, obj):
     obj.mod[2].append(animation)
-    
+    return obj
+
+
 def display_model(obj):
     for f in obj.mod[0]:
-        if type(f)==type([]):
+        if isinstance(f, list):
             display_model(f[1])
-            print("@"+f[0])
-        elif type(f)==type(""):
-            print("scale:"+f+"a for each unit")
+            print("@" + f[0])
+        elif isinstance(f, str):
+            print("scale:" + f + "a for each unit")
         else:
             print(f)
     for i in obj.mod[1]:
@@ -55,17 +64,20 @@ def display_model(obj):
             print(f)
         for f in i[2]:
             print(f)
-    print(obj.mod[2][0],"frames per second")
+    print(obj.mod[2][0], "frames per second")
     for i in obj.mod[2][1]:
         print(i)
-    print("material:",obj.mod[3])
+    print("material:", obj.mod[3])
 
-def new_assem(obj,assm,ani,rig):
-    obj.mod[0]=assm
-    obj.mod[1]=rig
-    obj.mod[2]=ani
-    obj.mod[3]="assem"
-    
-#runtime
-if __name__=="__main__":
+
+def new_assem(obj, assem, ani, rig):
+    obj.mod[0] = assem
+    obj.mod[1] = rig
+    obj.mod[2] = ani
+    obj.mod[3] = "assem"
+    return obj
+
+
+# runtime
+if __name__ == "__main__":
     print("model rigging and viewer v10.0")

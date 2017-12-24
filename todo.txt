@@ -1,4 +1,5 @@
 Todo
-	add saveTo and loadFrom module
+	~~add saveTo and loadFrom module~~
 	~~add newer files(ongoing)~~
-	~~rename ram (and ram dependancies)~~
+	~~rename ram (and ram dependencies)~~
+	fix functions that need to return ___
