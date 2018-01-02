@@ -1,18 +1,21 @@
-#import
+# import
 
-#setup
-def checkIteg(objPast,objCurrent):
-    if objPast.tag["health"]>objCurrent.tag["health"]:
+
+# setup
+def checkIteg(objPast, objCurrent):
+    if objPast.tag["health"] > objCurrent.tag["health"]:
         return "reduced"
     else:
         return "maintained"
 
-def checkWill(objPast,objCurrent):
-    if objPast.tag["fucntlist"]>objCurrent.tag["functlist"]:
+
+def checkWill(objPast, objCurrent):
+    if objPast.tag["fucntlist"] > objCurrent.tag["functlist"]:
         return "reduced"
     else:
         return "maintained"
 
-#runtime
+
+# runtime
 if __name__ == "__main__":
     print("empathy definitions v10.0")

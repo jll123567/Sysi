@@ -1,4 +1,5 @@
 # import
+
 import re
 
 
@@ -21,6 +22,7 @@ def makePublic(o0, o1):
 
 def intrude(o0, o1):
     o0.tag["priv"][1].append(o1)
+
 
 
 def obscureText(text, method):
@@ -48,6 +50,7 @@ def obscureText(text, method):
         return ""
     else:
         print("not a valid method")
+
 
 
 # runtime
