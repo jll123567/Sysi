@@ -58,6 +58,19 @@ def showTask(obj):
         recurse(i, 0)
 
 
+def makeValidTskProfile(Que):
+    # flatten function by rightfootin
+    # snippet link: https://rightfootin.blogspot.com/2006/09/more-on-python-flatten.html
+    #   modified to not include nested tuples as queues only support lists (or at least they're supposed to)
+    mainTask = []
+    for item in Que:
+        if isinstance(item, list):
+            mainTask.extend(makeValidTskProfile(item))
+        else:
+            mainTask.append(item)
+    return mainTask
+
+
 # runtime
 if __name__ == "__main__":
     print("queue v10.0")
