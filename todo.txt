@@ -1,5 +1,0 @@
-Todo
-	~~add saveTo and loadFrom module~~
-	~~add newer files(ongoing)~~
-	~~rename ram (and ram dependencies)~~
-	fix functions that need to return ___
