@@ -1,14 +1,19 @@
-# import
-
-
 # setup
-# usable functions,goals,limits
+# [limits,goals,functions,dict]
 # "functname()"
 # goals are bool checks that a user attempts to mke true and are in urgency order
 # limits are similar but are meant to not be made true and are still in urgency order
 # tasker profile(auto-get)
-def set(usr, goal, limit, funct):
-    usr.prs = [funct, goal, limit, usr.trd["tsk"]]
+# {"word": refrenceCount(int), "...": ...}
+
+
+def setPrs(usr, limit, goal, funct, usrDict):
+    usr.prs = [limit, goal, funct, usrDict]
+    return usr
+
+
+def updateDict(usr, usrDict):
+    usr.prs[3] = usrDict
     return usr
 
 
@@ -42,12 +47,7 @@ def removeFunction(usr, index):
     return usr
 
 
-def updateProfile(usr):
-    usr.prs[3] = usr.trd["tsk"]
-    return usr
-
-
-def clear(usr):
+def clearPrs(usr):
     usr.prs = [0, 0, 0]
     return usr
 
