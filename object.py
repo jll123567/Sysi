@@ -60,7 +60,7 @@ class user:
                 else:
                     print(obj.tag["name"], "is Object")
         if not fail:
-            if isinstance(obj,object):
+            if isinstance(obj, object):
                 obj = user(obj.mod, obj.trd, obj.tag["notes"][0], obj.tag["notes"][1], obj.tag)
                 print(obj.tag["name"], "is Now User")
                 return obj
