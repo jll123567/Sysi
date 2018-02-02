@@ -104,7 +104,7 @@ class scene:
     def __init__(self, scp, obj, loc, tag):
         # [time(time,tl branch),command0,command1,...]
         self.scp = scp
-        # [obj0,obj1,...]
+        # ["obj0=object.w/e(s,t,u,f,f)", ...]
         self.obj = obj
         # cont
         # use a super cont that will contain all relevant containers
