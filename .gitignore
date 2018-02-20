@@ -102,3 +102,5 @@ ENV/
 
 # the pycharm data I dont like
 /idea
+.idea
+/.idea
