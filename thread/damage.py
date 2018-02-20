@@ -1,10 +1,9 @@
 # import
 from random import randint
 
-# wep.dmg = ammount (int), value to modify(string)
 
-
-# a place holder for damage at the model, just stat dmg
+# setup
+# dmg
 def phys(wep, obj):
     apl = wep.dmg[1] - obj.tag["stat"]["defence"]
     if apl < 0:
@@ -13,15 +12,29 @@ def phys(wep, obj):
     return obj
 
 
-# damages the internal of obj
-# mem type only on usr
+def energy(wep, obj):
+    dmg_set = False
+    apl = 0
+    for i in wep.dmg[2]:
+        for f in obj.tag["stat"]["resist"]:
+            if i == f[0]:
+                apl = wep.dmg[1] - f[1]
+                dmg_set = True
+    if not dmg_set:
+        apl = wep.dmg[1]
+    if apl < 0:
+        apl = 0
+    obj.tag["health"] -= apl
+    return obj
+
+
 def internal(wep, obj):
     if "mem" in wep.dmg[2]:
         working = True
         while working:
             try:
                 obj.mem[1].pop(randint(0, 9999999999))
-            except IndexError:
+            except:
                 print("mem.remove fail /n retrying")
             else:
                 working = False
@@ -33,7 +46,6 @@ def internal(wep, obj):
     return obj
 
 
-# modifies the value of
 def stat(wep, obj):
     for i in obj.tag["stat"]:
         for f in wep.dmg[2]:
