@@ -4,7 +4,7 @@ import object
 
 # setup
 def logTagAdd(obj):
-    obj.tag.update({"evLog": "logTagAdd"})
+    obj.tag.update({"evLog": ["logTagAdd"]})
     return obj
 
 
