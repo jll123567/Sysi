@@ -23,7 +23,9 @@ def removeOutTags(obj):
 #   val * value
 #   val / value
 #   val ?(used when you know the function modifies but not how
-
+# outs for other types
+#   var = vlaue
+#   var ?
 # runtime
 if __name__ == "__main__":
     print("output tags v10.0")
