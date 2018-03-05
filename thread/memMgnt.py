@@ -1,6 +1,8 @@
 # import
 import re
 import thread.ram
+import hashlib
+import object
 
 
 # setup
@@ -48,6 +50,13 @@ def modify(usr, block, index, value):
     else:
         usr.mem[block][index] = value
     return usr
+
+
+# converts an oject to a "hashed" (shortened data preserving tags)
+def saveAsHash(obj):
+    info = str(obj)
+    dta = object.data((hashlib.md5(info.encode('utf-8')).hexdigest()), obj.tag)
+    return dta
 
 
 # runtime
