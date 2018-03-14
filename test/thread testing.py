@@ -28,13 +28,12 @@ cpxTst(cpxTest)
 # soon
 dmgTest = object.weapon("irrelevant", "", [20, "health"], {"name": "testWep"})
 # standardize stat names with \standards_and_profiles\RPGStats.py
-punchingBag = object.object("irrelevant", "irrelevant", {"name": "punching bag", "stat": {"defence": 2}, "health": 100})
+punchingBag = object.object("irrelevant", "irrelevant", {"name": "punching bag", "stat": {"defence": 2, "health": 100}})
 
 
 def dmgTst(dmgTest, punchingBag):
     print("init\n", punchingBag.tag["health"])
-    punchingBag = thread.damage.attack(dmgTest, punchingBag)
+    punchingBag = thread.damage.stat(dmgTest, punchingBag)
     print("after hit(rough 82)\n", punchingBag.tag["health"])
-
 
 dmgTst(dmgTest, punchingBag)
