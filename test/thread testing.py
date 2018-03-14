@@ -50,3 +50,6 @@ def langTest(listener):
     print(listener.trd["ram"])
     listener = thread.language.store(listener)
     print(listener.trd["ram"])
+
+
+langTest(listener)
