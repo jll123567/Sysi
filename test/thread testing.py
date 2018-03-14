@@ -2,6 +2,7 @@
 import thread.complex
 import thread.damage
 import object
+import thread.language
 
 # cpx test
 cpxTest = object.object("mod not relevant", {"cpx": [[], None]}, {"name": "cpxTest"})
@@ -23,7 +24,6 @@ def cpxTst(cpxTest):
 
 cpxTst(cpxTest)
 
-
 # dmg test
 # soon
 dmgTest = object.weapon("irrelevant", "", [20, "health"], {"name": "testWep"})
@@ -36,4 +36,17 @@ def dmgTst(dmgTest, punchingBag):
     punchingBag = thread.damage.stat(dmgTest, punchingBag)
     print("after hit(rough 82)\n", punchingBag.tag["health"])
 
-dmgTst(dmgTest, punchingBag)
+
+# wow I cant even type
+# dmgTst(dmgTest, punchingBag)
+
+# langtest
+listener = object.user("irrelevant", {"lang": [[[100, 100, 100], [100, 0, 0]], [0, 0, 0]], "ram": []},
+                       "irrelevant", "irrelevant", {"name": "listener"})
+
+
+# just store bc listen makes an ifinete loop
+def langTest(listener):
+    print(listener.trd["ram"])
+    listener = thread.language.store(listener)
+    print(listener.trd["ram"])
