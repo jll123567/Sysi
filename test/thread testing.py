@@ -3,6 +3,14 @@ import thread.complex
 import thread.damage
 import object
 import thread.language
+import thread.memMgnt
+
+# TODO:
+# thread.complex.solve does not do anything, ill fix it later
+# standardize stat names with \standards_and_profiles\RPGStats.py
+# make stat dmg work, srsly
+# listen makes an ifinete loop, fix it
+# add SO MANY COMMENTS, DOCUMENT DAMNIT
 
 # cpx test
 cpxTest = object.object("mod not relevant", {"cpx": [[], None]}, {"name": "cpxTest"})
@@ -40,6 +48,7 @@ def dmgTst(dmgTest, punchingBag):
 # wow I cant even type
 # dmgTst(dmgTest, punchingBag)
 
+
 # langtest
 listener = object.user("irrelevant", {"lang": [[[100, 100, 100], [100, 0, 0]], [0, 0, 0]], "ram": []},
                        "irrelevant", "irrelevant", {"name": "listener"})
@@ -53,3 +62,23 @@ def langTest(listener):
 
 
 langTest(listener)
+
+# memMgnt
+memBank = object.user("irreevant", {"ram": []}, "irrelevant", [0, ["start"], 2], {"name": "memBank",
+                                                                                  "adminNote": "sorry"})
+
+
+# testFunct
+def memTest(usr):
+    print(usr.trd, "\n  ", usr.mem)
+    usr = thread.memMgnt.load(usr, 1, 0)
+    print(usr.trd, "\n  ", usr.mem)
+    usr = thread.memMgnt.forget(usr, 1, 0)
+    print(usr.mem)
+    usr = thread.memMgnt.store(usr, 1, "test0")
+    print(usr.mem)
+    usr = thread.memMgnt.modify(usr, 1, 0, "test1")
+    print(usr.mem)
+
+
+memTest(memBank)
