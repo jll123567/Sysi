@@ -5,6 +5,7 @@ import object
 import thread.language
 import thread.memMgnt
 import thread.move
+import thread.ram
 
 # TODO:
 # thread.complex.solve does not do anything, ill fix it later
@@ -13,6 +14,9 @@ import thread.move
 # listen makes an ifinete loop, fix it
 # tread.move.moveto seems broken (in 3,4,5 out 3,3,3) fix it
 # add SO MANY COMMENTS, DOCUMENT DAMNIT
+# ram.free should be able to be fully cleared with "all"
+# ram.read shouldnt return anything
+# ram.free is freaking out about an empty list see if above is the issue
 
 # cpx test
 cpxTest = object.object("mod not relevant", {"cpx": [[], None]}, {"name": "cpxTest"})
@@ -98,3 +102,25 @@ def movTest(movObj):
 
 # tread.move.moveto seems broken (in 3,4,5 out 3,3,3) fix it
 movTest(movObj)
+
+
+# If you think im going to test my joke phys module you are WRONG
+
+
+# ram testing
+ramStore = object.object("irrelevant", {"ram": []}, {"name": "ramStore"})
+memBank = object.user("irreevant", {"ram": []}, "irrelevant", [0, ["start"], 2], {"name": "memBank",
+                                                                                  "adminNote": "sorry"})
+
+
+def ramTest(ramStore, memBank):
+    ramStore = thread.ram.load(ramStore, "hi")
+    ramStore = thread.ram.load(ramStore, "hi1")
+    thread.ram.read(ramStore)
+    ramStore = thread.ram.store(memBank, "store0", 0)
+    print(memBank.mem)
+    ramStore = thread.ram.free(ramStore, None)
+    print(ramStore.trd["ram"])
+
+ramTest(ramStore, memBank)
+
