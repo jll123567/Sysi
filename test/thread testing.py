@@ -6,6 +6,7 @@ import thread.language
 import thread.memMgnt
 import thread.move
 import thread.ram
+import thread.transfer
 
 # TODO:
 # thread.complex.solve does not do anything, ill fix it later
@@ -17,6 +18,13 @@ import thread.ram
 # ram.free should be able to be fully cleared with "all"
 # ram.read shouldnt return anything
 # ram.free is freaking out about an empty list see if above is the issue
+# on tasker.await and tasker.react shoulndt use usr as an input and should use a profile.
+# transfer.send should dict.update rather than ["sender"] = <w/e>
+# transfer.receve should be removed
+# transfer should use transf not trnsf for its label
+# also obj.trd[<this thing>] is called a thread label
+# visual sucks, fix it PLEASE
+# test after you change things
 
 # cpx test
 cpxTest = object.object("mod not relevant", {"cpx": [[], None]}, {"name": "cpxTest"})
@@ -103,7 +111,6 @@ def movTest(movObj):
 # tread.move.moveto seems broken (in 3,4,5 out 3,3,3) fix it
 movTest(movObj)
 
-
 # If you think im going to test my joke phys module you are WRONG
 
 
@@ -122,5 +129,23 @@ def ramTest(ramStore, memBank):
     ramStore = thread.ram.free(ramStore, None)
     print(ramStore.trd["ram"])
 
-ramTest(ramStore, memBank)
 
+# ramTest(ramStore, memBank)
+
+# Tasker tested recently-ish just needs reformattiong
+
+# transfer
+iface0 = object.object("irrelevant", {"trnsf": None}, {"name": "iface0"})
+iface1 = object.object("irrelevant", {"trnsf": object.data("hello", {"name": "dataToSend", "sender": None})},
+                       {"name": "iface1"})
+
+
+def sendTest(if0, if1):
+    if0 = thread.transfer.send(if0, if1, if1.trd["trnsf"])
+    print("\n", if0.trd["trnsf"].d)
+
+
+sendTest(iface0, iface1)
+
+
+# Visual is sooooooooo broken so Ill just redo it at this point
