@@ -9,7 +9,7 @@ import thread.ram
 import thread.transfer
 
 # TODO:
-# thread.complex.solve does not do anything, ill fix it later
+# ~~thread.complex.solve does not do anything, ill fix it later
 # standardize stat names with \standards_and_profiles\RPGStats.py
 # make stat dmg work, srsly
 # listen makes an ifinete loop, fix it

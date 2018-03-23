@@ -1,20 +1,23 @@
 # setup
-# [[p0,p1],result]
+# [[problems],[results]]
 
 
+# makes a new unsolved problem labled <problem> at <obj>.trd["cpx"] with the default solution None
+# Use: <obj> = Sysh.thread.complex.newProblem(<obj>, <string or dta>)
+# Requires: obj with cpx core @ trd
 def newProblem(obj, problem):
     obj.trd["cpx"][0].append(problem)
+    obj.trd["cpx"][1].append(None)
     return obj
 
 
-def post(obj, solution):
-    obj.trd["cpx"][1] = solution
+# post the solution of a problem
+# Use: <obj> = Sysh.thread.complex.postSolution(<obj>, <string or dta>, <index of problem>
+#                                                                        or <obj>.trd["cpx"].index(<problem>)
+# Requires:obj with cpx core @ trd
+def postSolution(obj, solution, problemIndex):
+    obj.trd["cpx"].insert(problemIndex, solution)
     return obj
-
-
-def solve(obj):
-    for i in obj.trd["cpx"][0]:
-        post(obj, i)
 
 
 # runtime
