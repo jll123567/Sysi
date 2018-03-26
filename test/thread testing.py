@@ -10,8 +10,8 @@ import thread.transfer
 
 # TODO:
 # ~~thread.complex.solve does not do anything, ill fix it later
-# standardize stat names with \standards_and_profiles\RPGStats.py
-# make stat dmg work, srsly
+# ~~standardize stat names with \standards_and_profiles\RPGStats.py
+# ~~make stat dmg work, srsly
 # listen makes an ifinete loop, fix it
 # tread.move.moveto seems broken (in 3,4,5 out 3,3,3) fix it
 # add SO MANY COMMENTS, DOCUMENT DAMNIT
