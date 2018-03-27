@@ -13,8 +13,9 @@ def DEPRICATEDphysDEPRICATED(wep, obj):
     return obj
 
 
-# damages the internal of obj
-# mem type only on usr
+# damages the internal of obj (mem type only on usr)
+# Use: <obj> = Sysh.thread.damage.internal(<wep>, <obj>)
+# Requires: obj, wep
 def internal(wep, obj):
     for i in wep.dmg:
         if i[1] == "mem":
@@ -34,7 +35,9 @@ def internal(wep, obj):
     return obj
 
 
-# modifies the value of
+# modifies the value of <stat>
+# Use: <obj> = Sysh.thread.damage.stat(<wep>, <obj>, <index of stat to modify>)
+# Requires: obj, wep, matching stat in obj tags and dmg prof of wep
 def stat(wep, obj, dmgIndex):
     for i in obj.tag["stat"]:
         if i == wep.dmg[dmgIndex][1]:
@@ -43,7 +46,9 @@ def stat(wep, obj, dmgIndex):
             print("obj does not have the stat ", wep.dmg[dmgIndex][1], " \nDid you mispell it?")
     return obj
 
-
+# remove health based on atk
+# Use: <obj> = Sysh.thread.damage.attack(<wep>, <obj>)
+# Requires: obj wih health tag, wep with atk in prof
 def attack(wep, obj):
     for i in wep.dmg:
         if i[1] == "atk":
