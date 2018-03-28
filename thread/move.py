@@ -1,8 +1,11 @@
 # setup
-# move
-#    [x pos,y pos,z pos,x accel,y accel, z accel, new x,new y,new z] 
+# mov
+#    [x pos,y pos,z pos,x accel,y accel, z accel]
 
 
+# sets obj's position in the thread
+# use: <obj> = Sysh.thread.move.warp(<obj>, <int/float>, <int/float>, <int/float>)
+# requires: obj
 def warp(obj, x, y, z):
     obj.trd["mov"][0] = x
     obj.trd["mov"][1] = y
@@ -10,33 +13,23 @@ def warp(obj, x, y, z):
     return obj
 
 
+# sets object acceleration in thread
+# use: <obj> = Sysh.thread.move.accelerate(<obj>, <int/float>, <int/float>, <int/float>)
+# requires: obj
+def accelerate(obj, x, y, z):
+    obj.trd["mov"][3] = x
+    obj.trd["mov"][4] = y
+    obj.trd["mov"][5] = z
+    return obj
+
+
+# moves obj based on acceleration
+# use: <obj> = Sysh.thread.move.move(<obj>)
+# requires: obj
 def move(obj):
     obj.trd["mov"][0] += obj.trd["mov"][3]
     obj.trd["mov"][1] += obj.trd["mov"][4]
     obj.trd["mov"][2] += obj.trd["mov"][5]
-    return obj
-
-
-def moveTo(obj, x, y, z):
-    while obj.trd["mov"][0] != x and obj.trd["mov"][1] != y and obj.trd["mov"][2] != z:
-        if obj.trd["mov"][0] < x:
-            obj.trd["mov"][0] += obj.trd["mov"][3]
-        elif obj.trd["mov"][0] > x:
-            obj.trd["mov"][0] -= obj.trd["mov"][3]
-        else:
-            obj.trd["mov"][0] = obj.trd["mov"][0]
-        if obj.trd["mov"][1] < y:
-            obj.trd["mov"][1] += obj.trd["mov"][4]
-        elif obj.trd["mov"][1] > y:
-            obj.trd["mov"][1] -= obj.trd["mov"][4]
-        else:
-            obj.trd["mov"][1] = obj.trd["mov"][1]
-        if obj.trd["mov"][2] < z:
-            obj.trd["mov"][2] += obj.trd["mov"][5]
-        elif obj.trd["mov"][2] > z:
-            obj.trd["mov"][2] -= obj.trd["mov"][5]
-        else:
-            obj.trd["mov"][2] = obj.trd["mov"][2]
     return obj
 
 

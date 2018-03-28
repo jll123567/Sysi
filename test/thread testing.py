@@ -13,11 +13,11 @@ import thread.transfer
 # ~~standardize stat names with \standards_and_profiles\RPGStats.py
 # ~~make stat dmg work, srsly
 # ~~listen makes an ifinete loop, fix it
-# tread.move.moveto seems broken (in 3,4,5 out 3,3,3) fix it
+# ~~tread.move.moveto seems broken (in 3,4,5 out 3,3,3) fix it
 # add SO MANY COMMENTS, DOCUMENT DAMNIT
-# ram.free should be able to be fully cleared with "all"
-# ram.read shouldnt return anything
-# ram.free is freaking out about an empty list see if above is the issue
+# ~~ram.free should be able to be fully cleared with "all"
+# ~~ram.read shouldnt return anything
+# ~~ram.free is freaking out about an empty list see if above is the issue
 # on tasker.await and tasker.react shoulndt use usr as an input and should use a profile.
 # transfer.send should dict.update rather than ["sender"] = <w/e>
 # transfer.receve should be removed
@@ -44,7 +44,7 @@ def cpxTst(cpxTest):
     # thread.complex.solve does not do anything, ill fix it later
 
 
-cpxTst(cpxTest)
+# cpxTst(cpxTest)
 
 # dmg test
 # soon
@@ -75,7 +75,7 @@ def langTest(listener):
     print(listener.trd["ram"])
 
 
-langTest(listener)
+# langTest(listener)
 
 # memMgnt
 memBank = object.user("irreevant", {"ram": []}, "irrelevant", [0, ["start"], 2], {"name": "memBank",
@@ -95,42 +95,38 @@ def memTest(usr):
     print(usr.mem)
 
 
-memTest(memBank)
+# memTest(memBank)
 
 # move testing
-movObj = object.object("irrelevant", {"mov": [0, 0, 0, 1, 1, 1, 3, 4, 5]}, {"name": "movObj",
+movObj = object.object("irrelevant", {"mov": [0, 0, 0, 1, 1, 1]}, {"name": "movObj",
                                                                             "previous location": [0, 0, 0]})
 
 
 def movTest(movObj):
     print(movObj.tag["previous location"])
-    movObj = thread.move.warp(movObj, 3, 4, 5)
+    movObj = thread.move.move(movObj)
     print(movObj.trd["mov"])
 
 
 # tread.move.moveto seems broken (in 3,4,5 out 3,3,3) fix it
-movTest(movObj)
+# movTest(movObj)
 
 # If you think im going to test my joke phys module you are WRONG
 
 
 # ram testing
 ramStore = object.object("irrelevant", {"ram": []}, {"name": "ramStore"})
-memBank = object.user("irreevant", {"ram": []}, "irrelevant", [0, ["start"], 2], {"name": "memBank",
-                                                                                  "adminNote": "sorry"})
 
 
-def ramTest(ramStore, memBank):
+def ramTest(ramStore):
     ramStore = thread.ram.load(ramStore, "hi")
     ramStore = thread.ram.load(ramStore, "hi1")
     thread.ram.read(ramStore)
-    ramStore = thread.ram.store(memBank, "store0", 0)
-    print(memBank.mem)
     ramStore = thread.ram.free(ramStore, None)
     print(ramStore.trd["ram"])
 
 
-# ramTest(ramStore, memBank)
+ramTest(ramStore)
 
 # Tasker tested recently-ish just needs reformattiong
 
