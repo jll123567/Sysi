@@ -18,7 +18,7 @@ import thread.transfer
 # ~~ram.free should be able to be fully cleared with "all"
 # ~~ram.read shouldnt return anything
 # ~~ram.free is freaking out about an empty list see if above is the issue
-# on tasker.await and tasker.react shoulndt use usr as an input and should use a profile.
+# ~~on tasker.await and tasker.react shoulndt use usr as an input and should use a profile.
 # transfer.send should dict.update rather than ["sender"] = <w/e>
 # transfer.receve should be removed
 # transfer should use transf not trnsf for its label
