@@ -19,9 +19,9 @@ import thread.transfer
 # ~~ram.read shouldnt return anything
 # ~~ram.free is freaking out about an empty list see if above is the issue
 # ~~on tasker.await and tasker.react shoulndt use usr as an input and should use a profile.
-# transfer.send should dict.update rather than ["sender"] = <w/e>
-# transfer.receve should be removed
-# transfer should use transf not trnsf for its label
+# ~~transfer.send should dict.update rather than ["sender"] = <w/e>
+# ~~transfer.receve should be removed
+# ~~transfer should use transf not trnsf for its label
 # also obj.trd[<this thing>] is called a thread label
 # visual sucks, fix it PLEASE
 # test after you change things
