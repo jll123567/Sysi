@@ -27,7 +27,7 @@ import thread.transfer
 # test after you change things
 
 # cpx test
-cpxTest = object.object("mod not relevant", {"cpx": [[], None]}, {"name": "cpxTest"})
+cpxTest = object.object("mod not relevant", {"cpx": [[], []]}, {"name": "cpxTest"})
 
 
 def cpxTst(cpxTest):
@@ -36,20 +36,15 @@ def cpxTst(cpxTest):
     cpxTest = thread.complex.newProblem(cpxTest, 0)
     cpxTest = thread.complex.newProblem(cpxTest, [0, 3])
     cpxTest = thread.complex.newProblem(cpxTest, True)
-    print("add problem\n", cpxTest.trd["cpx"])
-    cpxTest = thread.complex.post(cpxTest, "success")
     print("add sol\n", cpxTest.trd["cpx"])
-    cpxTest = thread.complex.post(cpxTest, "double check")
+    cpxTest = thread.complex.postSolution(cpxTest, "double check", 0)
     print("add sol\n", cpxTest.trd["cpx"])
-    # thread.complex.solve does not do anything, ill fix it later
 
 
-# cpxTst(cpxTest)
+cpxTst(cpxTest)
 
 # dmg test
-# soon
 dmgTest = object.weapon("irrelevant", "", [20, "health"], {"name": "testWep"})
-# standardize stat names with \standards_and_profiles\RPGStats.py
 punchingBag = object.object("irrelevant", "irrelevant", {"name": "punching bag", "stat": {"defence": 2, "health": 100}})
 
 
@@ -126,7 +121,7 @@ def ramTest(ramStore):
     print(ramStore.trd["ram"])
 
 
-ramTest(ramStore)
+# ramTest(ramStore)
 
 # Tasker tested recently-ish just needs reformattiong
 
@@ -141,7 +136,7 @@ def sendTest(if0, if1):
     print("\n", if0.trd["trnsf"].d)
 
 
-sendTest(iface0, iface1)
+# sendTest(iface0, iface1)
 
 
 # Visual is sooooooooo broken so Ill just redo it at this point
