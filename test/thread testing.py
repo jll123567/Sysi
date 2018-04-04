@@ -22,8 +22,8 @@ import thread.transfer
 # ~~transfer.send should dict.update rather than ["sender"] = <w/e>
 # ~~transfer.receve should be removed
 # ~~transfer should use transf not trnsf for its label
-# also obj.trd[<this thing>] is called a thread label
-# visual sucks, fix it PLEASE
+# ~~also obj.trd[<this thing>] is called a thread label
+# ~~visual sucks, fix it PLEASE
 # test after you change things
 
 # cpx test
