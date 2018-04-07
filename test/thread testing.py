@@ -30,32 +30,32 @@ import thread.transfer
 cpxTest = object.object("mod not relevant", {"cpx": [[], []]}, {"name": "cpxTest"})
 
 
-def cpxTst(cpxTest):
-    print("init val\n", cpxTest.trd["cpx"])
-    cpxTest = thread.complex.newProblem(cpxTest, "test Unsolved")
-    cpxTest = thread.complex.newProblem(cpxTest, 0)
-    cpxTest = thread.complex.newProblem(cpxTest, [0, 3])
-    cpxTest = thread.complex.newProblem(cpxTest, True)
-    print("add sol\n", cpxTest.trd["cpx"])
-    cpxTest = thread.complex.postSolution(cpxTest, "double check", 0)
-    print("add sol\n", cpxTest.trd["cpx"])
+def cpxTst(probSolver):
+    print("init val\n", probSolver.trd["cpx"])
+    probSolver = thread.complex.newProblem(probSolver, "test Unsolved")
+    probSolver = thread.complex.newProblem(probSolver, 0)
+    probSolver = thread.complex.newProblem(probSolver, [0, 3])
+    probSolver = thread.complex.newProblem(probSolver, True)
+    print("add sol\n", probSolver.trd["cpx"])
+    probSolver = thread.complex.postSolution(probSolver, "double check", 0)
+    print("add sol\n", probSolver.trd["cpx"])
 
 
-cpxTst(cpxTest)
+# cpxTst(cpxTest)
 
 # dmg test
-dmgTest = object.weapon("irrelevant", "", [20, "health"], {"name": "testWep"})
-punchingBag = object.object("irrelevant", "irrelevant", {"name": "punching bag", "stat": {"defence": 2, "health": 100}})
+dmgTest = object.weapon("irrelevant", "", [[20, "atk"], [5, "def"]], {"name": "testWep"})
+punchingBag = object.object("irrelevant", "irrelevant", {"name": "punching bag", "stat": {"def": 10}, "health": 100})
 
 
-def dmgTst(dmgTest, punchingBag):
-    print("init\n", punchingBag.tag["health"])
-    punchingBag = thread.damage.stat(dmgTest, punchingBag)
-    print("after hit(rough 82)\n", punchingBag.tag["health"])
+def dmgTst(wep, objToPunch):
+    print("init\n", objToPunch.tag["health"])
+    objToPunch = thread.damage.stat(wep, objToPunch, 1)
+    objToPunch = thread.damage.attack(wep, objToPunch)
+    print("after hit(rough 82)\n", objToPunch.tag["health"])
 
 
-# wow I cant even type
-# dmgTst(dmgTest, punchingBag)
+dmgTst(dmgTest, punchingBag)
 
 
 # langtest

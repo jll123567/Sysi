@@ -4,7 +4,7 @@
 
 
 def addTags(obj):
-    obj.tag.update({"atk": 0, "def": 0, "agi": 0, "lck": 0})
+    obj.tag.update({"stat": {"atk": 0, "def": 0, "agi": 0, "lck": 0}})
     return obj
 
 
