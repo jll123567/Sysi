@@ -39,9 +39,9 @@ def internal(wep, obj):
 # Use: <obj> = Sysh.thread.damage.stat(<wep>, <obj>, <index of stat to modify>)
 # Requires: obj, wep, matching stat in obj tags and dmg prof of wep
 def stat(wep, obj, dmgIndex):
-    for stat, val in obj.tag["stat"].iteritems():
-        if obj.tag["stat"].stat == wep.dmg[dmgIndex][1]:
-                obj.tag["stat"][stat] -= wep.dmg[0]
+    for key in obj.tag["stat"].keys():
+        if key == wep.dmg[dmgIndex][1]:
+            obj.tag["stat"][key] -= wep.dmg[dmgIndex][0]
         else:
             print("obj does not have the stat ", wep.dmg[dmgIndex][1], " \nDid you mispell it?")
     return obj

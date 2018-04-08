@@ -49,10 +49,11 @@ punchingBag = object.object("irrelevant", "irrelevant", {"name": "punching bag",
 
 
 def dmgTst(wep, objToPunch):
-    print("init\n", objToPunch.tag["health"])
+    print("init\n", objToPunch.tag["health"], "\ndef: ", objToPunch.tag["stat"]["def"])
     objToPunch = thread.damage.stat(wep, objToPunch, 1)
+    print("new def: ", objToPunch.tag["stat"]["def"])
     objToPunch = thread.damage.attack(wep, objToPunch)
-    print("after hit(rough 82)\n", objToPunch.tag["health"])
+    print("after hit(80)\n", objToPunch.tag["health"])
 
 
 dmgTst(dmgTest, punchingBag)
