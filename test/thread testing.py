@@ -14,7 +14,7 @@ import thread.transfer
 # ~~make stat dmg work, srsly
 # ~~listen makes an ifinete loop, fix it
 # ~~tread.move.moveto seems broken (in 3,4,5 out 3,3,3) fix it
-# add SO MANY COMMENTS, DOCUMENT DAMNIT
+# ~~add SO MANY COMMENTS, DOCUMENT
 # ~~ram.free should be able to be fully cleared with "all"
 # ~~ram.read shouldnt return anything
 # ~~ram.free is freaking out about an empty list see if above is the issue
@@ -56,7 +56,7 @@ def dmgTst(wep, objToPunch):
     print("after hit(80)\n", objToPunch.tag["health"])
 
 
-dmgTst(dmgTest, punchingBag)
+# dmgTst(dmgTest, punchingBag)
 
 
 # langtest
@@ -64,7 +64,8 @@ listener = object.user("irrelevant", {"lang": [[[100, 100, 100], [100, 0, 0]], [
                        "irrelevant", "irrelevant", {"name": "listener"})
 
 
-# just store bc listen makes an ifinete loop
+# Ok ill figue out how to make listen work a SOME point but I dont want to rewright the entire thing so
+# later
 def langTest(listener):
     print(listener.trd["ram"])
     listener = thread.language.store(listener)
