@@ -100,13 +100,19 @@ movObj = object.object("irrelevant", {"mov": [0, 0, 0, 1, 1, 1]}, {"name": "movO
 
 
 def movTest(movObj):
-    print(movObj.tag["previous location"])
+    print(movObj.trd["mov"], "\n move +1,+1,+1")
+    movObj = thread.move.move(movObj)
+    print(movObj.trd["mov"], "\n warp to -10,0,0")
+    movObj = thread.move.warp(movObj, -10, 0, 0)
+    print(movObj.trd["mov"], "\n set acceleration 3,5,-20")
+    movObj = thread.move.accelerate(movObj, 3, 5, -20)
+    print(movObj.trd["mov"], "\n move +3,+5,-20")
     movObj = thread.move.move(movObj)
     print(movObj.trd["mov"])
 
 
 # tread.move.moveto seems broken (in 3,4,5 out 3,3,3) fix it
-# movTest(movObj)
+movTest(movObj)
 
 # If you think im going to test my joke phys module you are WRONG
 
