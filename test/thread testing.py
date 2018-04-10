@@ -99,16 +99,16 @@ movObj = object.object("irrelevant", {"mov": [0, 0, 0, 1, 1, 1]}, {"name": "movO
                                                                             "previous location": [0, 0, 0]})
 
 
-def movTest(movObj):
-    print(movObj.trd["mov"], "\n move +1,+1,+1")
-    movObj = thread.move.move(movObj)
-    print(movObj.trd["mov"], "\n warp to -10,0,0")
-    movObj = thread.move.warp(movObj, -10, 0, 0)
-    print(movObj.trd["mov"], "\n set acceleration 3,5,-20")
-    movObj = thread.move.accelerate(movObj, 3, 5, -20)
-    print(movObj.trd["mov"], "\n move +3,+5,-20")
-    movObj = thread.move.move(movObj)
-    print(movObj.trd["mov"])
+def movTest(moveableObj):
+    print(moveableObj.trd["mov"], "\n move +1,+1,+1")
+    moveableObj = thread.move.move(moveableObj)
+    print(moveableObj.trd["mov"], "\n warp to -10,0,0")
+    moveableObj = thread.move.warp(moveableObj, -10, 0, 0)
+    print(moveableObj.trd["mov"], "\n set acceleration 3,5,-20")
+    moveableObj = thread.move.accelerate(moveableObj, 3, 5, -20)
+    print(moveableObj.trd["mov"], "\n move +3,+5,-20")
+    moveableObj = thread.move.move(moveableObj)
+    print(moveableObj.trd["mov"])
 
 
 # tread.move.moveto seems broken (in 3,4,5 out 3,3,3) fix it
