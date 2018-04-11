@@ -112,24 +112,29 @@ def movTest(moveableObj):
 
 
 # tread.move.moveto seems broken (in 3,4,5 out 3,3,3) fix it
-movTest(movObj)
+# movTest(movObj)
 
 # If you think im going to test my joke phys module you are WRONG
 
 
 # ram testing
 ramStore = object.object("irrelevant", {"ram": []}, {"name": "ramStore"})
+usrStore = object.user("irrelevant", {"ram": None}, None, [[], [], []], {"name": "usrstore"})
 
 
-def ramTest(ramStore):
-    ramStore = thread.ram.load(ramStore, "hi")
-    ramStore = thread.ram.load(ramStore, "hi1")
-    thread.ram.read(ramStore)
-    ramStore = thread.ram.free(ramStore, None)
-    print(ramStore.trd["ram"])
+def ramTest(ramObj, ramUsr):
+    ramObj = thread.ram.load(ramObj, "hi")
+    ramObj = thread.ram.load(ramObj, "hi1")
+    thread.ram.read(ramObj)
+    ramObj = thread.ram.free(ramObj, "all")
+    ramObj = thread.ram.load(ramObj, "ma name jef")
+    ramUsr.trd["ram"] = ramObj.trd["ram"]
+    ramUsr = thread.ram.store(ramUsr, "jeff's name", 20)
+    print(ramUsr.mem[1][0].d)
+    print(ramObj.trd["ram"])
 
 
-# ramTest(ramStore)
+ramTest(ramStore, usrStore)
 
 # Tasker tested recently-ish just needs reformattiong
 
