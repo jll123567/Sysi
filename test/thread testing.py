@@ -134,22 +134,22 @@ def ramTest(ramObj, ramUsr):
     print(ramObj.trd["ram"])
 
 
-ramTest(ramStore, usrStore)
+# ramTest(ramStore, usrStore)
 
 # Tasker tested recently-ish just needs reformattiong
 
 # transfer
-iface0 = object.object("irrelevant", {"trnsf": None}, {"name": "iface0"})
-iface1 = object.object("irrelevant", {"trnsf": object.data("hello", {"name": "dataToSend", "sender": None})},
+iface0 = object.object("irrelevant", {"transf": None}, {"name": "iface0"})
+iface1 = object.object("irrelevant", {"transf": object.data("hello", {"name": "dataToSend", "sender": None})},
                        {"name": "iface1"})
 
 
 def sendTest(if0, if1):
-    if0 = thread.transfer.send(if0, if1, if1.trd["trnsf"])
-    print("\n", if0.trd["trnsf"].d)
+    if0 = thread.transfer.send(if0, if1, if1.trd["transf"])
+    print("\n", if0.trd["transf"].d)
 
 
-# sendTest(iface0, iface1)
+sendTest(iface0, iface1)
 
 
 # Visual is sooooooooo broken so Ill just redo it at this point
