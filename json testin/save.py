@@ -1,5 +1,5 @@
 # import
-# import object
+import object
 
 
 # setup
@@ -10,6 +10,7 @@ def saveUni(uni, fileName):
         uni.funct) + "," + str(uni.rule) + "," + str(uni.tag)
     sameEnd = ")\n    return uni\n# END AUTO GENERATED CODE\n# TO USE: IMPORT THIS FILE AND RUN " + fileName + ".load()"
     file.write(sameBegin + variableMiddle + sameEnd)
+    file.close()
 
 
 def saveScn(scn, fileName):
@@ -18,6 +19,7 @@ def saveScn(scn, fileName):
     variableMiddle = str(scn.scp) + "," + str(scn.obj) + "," + str(scn.loc) + "," + str(scn.tag)
     sameEnd = ")\n    return scn\n# END AUTO GENERATED CODE\n# TO USE IMPORT THIS FILE AND RUN " + fileName + ".load()"
     file.write(sameBegin + variableMiddle + sameEnd)
+    file.close()
 
 
 def saveScnExe(scn, fileName):
@@ -43,10 +45,31 @@ def saveScnExe(scn, fileName):
     saveEndExStart = ")\n    return scn\ndef execute():\n"
     fileEnd = "# END AUTO GENERATED CODE\n# TO USE IMPORT THIS FILE AND RUN " + fileName + ".load()"
     file.write(fileStart + saveScnStr + saveEndExStart + initialVar + script + printEnd + fileEnd)
+    file.close()
 
+
+# outputs the object as a json file
+# use: objToJson(<filename>, <obj>)
+# requires: obj, space for <filename>.json
+def objToJson(filename, obj):
+    file = open(filename + ".json", "w")
+    mod = '"' + str(obj.mod) + '"'
+    trd = '"' + str(obj.trd) + '"'
+    tag = '"' + str(obj.tag) + '"'
+    json = "{\"mod\":" + mod + ",\"trd\":" + trd + ",\"tag\":" + tag + '}'
+    file.write(json)
+    file.close()
+    print(json, "was saved to", filename + ".json")
+
+
+# testing
+testObj = object.object([[1, "0,0,0-0,0,0"], [1, ["0,0,0", ["0,0,0"], ["0,0,0"]]], [], ["a", [None]]],
+                        {"ram": "hello"},
+                        {"name": "testObj"})
 
 # runtime
 if __name__ == "__main__":
-    print("Save uni v10.0")
+    print("Save v10.0")
     # x = object.scene(["y = 2"], ["y = 1"], "'loc'", "'tag'")
     # saveScnExe(x, "test")
+    objToJson("Heyy", testObj)
