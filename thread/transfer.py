@@ -1,21 +1,15 @@
-# import
-from . import ram
-
-
 # setup
-# trnsf
-# interface=data receved
-# note: sent data must have a "sander" tag in dta.tag
+# transf
+# interface = container for receved data
 
-def send(obj0, obj1, dta):
+
+# sends <data> form an object to another
+# use <obj> = Sysh.thread.transfer.send(<obj>, <sender>, <dta>
+# requres: 2 obj (sender and obj) and dta
+def send(obj, sender, dta):
     pkg = dta
-    pkg.tag["sender"] = obj1.tag["name"]
-    obj0.trd["trnsf"] = pkg
-    return obj0
-
-
-def receive(obj):
-    obj = ram.load(obj, obj.trd["trnsf"])
+    pkg.tag.update({"sender": sender.tag["name"]})
+    obj.trd["transf"] = pkg
     return obj
 
 

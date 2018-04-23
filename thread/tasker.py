@@ -8,46 +8,58 @@ import time
 # profile=[f0,f1,f2,...]
 # first profile is current profile
 
-def step(usr):
-    print(usr.trd["tsk"][0][0])
-    usr.trd["tsk"][0].pop(0)
-    if usr.trd["tsk"][0] == []:
-        usr.trd["tsk"].pop(0)
-    return usr
+# steps through each command in current profile
+# use <obj> = Sysh.thread.tasker.step(<obj>)
+# requires: obj
+def step(obj):
+    print(obj.trd["tsk"][0][0])
+    obj.trd["tsk"][0].pop(0)
+    if obj.trd["tsk"][0] == []:
+        obj.trd["tsk"].pop(0)
+    return obj
 
 
-def run(usr):
-    for i in usr.trd["tsk"][0]:
+# runs entire profile
+# use <obj> = Sysh.thread.tasker.run(<obj>)
+# requires: obj
+def run(obj):
+    for i in obj.trd["tsk"][0]:
         print(i)
-    usr.trd["tsk"].pop(0)
-    return usr
+    obj.trd["tsk"].pop(0)
+    return obj
 
 
-def react(var, val, usr, index):
-    if var == val:
-        newMain = usr.trd["tsk"][index]
-        usr.trd["tsk"].pop(index)
-        usr.trd["tsk"].insert(index, newMain)
-        usr = run(usr)
-    return usr
+# sets the current profile to <profile>
+# use <obj> = Sysh.thread.tasker.setCurrentProfile(<obj>, <task profile>)
+# requires: obj
+def setCurrentProfile(obj, profile):
+    obj.trd["tsk"].insert(0, profile)
+    return obj
 
 
-def await(var, val, usr, awaitProf):
-    waiting = True
-    while waiting:
-        if var == val:
-            waiting = False
-            usr = run(usr)
-        else:
-            usr.trd["tsk"].insert(0, awaitProf)
-            usr = step(usr)
-    return usr
+# adds a new profile to the end of the tasking queue
+# use <obj> = Sysh.thread.tasker.addProflie(<obj>, <task profile>)
+# requires: obj
+def addProfile(obj, profile):
+    obj.trd["tsk"].append(profile)
+    return obj
 
 
-def wait(t, usr):
+# ends a task
+# use <obj> = Sysh.thread.tasker.quitTask(<obj>, <index>)
+# requires: obj
+def quitTask(obj, index):
+    obj.trd["tsk"].pop(index)
+    return obj
+
+
+# waits <t> seconds before running <obj>
+# use <obj> = Sysh.thread.tasker.wait(<obj>, <int/float>)
+# requires: obj
+def wait(obj, t):
     time.sleep(t)
-    usr = run(usr)
-    return usr
+    obj = run(obj)
+    return obj
 
 
 # runtime
