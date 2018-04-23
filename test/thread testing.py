@@ -7,6 +7,7 @@ import thread.memMgnt
 import thread.move
 import thread.ram
 import thread.transfer
+import thread.tasker
 
 # TODO:
 # ~~thread.complex.solve does not do anything, ill fix it later
@@ -24,7 +25,7 @@ import thread.transfer
 # ~~transfer should use transf not trnsf for its label
 # ~~also obj.trd[<this thing>] is called a thread label
 # ~~visual sucks, fix it PLEASE
-# test after you change things
+# ~~test after you change things
 
 # cpx test
 cpxTest = object.object("mod not relevant", {"cpx": [[], []]}, {"name": "cpxTest"})
@@ -42,6 +43,7 @@ def cpxTst(probSolver):
 
 
 # cpxTst(cpxTest)
+
 
 # dmg test
 dmgTest = object.weapon("irrelevant", "", [[20, "atk"], [5, "def"]], {"name": "testWep"})
@@ -136,7 +138,37 @@ def ramTest(ramObj, ramUsr):
 
 # ramTest(ramStore, usrStore)
 
-# Tasker tested recently-ish just needs reformattiong
+# Tasker
+taskObj = object.user("irrelevant",
+                      {"tsk": [["test", "test1", "test2"], ["test", "test1", "test2"], ["I sould not be current"]],
+                       "ram": []},
+                      "irrelevant", [[], [], []], {"name": "taskObj"})
+
+
+def tskTest(taskedObj):
+    print(taskedObj.trd["tsk"])
+    taskedObj = thread.tasker.step(taskedObj)
+    taskedObj = thread.tasker.step(taskedObj)
+    taskedObj = thread.tasker.step(taskedObj)
+    print(taskedObj.trd["tsk"])
+    taskedObj = thread.tasker.run(taskedObj)
+    print(taskedObj.trd["tsk"])
+    taskedObj = thread.tasker.addProfile(taskedObj, ["oh hi"])
+    taskedObj = thread.tasker.setCurrentProfile(taskedObj, ["im here too"])
+    taskedObj = thread.tasker.addProfile(taskedObj, ["oh hi"])
+    print(taskedObj.trd["tsk"])
+    taskedObj = thread.tasker.quitTask(taskedObj, -1)
+    print(taskedObj.trd["tsk"])
+    for i in range(0, 10):
+        if i == 2:
+            taskedObj = thread.tasker.wait(taskedObj, 5)
+        else:
+            print("b \n")
+    print(taskedObj.trd["tsk"])
+
+
+# tskTest(taskObj)
+
 
 # transfer
 iface0 = object.object("irrelevant", {"transf": None}, {"name": "iface0"})
@@ -149,7 +181,7 @@ def sendTest(if0, if1):
     print("\n", if0.trd["transf"].d)
 
 
-sendTest(iface0, iface1)
+# sendTest(iface0, iface1)
 
 
 # Visual is sooooooooo broken so Ill just redo it at this point

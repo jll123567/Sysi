@@ -33,7 +33,7 @@ def run(obj):
 # use <obj> = Sysh.thread.tasker.setCurrentProfile(<obj>, <task profile>)
 # requires: obj
 def setCurrentProfile(obj, profile):
-    obj.trd["tsk"][0] = profile
+    obj.trd["tsk"].insert(0, profile)
     return obj
 
 
@@ -42,6 +42,14 @@ def setCurrentProfile(obj, profile):
 # requires: obj
 def addProfile(obj, profile):
     obj.trd["tsk"].append(profile)
+    return obj
+
+
+# ends a task
+# use <obj> = Sysh.thread.tasker.quitTask(<obj>, <index>)
+# requires: obj
+def quitTask(obj, index):
+    obj.trd["tsk"].pop(index)
     return obj
 
 
