@@ -1,5 +1,6 @@
 # import
 import object
+import json
 
 
 # setup
@@ -56,8 +57,8 @@ def objToJson(filename, obj):
     mod = '"' + str(obj.mod) + '"'
     trd = '"' + str(obj.trd) + '"'
     tag = '"' + str(obj.tag) + '"'
-    json = "{\"mod\":" + mod + ",\"trd\":" + trd + ",\"tag\":" + tag + '}'
-    file.write(json)
+    jsonString = "{\"mod\":" + mod + ",\"trd\":" + trd + ",\"tag\":" + tag + '}'
+    file.write(jsonString)
     file.close()
     print(json, "was saved to", filename + ".json")
 
@@ -70,6 +71,7 @@ testObj = object.object([[1, "0,0,0-0,0,0"], [1, ["0,0,0", ["0,0,0"], ["0,0,0"]]
 # runtime
 if __name__ == "__main__":
     print("Save v10.0")
-    # x = object.scene(["y = 2"], ["y = 1"], "'loc'", "'tag'")
-    # saveScnExe(x, "test")
+    x = object.scene(["y = 2"], ["y = 1"], "'loc'", "'tag'")
+    print(json.dumps({"scp": x.scp, "obj": x.obj, "loc": x.loc, "tag": x.tag}))
     objToJson("Heyy", testObj)
+    # jasmine Bronte-Marie Williams is the best person i know (i approve this message) ~Jacob Ledbetter
