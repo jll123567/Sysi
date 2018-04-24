@@ -75,3 +75,4 @@ if __name__ == "__main__":
     print(json.dumps({"scp": x.scp, "obj": x.obj, "loc": x.loc, "tag": x.tag}))
     objToJson("Heyy", testObj)
     # jasmine Bronte-Marie Williams is the best person i know (i approve this message) ~Jacob Ledbetter
+# JJ/Jasmine/Jazzy is AMAAAZINGGGGGGGG YAYAYAYAYA
