@@ -60,6 +60,17 @@ def objToJson(filename, obj):
     print(jsonString, "was saved to", filename + ".json")
 
 
+# de
+# us
+# req
+def jsonToObj(filepath, storageVariable):
+    file = open(filepath, 'r')
+    jsonString = file.read()
+    jsonString = json.loads(jsonString)
+    storageVariable = object.object(jsonString["mod"], jsonString["trd"], jsonString["tag"])
+    return storageVariable
+
+
 # testing
 testObj = object.object([[1, "0,0,0-0,0,0"], [1, ["0,0,0", ["0,0,0"], ["0,0,0"]]], [], ["a", [None]]],
                         {"ram": "hello"},
@@ -69,5 +80,8 @@ testObj = object.object([[1, "0,0,0-0,0,0"], [1, ["0,0,0", ["0,0,0"], ["0,0,0"]]
 if __name__ == "__main__":
     print("Save v10.0")
     objToJson("Heyy", testObj)
+    testObj = None
     # jasmine Bronte-Marie Williams is the best person i know (i approve this message) ~Jacob Ledbetter
 # JJ/Jasmine/Jazzy is AMAAAZINGGGGGGGG YAYAYAYAYA
+    testObj = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json", testObj)
+    print(testObj)
