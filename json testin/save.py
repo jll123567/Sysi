@@ -60,15 +60,15 @@ def objToJson(filename, obj):
     print(jsonString, "was saved to", filename + ".json")
 
 
-# de
-# us
-# req
-def jsonToObj(filepath, storageVariable):
+# take the json from <filepath> and returns the object inside
+# storageVar = jsonToObj(<filepath>)
+# requires: sysh object stored in a json file
+def jsonToObj(filepath):
     file = open(filepath, 'r')
     jsonString = file.read()
     jsonString = json.loads(jsonString)
-    storageVariable = object.object(jsonString["mod"], jsonString["trd"], jsonString["tag"])
-    return storageVariable
+    obj = object.object(jsonString["mod"], jsonString["trd"], jsonString["tag"])
+    return obj
 
 
 # testing
@@ -81,7 +81,8 @@ if __name__ == "__main__":
     print("Save v10.0")
     objToJson("Heyy", testObj)
     testObj = None
-    # jasmine Bronte-Marie Williams is the best person i know (i approve this message) ~Jacob Ledbetter
-# JJ/Jasmine/Jazzy is AMAAAZINGGGGGGGG YAYAYAYAYA
-    testObj = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json", testObj)
     print(testObj)
+    testObj = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
+    print(testObj)
+    # jasmine Bronte-Marie Williams is the best person i know (i approve this message) ~Jacob Ledbetter
+    # JJ/Jasmine/Jazzy is AMAAAZINGGGGGGGG YAYAYAYAYA
