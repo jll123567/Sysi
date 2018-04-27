@@ -54,7 +54,23 @@ def saveScnExe(scn, fileName):
 # requires: obj, space for <filename>.json
 def objToJson(filename, obj):
     file = open(filename + ".json", "w")
-    jsonString = json.dumps({"mod": obj.mod, "trd": obj.trd, "tag": obj.tag})
+    if isinstance(obj, object.object):
+        jsonString = json.dumps({"mod": obj.mod, "trd": obj.trd, "tag": obj.tag})
+    elif isinstance(obj, object.user):
+        jsonString = json.dumps({"mod": obj.mod, "trd": obj.trd, "prs": obj.prs, "mem": obj.mem, "tag": obj.tag})
+    elif isinstance(obj, object.weapon):
+        jsonString = json.dumps({"mod": obj.mod, "trd": obj.trd, "dmg": obj.dmg, "tag": obj.tag})
+    elif isinstance(obj, object.data):
+        jsonString = json.dumps({"d": obj.d, "tag": obj.tag})
+    elif isinstance(obj, object.container):
+        jsonString = json.dumps({"org": obj.bnd, "bnd": obj.bnd, "tag": obj.tag})
+    elif isinstance(obj, object.scene):
+        jsonString = json.dumps({"scp": obj.scp, "obj": obj.obj, "loc": obj.loc, "tag": obj.tag})
+    elif isinstance(obj, object.universe):
+        jsonString = json.dumps({"tl": obj.tl, "scn": obj.scn, "obj": obj.obj, "cont": obj.cont, "funct": obj.funct,
+                                 "rule": obj.rule, "tag": obj.tag})
+    else:
+        raise Exception("File not created, not a system object")
     file.write(jsonString)
     file.close()
     print(jsonString, "was saved to", filename + ".json")
@@ -72,9 +88,7 @@ def jsonToObj(filepath):
 
 
 # testing
-testObj = object.object([[1, "0,0,0-0,0,0"], [1, ["0,0,0", ["0,0,0"], ["0,0,0"]]], [], ["a", [None]]],
-                        {"ram": "hello"},
-                        {"name": "testObj"})
+testObj = object.data({"wow": "hello"}, {"name": "testObj"})
 
 # runtime
 if __name__ == "__main__":
@@ -82,7 +96,7 @@ if __name__ == "__main__":
     objToJson("Heyy", testObj)
     testObj = None
     print(testObj)
-    testObj = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
+    # testObj = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
     print(testObj)
     # jasmine Bronte-Marie Williams is the best person i know (i approve this message) ~Jacob Ledbetter
     # JJ/Jasmine/Jazzy is AMAAAZINGGGGGGGG YAYAYAYAYA
