@@ -83,8 +83,30 @@ def jsonToObj(filepath):
     file = open(filepath, 'r')
     jsonString = file.read()
     jsonString = json.loads(jsonString)
-    obj = object.object(jsonString["mod"], jsonString["trd"], jsonString["tag"])
-    return obj
+    if "mod" in jsonString:
+        if "mem" in jsonString:
+            usr = object.user(jsonString["mod"], jsonString["trd"], jsonString["prs"],
+                              jsonString["mem"], jsonString["tag"])
+            return usr
+        elif "dmg" in jsonString:
+            wep = object.weapon(jsonString["mod"], jsonString["trd"], jsonString["dmg"], jsonString["tag"])
+            return wep
+        else:
+            obj = object.object(jsonString["mod"], jsonString["trd"], jsonString["tag"])
+            return obj
+    elif "d" in jsonString:
+        dta = object.data(jsonString["d"], jsonString["tag"])
+        return dta
+    elif "org" in jsonString:
+        cont = object.container(jsonString["org"], jsonString["bnd"], jsonString["tag"])
+        return cont
+    elif "scp" in jsonString:
+        scn = object.scene(jsonString["scp"], jsonString["obj"], jsonString["loc"], jsonString["tag"])
+        return scn
+    else:
+        uni = object.universe(jsonString["tl"], jsonString["scn"], jsonString["obj"], jsonString["cont"],
+                              jsonString["funct"], jsonString["rule"], jsonString["tag"])
+        return uni
 
 
 # testing
