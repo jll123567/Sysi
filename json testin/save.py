@@ -110,15 +110,45 @@ def jsonToObj(filepath):
 
 
 # testing
-testObj = object.data({"wow": "hello"}, {"name": "testObj"})
+testObj = object.object({"wow": "hello"}, {"also dict": "yep"}, {"name": "testObj"})
+testUsr = object.user("i", "am", "full", "of", "string")
+testWep = object.weapon(0.1, 0.2, 0.3, 0.5)
+testDta = object.data(("huh", "what?"), ("oh", 0, 2))
+testCont = object.container([0, 1, 2, 3], ["hi", "bye"], ["so", True])
+testScn = object.scene(True, False, True, False)
+testUni = object.universe(None, None, None, None, None, None, None)
 
 # runtime
 if __name__ == "__main__":
     print("Save v10.0")
     objToJson("Heyy", testObj)
     testObj = None
-    print(testObj)
-    # testObj = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
-    print(testObj)
+    testObj = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
+    print(testObj.mod)
+    objToJson("Heyy", testUsr)
+    testUsr = None
+    testUsr = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
+    print(testUsr.prs)
+    objToJson("Heyy", testWep)
+    testWep = None
+    testWep = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
+    print(testWep.dmg)
+    objToJson("Heyy", testDta)
+    testDta = None
+    testDta = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
+    print(testDta.d)
+    objToJson("Heyy", testCont)
+    testCont = None
+    testCont = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
+    print(testCont.bnd)
+    objToJson("Heyy", testScn)
+    testScn = None
+    testScn = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
+    print(testScn.scp)
+    objToJson("Heyy", testUni)
+    testUni = None
+    testUni = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
+    print(testUni.rule)
+    print("TEST COMPLETE")
     # jasmine Bronte-Marie Williams is the best person i know (i approve this message) ~Jacob Ledbetter
     # JJ/Jasmine/Jazzy is AMAAAZINGGGGGGGG YAYAYAYAYA
