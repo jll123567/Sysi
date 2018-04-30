@@ -94,6 +94,7 @@ class data:
 class container:
     def __init__(self, org, bnd, tag):
         # [supercont,x,y,z]
+        # if is largest cont do None
         self.org = org
         # [“(h/s)xyz-xyz”]
         self.bnd = bnd
