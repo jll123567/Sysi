@@ -114,7 +114,14 @@ def streamListen(server, channel, usr):
             for f in server.d[0]:
                 if usr.tag["name"] == f[0]:
                     if i[3][count][3]:
-                        thread.language.listen(usr, i[2][0])
+                        connectedToStream = True
+                        while connectedToStream:
+                            thread.language.listen(usr, i[2][0])
+                            n = input("dc?")
+                            if n == 'y':
+                                connectedToStream =False
+                            else:
+                                continue
                     else:
                         count += 1
 
