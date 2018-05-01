@@ -52,19 +52,6 @@ def odump(obj):
         print("object is either invalid, not named, or too large")
 
 
-def ddump(dev):
-    try:
-        print(dev.tag["name"])
-        print(" model")
-        dump_parser(dev.mod, 1)
-        print(" thread")
-        for i in dev.trd:
-            print("  ", dev.trd.index(i))
-            dump_parser(i, 2)
-    except:
-        print("device is either invalid, not named, or too large")
-
-
 def wdump(wep):
     try:
         print(wep.tag["name"])

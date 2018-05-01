@@ -7,7 +7,7 @@ import thread.tasker
 # host-usr
 # else-list of obj specified type only
 
-def setup(host, uni, usr, wep, dev, obj, dta, hostInternal):
+def setup(host, uni, usr, wep, obj, dta, hostInternal):
     thread.ram.store(host)
     for _ in host.trd["ram"]:
         thread.ram.free(host, None)
@@ -15,7 +15,6 @@ def setup(host, uni, usr, wep, dev, obj, dta, hostInternal):
     thread.ram.load(host, uni)
     thread.ram.load(host, usr)
     thread.ram.load(host, wep)
-    thread.ram.load(host, dev)
     thread.ram.load(host, obj)
     thread.ram.load(host, hostInternal)
 

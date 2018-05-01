@@ -68,13 +68,6 @@ class user:
                 print(obj.tag["name"], "is User")
 
 
-class device:
-    def __init__(self, mod, trd, tag):
-        self.mod = mod
-        self.tag = tag
-        self.trd = trd
-
-
 class weapon:
     def __init__(self, mod, trd, dmg, tag):
         self.mod = mod
@@ -120,7 +113,7 @@ class universe:
         # scene list in order like(0,0)(0,1)(1,0)(1,1)
         self.scn = scn
         # objlist
-        # [usr,wep,dev,obj,dta]
+        # [usr, wep, obj, dta]
         self.obj = obj
         # container struct
         self.cont = cont

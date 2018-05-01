@@ -4,7 +4,7 @@ import object
 
 # setup
 # group is a list of objects
-# groupType is a string desc by what objects are in the group (obj,usr,wep,dev,cont,scn,uni,dta) + multi for many types
+# groupType is a string desc by what objects are in the group (obj,usr,wepcont,scn,uni,dta) + multi for many types
 # groupCount is the number of object in the group
 # groupSort is a string desc of how the objects are sorted(optional)
 # groupRelevance is a string desc of why these objects are grouped(optional)

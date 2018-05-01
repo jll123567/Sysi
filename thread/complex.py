@@ -3,7 +3,7 @@
 
 
 # makes a new unsolved problem labled <problem> at <obj>.trd["cpx"] with the default solution None
-# Use: <obj> = Sysh.thread.complex.newProblem(<obj>, <string or dta>)
+# Use: <obj> = Sysh.thread.complex.ne   wProblem(<obj>, <string or dta>)
 # Requires: obj with cpx core @ trd
 def newProblem(obj, problem):
     obj.trd["cpx"][0].append(problem)
