@@ -2,18 +2,11 @@
 class object:
     def __init__(self, mod, trd, tag):
         self.mod = mod
-        # {“block1”:[...],...}
+        # Check ./adminProg/model.py
         self.trd = trd
-        # must have a name(“name”)
-        # must have a location([cont,”x,y,z,p,ya,r”])
         self.tag = tag
-        # necessary tags
-        # name=all useable names
-        # relevant_cont=smallest relevant container
-        # uni=Host universs
-        # id=“type”,”id (dervied from creation time)”
-        # event_log=[log of events]
-        # terms=guess
+        # required tags
+        # name
 
 
 class user:
@@ -21,16 +14,13 @@ class user:
         self.mod = mod
         self.tag = tag
         self.trd = trd
-        # working on it
         self.prs = prs
+        # working on it
+        self.mem = mem
         # [internal,real,storeage]
         # [obj,obj,...]timesort
-        self.mem = mem
 
-    def get(var):
-        return var
-
-    # noinspection PyMethodFirstArgAssignment
+    # Recomended once a year
     def usershipQuery(obj):
         print("can get info from and modify $HostUni")
         rww = input("y/n")
@@ -40,9 +30,11 @@ class user:
         rea = input("y/n")
         print("can add new functions to tasker")
         lrn = input("y/n")
+        print("attempts to reserve or increase the intregrity and freewill of objects or users")
+        mor = input("y/n")
         print("does not == another obj")
         unq = input("y/n")
-        total = [rww, rwi, rea, lrn, unq]
+        total = [rww, rwi, rea, lrn, unq, mor]
         fail = False
         for i in total:
             if i != 'y' or i != 'n':
@@ -52,18 +44,18 @@ class user:
             if i == 'n':
                 fail = True
                 if isinstance(obj, user):
-                    oldUsrDta = obj.prs + obj.mem
-                    obj = object(obj.mod, obj.trd, obj.tag)
-                    obj.tag["notes"] = oldUsrDta
+                    oldUsrDta = [obj.prs + obj.mem]
+                    objActual = object(obj.mod, obj.trd, obj.tag)
+                    obj.tag.update({"notes": oldUsrDta})
                     print(obj.tag["name"], "is Now Object")
-                    return obj
+                    return objActual
                 else:
                     print(obj.tag["name"], "is Object")
         if not fail:
             if isinstance(obj, object):
-                obj = user(obj.mod, obj.trd, obj.tag["notes"][0], obj.tag["notes"][1], obj.tag)
+                usr = user(obj.mod, obj.trd, obj.tag["notes"][0], obj.tag["notes"][1], obj.tag)
                 print(obj.tag["name"], "is Now User")
-                return obj
+                return usr
             else:
                 print(obj.tag["name"], "is User")
 
@@ -73,61 +65,59 @@ class weapon:
         self.mod = mod
         self.tag = tag
         self.trd = trd
-        # damage profile
         self.dmg = dmg
+        # damage profile
 
 
 class data:
-    def __init__(self, d, tag):
+    def __init__(self, storage, tag):
         self.tag = tag
-        # literally fucking anything
-        self.d = d
+        self.storage = storage
+        # anything you want to store
 
 
 class container:
     def __init__(self, org, bnd, tag):
+        self.org = org
         # [supercont,x,y,z]
         # if is largest cont do None
-        self.org = org
-        # [“(h/s)xyz-xyz”]
         self.bnd = bnd
+        # [“(h/s)xyz-xyz”]
         self.tag = tag
 
 
 class scene:
     def __init__(self, scp, obj, loc, tag):
-        # [time(time,tl branch),command0,command1,...]
         self.scp = scp
-        # ["obj0=object.w/e(s,t,u,f,f)", ...]
+        # [time(time,tl branch),command0,command1,...]
         self.obj = obj
+        # objlist
+        # [usr, wep, obj, dta]
+        # ["obj0=object.w/e(s,t,u,f,f)", ...]
+        self.loc = loc
         # cont
         # use a super cont that will contain all relevant containers
-        self.loc = loc
         self.tag = tag
 
 
 class universe:
     def __init__(self, tl, scn, obj, cont, funct, rule, tag):
-        # time line(wip)
         self.tl = tl
-        # scene list in order like(0,0)(0,1)(1,0)(1,1)
+        # time line(wip)
         self.scn = scn
+        # scene list in order like(0,0)(0,1)(1,0)(1,1)
+        self.obj = obj
         # objlist
         # [usr, wep, obj, dta]
-        self.obj = obj
-        # container struct
+        # ["obj0=object.w/e(s,t,u,f,f)", ...]
         self.cont = cont
-        # functions unique to uni
+        # container struct
         self.funct = funct
-        # pisx and other functions to always run while in uni
+        # functions unique to uni
         self.rule = rule
-        # tags
+        # phisx and other functions to always run while in uni
         self.tag = tag
 
-
-# necessary tags
-#        relevancy
-#        name
 
 # runtime
 if __name__ == "__main__":

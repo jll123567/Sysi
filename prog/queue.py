@@ -9,7 +9,7 @@ import thread.memMgnt
 # instruction="i/e : task"
 # e is for exact code like tasks and i is for inexact string or english like tasks
 def load(obj, memory):
-    obj.trd["que"] = obj.mem[0][memory].d
+    obj.trd["que"] = obj.mem[0][memory].storage
     return obj
 
 

@@ -11,40 +11,40 @@ import object
 # selected: an integar that is the index of the resolution you want(None if no resolution selected) ex: want b [a,b,c,d] selected:1
 
 def createError(errType, severity, message, resolutions, selected, name):
-    e = object.data(
+    e = object.storageata(
         {"code": (str(errType) + str(severity) + ":" + message), "resolutions": resolutions, "selected": selected},
         {"name": name, "relevancy": [0, 0, 0], "dataType": "err"})
     return e
 
 
 def setError(err, errType, severity, message, resolutions, selected):
-    err.d["code"] = (str(errType) + str(severity) + ":" + message)
-    err.d["resolutions"] = resolutions
-    err.d["selected"] = selected
+    err.storage["code"] = (str(errType) + str(severity) + ":" + message)
+    err.storage["resolutions"] = resolutions
+    err.storage["selected"] = selected
     return err
 
 
 def clearError(err):
-    err.d = None
+    err.storage = None
     err.tag["dataType"] = "none"
 
 
 def resolveError(err):
     resolveing = True
-    print(err.d["code"])
+    print(err.storage["code"])
     count = 0
-    for i in err.d["resolutions"]:
+    for i in err.storage["resolutions"]:
         print(str(count) + ":" + i)
         count += 1
     while resolveing:
         try:
             selected = input("resolution?:")
-            err.d["selected"] = int(selected)
+            err.storage["selected"] = int(selected)
         except ValueError:
             print("int only")
         else:
             resolveing = False
-    print(err.d, err.tag)
+    print(err.storage, err.tag)
     return err
 
 

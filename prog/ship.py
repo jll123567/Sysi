@@ -10,17 +10,17 @@
 
 
 def ship(u0, u1, shipType, db):
-    db.d.append([u0, u1, shipType])
+    db.storage.append([u0, u1, shipType])
     return db
 
 
 def sinkShip(db, index):
-    db.d.pop(index)
+    db.storage.pop(index)
     return db
 
 
 def dispDb(db):
-    for i in db.d:
+    for i in db.storage:
         print(i[0], ",", i[1], ",", i[2], ",")
 
 

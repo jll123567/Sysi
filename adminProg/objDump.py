@@ -71,7 +71,7 @@ def dtdump(dta):
     try:
         print(dta.tag["name"])
         print(" data")
-        dump_parser(dta.d, 1)
+        dump_parser(dta.storage, 1)
     except:
         print("data is either invalid, not named, or too large")
 

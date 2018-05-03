@@ -15,9 +15,9 @@ def createGroup(objList, groupType, name):
     return grp
 
 
-# takes data with a valid group in dta.d and makes a group
+# takes data with a valid group in dta.storage and makes a group
 def makeGroup(dta, groupType, name):
-    grp = object.data(dta.d, {"name": name, "groupType": groupType, "groupCount": len(dta.d)})
+    grp = object.data(dta.storage, {"name": name, "groupType": groupType, "groupCount": len(dta.storage)})
     return grp
 
 
