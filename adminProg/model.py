@@ -3,8 +3,14 @@
 # model stores any sort of model of the object
 # accepts png, stl, and the method below
 #
-#   Model format=[[scale,"x,y,z-x,y,z","..."],[scale,["x,y,z",["x,y,z","..."],["x,y,z","..."]],[that,all,again]],[scale,[[["original skpos","new pos","next"],[data for next point]],[next animation]]],[texture,[physx properties]]]
-#   assem [[scale,["x,y,z,p,ya,r",obj] and material = "assem"
+# Model format:
+#
+# {"geometry": {"scale": int, "points": ["x,y,z-x,y,z","more points"]},
+# "skeleton": {"scale": int, "points": [skeleton point"x,y,z",["points bound to it(by offset)"x,y,z","..."], [...]},
+# "animations": {animationName: {"scale": int, [[original skpos"x,y,z", new pos(1ms later)"x,y,z", "..."], [...]]},
+#       nextAnimation: [...]},
+# "material": {"texture": "./a_png_or something.jpeg", "physx": [physx properties(wip)]}
+# note: parts of assemblies {"scale": int,["x,y,z,pitch,yaw,roll",obj]} with "material": "assem"
 
 
 def makeModel(model, obj, material):

@@ -105,7 +105,8 @@ class universe:
         self.tl = tl
         # time line(wip)
         self.scn = scn
-        # scene list in order like(0,0)(0,1)(1,0)(1,1)
+        # scene list in or
+        # der like(0,0)(0,1)(1,0)(1,1)
         self.obj = obj
         # objlist
         # [usr, wep, obj, dta]
