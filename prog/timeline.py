@@ -2,7 +2,10 @@
 
 
 # setup
-# [[master line end point],[id,parent id,start offset,endpoint],...]
+# [[master line end point],[id,parent id,start time,end time],...]
+
+# for scenes
+# scn.scp[0] = [id, start]
 def fork(uni, lineId, parent, offset, endpoint):
     count = 0
     invalid = True
