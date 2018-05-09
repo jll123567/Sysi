@@ -82,7 +82,7 @@ class container:
         # [supercont,x,y,z]
         # if is largest cont do None
         self.bnd = bnd
-        # [“(h/s)xyz-xyz”]
+        # [“(h/s)x,y,z-x,y,z”]
         self.tag = tag
 
 

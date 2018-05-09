@@ -1,5 +1,5 @@
 # import
-import prog.error
+import error
 
 # setup
 # a small bug tracker like thing(idk)
@@ -15,7 +15,7 @@ def errorQueue(errs):
         queue.append(i)
     for i in queue:
         print(str(len(queue)) + " left to resolve")
-        prog.error.resolveError(i)
+        error.resolveError(i)
     print("queue empty exiting")
 
 
