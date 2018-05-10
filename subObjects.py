@@ -3,19 +3,20 @@
 # objects can be like groups without being groups
 # parent and child objects have a "sub" section in their thread
 
-# "sub": {"parent": <parent obj refernce>, "children": [[refrence, "position"], ...]}
+# "sub": {"parent": [reference, offset], "children": [reference, ...]}
 
-# refrences can be to any obj
-# position is the distance from the curent object's model origin in the fromat "x,y,z"
+# references can be to any obj
+# position is the distance of the  parent's position to the object's position in the format "x,y,z"
 # if a object has no children but a prent leave "children" set to an empty list ([])
 # if a object has no parent set "parent" to None
-# if an object has neither chilldren or a parent remove the "sub" entry or set it to None
-# children's model position are overidien in the parent.trd["sub"]
+# if an object has neither children or a parent remove the "sub" entry or set it to None
+# children's model position are overridden in the parent.trd["sub"]
 
-# ex parent: "sub": {"parent": None, "children": [[child0, "10,10,20.553"]]}
-# ex child: "sub": {"parent": parent0, "children":[[child1, "1,1,1"]]}
+# ex parent: "sub": {"parent": None, "children": [child0]}
+# ex child: "sub": {"parent": [parent0, "1,1,1"], "children":[child1]}
 
-def makeEmptyParrent(obj):
+
+def makeEmptyParent(obj):
     obj.trd.update({"sub": {"parent": None, "children": []}})
     return obj
 
@@ -25,23 +26,46 @@ def makeParent(obj, children):
     return obj
 
 
-def makeChild():
+def makeChild(obj, parent, offset):
+    obj.trd.update({"sub": {"parent": [parent, offset], "children": []}})
+    obj.trd["mov"] = "sub"
+    return obj
 
 
-
-def setParent():
-
-
-
-def setChildren():
+def setParent(obj, parent):
+    obj.trd["sub"]["parent"] = parent
+    return obj
 
 
-
-def removeParent():
-
-
-
-def removeSub():
+def setChildren(obj, children):
+    obj.trd["sub"]["children"] = children
+    return obj
 
 
+def addChild(obj, child):
+    obj.trd["sub"]["children"].append(child)
+    return obj
 
+
+def removeChild(obj, index):
+    obj.trd["sub"]["children"].pop(index)
+    return obj
+
+
+def removeParent(obj):
+    parentMov = obj.trd["sub"]["parent"][0].mov
+    offset = obj.trd["sub"]["parent"][1]
+    obj.trd["mov"] = [parentMov[0] + offset[0], parentMov[1] + offset[1], parentMov[2] + offset[2],
+                      parentMov[3], parentMov[4], parentMov[5]]
+    obj.trd["sub"]["parent"] = None
+    return obj
+
+
+def removeSub(obj):
+    obj.trd.remove("sub")
+    return obj
+
+
+# runtime
+if __name__ == "__main__":
+    print("subObjects v10")
