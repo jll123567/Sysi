@@ -69,3 +69,8 @@ def removeSub(obj):
 # runtime
 if __name__ == "__main__":
     print("subObjects v10")
+# to test
+# functions
+# assembleys and non assembleys
+# many children
+# mov updating
