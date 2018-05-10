@@ -13,9 +13,9 @@
 # note: parts of assemblies {"scale": int,["x,y,z,pitch,yaw,roll",obj]} with "material": "assem"
 
 
-def makeModel(model, obj, material):
-    obj.mod[0] = model
-    obj.mod[3] = material
+def makeModel(obj, model, material):
+    obj.mod["geometry"] = model
+    obj.mod["material"] = material
     return obj
 #    else:
 #        points=[[]]
@@ -44,36 +44,32 @@ def makeModel(model, obj, material):
 #        object.mod[0]=points
 
 
-def rigModel(rigging, obj):
-    obj.mod[1] = rigging
+def rigModel(obj, skeleton):
+    obj.mod["skeleton"] = skeleton
     return obj
 
 
 def setAnimations(obj, ani):
-    obj.mod[2] = ani
+    obj.mod["animations"] = ani
     return obj
 
 
-def addAnimation(animation, obj):
-    obj.mod[2].append(animation)
+def addAnimation(obj, animation):
+    obj.mod["animations"].update(animation)
     return obj
 
 
-def displaySysModel(obj):
-    for f in obj.mod[0]:
+"""def displaySysModel(obj):
+    print("scale:" + obj.mod["geometry"]["scale"] + "global units for one unit of this model")
+    for f in obj.mod["geometry"]["points"]:
         if isinstance(f, list):
             displaySysModel(f[1])
             print("@" + f[0])
-        elif isinstance(f, str):
-            print("scale:" + f + "a for each unit")
         else:
             print(f)
-    for i in obj.mod[1]:
-        print(i[0])
-        for f in i[1]:
-            print(f)
-        for f in i[2]:
-            print(f)
+    print(obj.mod["skeleton"]["scale"])
+    for i in obj.mod["skeleton"]["points"]:
+        print(i)
     print(obj.mod[2][0], "frames per second")
     for i in obj.mod[2][1]:
         print(i)
@@ -81,13 +77,13 @@ def displaySysModel(obj):
 
 
 def newAssem(obj, assem, ani, rig):
-    obj.mod[0] = assem
-    obj.mod[1] = rig
-    obj.mod[2] = ani
+    obj.mod["geometry"] = assem
+    obj.mod["skeleton"] = rig
+    obj.mod[""] = ani
     obj.mod[3] = "assem"
     return obj
 
-    # open("filename","mode")
+    # open("filename","mode")"""
 
 
 def imgAsModel(obj, file):

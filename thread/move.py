@@ -1,6 +1,8 @@
 # setup
 # mov
 #    [x pos,y pos,z pos,x accel,y accel, z accel]
+#
+# if obj is a sub obj mov will equal "sub"
 
 
 # sets obj's position in the thread
