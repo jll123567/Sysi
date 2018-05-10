@@ -34,6 +34,12 @@ def addAnimation(obj, animation):
     return obj
 
 
+def makeAssembly(obj):
+    obj.tag.update({"oldModel": obj.mod})
+    obj.mod = "assem"
+    return obj
+
+
 def imgAsModel(obj, file):
     obj.mod = file
     return obj
