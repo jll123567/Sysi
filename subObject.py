@@ -6,14 +6,15 @@
 # "sub": {"parent": [reference, offset], "children": [reference, ...]}
 
 # references can be to any obj
-# position is the distance of the  parent's position to the object's position in the format "x,y,z"
+# offset is the distance of the  parent's position to the object's position in the format [x,y,z]
+# if an object has one child put it in a list by its self
 # if a object has no children but a prent leave "children" set to an empty list ([])
 # if a object has no parent set "parent" to None
 # if an object has neither children or a parent remove the "sub" entry or set it to None
 # children's model position are overridden in the parent.trd["sub"]
 
 # ex parent: "sub": {"parent": None, "children": [child0]}
-# ex child: "sub": {"parent": [parent0, "1,1,1"], "children":[child1]}
+# ex child: "sub": {"parent": [parent0, [1,1,1]], "children":[child1]}
 
 
 def makeEmptyParent(obj):
@@ -32,8 +33,8 @@ def makeChild(obj, parent, offset):
     return obj
 
 
-def setParent(obj, parent, offest):
-    obj.trd["sub"]["parent"] = [parent, offest]
+def setParent(obj, parent, offset):
+    obj.trd["sub"]["parent"] = [parent, offset]
     obj.trd["mov"] = "sub"
     return obj
 
@@ -54,7 +55,15 @@ def removeChild(obj, index):
 
 
 def removeParent(obj):
-    parentMov = obj.trd["sub"]["parent"][0].mov
+
+    def getParentMov(obj):
+        par = obj.trd["sub"]["parent"][0]
+        if par.trd["mov"] == "sub":
+            return getParentMov(par)
+        else:
+            return par.trd["mov"]
+
+    parentMov = getParentMov(obj)
     offset = obj.trd["sub"]["parent"][1]
     obj.trd["mov"] = [parentMov[0] + offset[0], parentMov[1] + offset[1], parentMov[2] + offset[2],
                       parentMov[3], parentMov[4], parentMov[5]]
@@ -63,7 +72,7 @@ def removeParent(obj):
 
 
 def removeSub(obj):
-    obj.trd.remove("sub")
+    del obj.trd["sub"]
     return obj
 
 
