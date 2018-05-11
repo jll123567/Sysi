@@ -32,8 +32,9 @@ def makeChild(obj, parent, offset):
     return obj
 
 
-def setParent(obj, parent):
-    obj.trd["sub"]["parent"] = parent
+def setParent(obj, parent, offest):
+    obj.trd["sub"]["parent"] = [parent, offest]
+    obj.trd["mov"] = "sub"
     return obj
 
 
@@ -71,6 +72,6 @@ if __name__ == "__main__":
     print("subObjects v10")
 # to test
 # functions
-# assembleys and non assembleys
+# assemblies and non assemblies
 # many children
 # mov updating
