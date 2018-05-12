@@ -2,7 +2,7 @@
 import test.Thread
 # setup
 class object:
-    def __init__(self, mod=None, trd=test.class_Inherit_Test.Thread.thread(), tag={"name": None}):
+    def __init__(self, mod=None, trd=test.Thread.thread(), tag={"name": None}):
         self.mod = mod
         # Check ./adminProg/model.py
         self.trd = trd
