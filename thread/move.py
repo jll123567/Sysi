@@ -1,41 +1,44 @@
-import thread.Thread
 # setup
 # mov
-#    [x pos,y pos,z pos,x accel,y accel, z accel]
+#    x pos,y pos,z pos,x accel,y accel, z accel
 #
 # if obj is a sub obj mov will equal "sub"
 
-class mov(thread.Thread):
-    def __init__(self, self.mov):
+class mov():
+    def __init__(self, x, y, z, a, b, c):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.a = a
+        self.b = b
+        self.c = c
+
 
 # sets obj's position in the thread
 # use: <obj> = Sysh.thread.move.warp(<obj>, <int/float>, <int/float>, <int/float>)
 # requires: obj
-def warp(obj, x, y, z):
-    obj.trd["mov"][0] = x
-    obj.trd["mov"][1] = y
-    obj.trd["mov"][2] = z
-    return obj
+    def warp(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
 
 
 # sets object acceleration in thread
 # use: <obj> = Sysh.thread.move.accelerate(<obj>, <int/float>, <int/float>, <int/float>)
 # requires: obj
-def accelerate(obj, x, y, z):
-    obj.trd["mov"][3] = x
-    obj.trd["mov"][4] = y
-    obj.trd["mov"][5] = z
-    return obj
+    def accelerate(self, a, b, c):
+        self.a = a
+        self.b = b
+        self.c = c
 
 
 # moves obj based on acceleration
 # use: <obj> = Sysh.thread.move.move(<obj>)
 # requires: obj
-def move(obj):
-    obj.trd["mov"][0] += obj.trd["mov"][3]
-    obj.trd["mov"][1] += obj.trd["mov"][4]
-    obj.trd["mov"][2] += obj.trd["mov"][5]
-    return obj
+    def move(self):
+        self.x += self.a
+        self.y += self.b
+        self.z += self.c
 
 
 # runtime

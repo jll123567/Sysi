@@ -1,5 +1,5 @@
-import object
+import thread.move
 
 class thread():
-    def __init__(self):
-        pass
+    def __init__(self, mov=thread.mov()):
+        self.mov = mov
