@@ -1,9 +1,12 @@
+import thread.Thread
 # setup
 # mov
 #    [x pos,y pos,z pos,x accel,y accel, z accel]
 #
 # if obj is a sub obj mov will equal "sub"
 
+class mov(thread.Thread):
+    def __init__(self, self.mov):
 
 # sets obj's position in the thread
 # use: <obj> = Sysh.thread.move.warp(<obj>, <int/float>, <int/float>, <int/float>)

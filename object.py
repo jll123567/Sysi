@@ -1,9 +1,11 @@
+# import
+import thread.Thread
 # setup
 class object:
     def __init__(self, mod, trd, tag):
         self.mod = mod
         # Check ./adminProg/model.py
-        self.trd = trd
+        self.trd = thread.Thread.thread()
         self.tag = tag
         # required tags
         # name
