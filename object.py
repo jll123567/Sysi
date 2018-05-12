@@ -2,7 +2,7 @@
 class object:
     def __init__(self, mod, trd, tag):
         self.mod = mod
-        # Check ./adminProg/model.py
+        # Check ./admin_Prog/model.py
         self.trd = trd
         self.tag = tag
         # required tags
