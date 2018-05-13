@@ -1,5 +1,4 @@
 # import
-import thread.memMgnt
 
 
 # setup

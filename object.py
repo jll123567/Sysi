@@ -1,18 +1,25 @@
 # import
-import test.Thread
+from atribs import model, thread as thread
+import atribs.personality
+import atribs.memory
 # setup
 class object:
-    def __init__(self, mod=None, trd=test.class_Inherit_Test.Thread.thread(), tag={"name": None}):
+    def __init__(self, mod=atribs.model.sysModel(), trd=thread.trd(), tag={"name": None}):
         self.mod = mod
-        # Check ./adminProg/model.py
         self.trd = trd
         self.tag = tag
         # required tags
-        # name
+            # name
+
+    def makeModelAssembly(self):
+        oldModel = self.mod
+        self.tag.update({"oldModel": oldModel})
+        self.mod = "assem"
 
 
 class user:
-    def __init__(self, mod, trd, prs, mem, tag):
+    def __init__(self, mod=atribs.model.sysModel(), trd=thread.trd(), prs=atribs.personality, mem=atribs.memory,
+                 tag={"name": None}):
         self.mod = mod
         self.tag = tag
         self.trd = trd
@@ -21,6 +28,14 @@ class user:
         self.mem = mem
         # [internal,real,storeage]
         # [obj,obj,...]timesort
+
+    #def load(self, block, index, usr):
+    #    if block == 0:
+    #        print("no internal access")
+    #    elif block == 1:
+    #        self.trd.ram.load(usr, self.mem.real[index])
+    #    else:
+    #        self.trd.ram.load(usr, self.mem.extrnal[index])
 
     # Recomended once a year
     def usershipQuery(obj):

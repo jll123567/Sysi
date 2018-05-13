@@ -1,5 +1,5 @@
-import test.object as Sobject
-import test.move as move
+import object as Sobject
+import thread.move as move
 
 obj = Sobject.object()
 obj.trd.mov = move.mov()

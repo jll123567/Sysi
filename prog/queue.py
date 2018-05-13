@@ -1,6 +1,6 @@
 # import
 import object
-import thread.memMgnt
+import atribs.memory
 
 
 # setup
@@ -20,7 +20,7 @@ def close(obj):
 
 def save(obj, tags):
     lastQueue = object.data(obj.trd["que"], tags)
-    obj = thread.memMgnt.store(obj, 1, lastQueue)
+    obj = atribs.memory.store(obj, 1, lastQueue)
     print("queue saved to: ", lastQueue, "@", obj.tag["name"], ".mem")
     return obj
 

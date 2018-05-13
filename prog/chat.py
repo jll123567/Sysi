@@ -5,7 +5,7 @@ import thread.language
 # setup
 # server=dta
 # [[usrlist],     [channels]]
-# [user,is_admin] [name,msg,stream,perms]
+# [atribs,is_admin] [name,msg,stream,perms]
 #                      ["name:text"][level,[users,...]][r,w,s,l]
 def addServer(server, pram):
     server.storage = pram
@@ -53,7 +53,7 @@ def addMessage(server, channel, message, usr):
                     if f[3][count]:
                         f[1].append(usr.tag["name"] + ":" + message)
                     else:
-                        print("can not add message: user not permitted")
+                        print("can not add message: atribs not permitted")
         else:
             count += 1
 

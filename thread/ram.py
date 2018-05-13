@@ -1,7 +1,7 @@
 # import
 import re
 import object
-import thread.memMgnt
+import atribs.memory
 
 
 # setup
@@ -43,7 +43,7 @@ def search(obj, query):
 # requires: usr
 def store(usr, storedRamName, storedRamImportance):
     dta = object.data([usr.trd["ram"]], {"name": storedRamName, "relevancy": [0, 0, storedRamImportance]})
-    usr = thread.memMgnt.store(usr, 1, dta)
+    usr = atribs.memory.store(usr, 1, dta)
     return usr
 
 

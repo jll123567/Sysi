@@ -36,7 +36,7 @@ def udump(usr):
         print(" pers")
         dump_parser(usr.pers, 1)
     except:
-        print("not a valid user,no name or container specified, or user is too large")
+        print("not a valid atribs,no name or container specified, or atribs is too large")
 
 
 def odump(obj):

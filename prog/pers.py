@@ -1,7 +1,7 @@
 # setup
 # [limits,goals,functions,dict]
 # "functname()"
-# goals are bool checks that a user attempts to mke true and are in urgency order
+# goals are bool checks that a atribs attempts to mke true and are in urgency order
 # limits are similar but are meant to not be made true and are still in urgency order
 # tasker profile(auto-get)
 # {"word": refrenceCount(int), "...": ...}
@@ -53,19 +53,19 @@ def clearPrs(usr):
 
 
 """Terms:
-    aimless:user has no goals
-    unsatisfied:user has one or more unsolvable goals
-    satisfied:user has met all goals
-    unlimited:user has no limiters
-    limited:user has limiters
+    aimless:atribs has no goals
+    unsatisfied:atribs has one or more unsolvable goals
+    satisfied:atribs has met all goals
+    unlimited:atribs has no limiters
+    limited:atribs has limiters
     simulated:object has  a unofficial pers
     404<term>:cannot get <term>
-    Conflicted:user cannot complete a goal w/o satisfying a limiter
+    Conflicted:atribs cannot complete a goal w/o satisfying a limiter
     observe:has std observer functions
     admin:has all possible functions(within a certain context)
-    jailed:does not have some or any standard user functions
+    jailed:does not have some or any standard atribs functions
    Note:
-       pers only helps predict user behavior and may be slightly inaccurate due to system run location(you can only guess what you know.)"""
+       pers only helps predict atribs behavior and may be slightly inaccurate due to system run location(you can only guess what you know.)"""
 
 # runtime
 if __name__ == "__main__":
