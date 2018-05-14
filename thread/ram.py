@@ -1,67 +1,55 @@
 # import
 import re
-import object
-import atribs.memory
 
 
 # setup
 # random access memory
 # [ w/e ,...]
 
-# loads <dta> into ram
-# use: <obj> = Sysh.thread.ram.laod(<obj>, <any>)
-# requires: obj
-def load(obj, dta):
-    obj.trd["ram"].append(dta)
-    return obj
+class ram:
+    def __init__(self, storage):
+        self.storage = storage
 
+    # loads <dta> into ram
+    # use: <obj> = Sysh.thread.ram.laod(<obj>, <any>)
+    # requires: obj
+    def load(self, dta):
+        self.storage.append(dta)
 
-# reads <obj>'s ram
-# use: Sysh.thread.ram.read(<obj>)
-# requires: obj
-def read(obj):
-    for i in obj.trd["ram"]:
-        print(i)
-
-
-# searches ram for <query> using re.search
-# use: <obj> = Sysh.thread.ram.search(<obj>, <str or other re useable match>)
-# requires: obj
-def search(obj, query):
-    matched = True
-    for i in obj.trd["ram"]:
-        if re.search(query, i):
+    # reads <obj>'s ram
+    # use: Sysh.thread.ram.read(<obj>)
+    # requires: obj
+    def read(self):
+        for i in self.storage:
             print(i)
-            print(obj.trd["ram"].index(i))
-            matched = True
-    if not matched:
-        print("no results. try sysh.thred.ram.read(obj)")
 
+    # searches ram for <query> using re.search
+    # use: <obj> = Sysh.thread.ram.search(<obj>, <str or other re useable match>)
+    # requires: obj
+    def search(self, query):
+        matched = True
+        for i in self.storage:
+            if re.search(query, i):
+                print(i)
+                print(self.storage.index(i))
+                matched = True
+        if not matched:
+            print("no results. try obj.sysh.thred.ram.read()")
 
-# saves a copy of ram ro memory
-# use: <usr> = Sysh.thread.ram.store(<usr>, <string>, <int between 0 and 100>)
-# requires: usr
-def store(usr, storedRamName, storedRamImportance):
-    dta = object.data([usr.trd["ram"]], {"name": storedRamName, "relevancy": [0, 0, storedRamImportance]})
-    usr = atribs.memory.store(usr, 1, dta)
-    return usr
-
-
-# removes the <index>th iem from ram
-# use: <obj> = Sysh.thread.ram.free(<obj>, <int, None, or string "all">)
-# requires: obj
-# Inputs
-#   int is the int-th item in ram
-#   None removes the last (or -1st) item in ram
-#   "all" sets ram to []
-def free(obj, index):
-    if index is None:
-        obj.trd["ram"].pop(-1)
-    elif index == "all":
-        obj.trd["ram"] = []
-    else:
-        obj.trd["ram"].pop(index)
-    return obj
+    # removes the <index>th iem from ram
+    # use: <obj> = Sysh.thread.ram.free(<obj>, <int, None, or string "all">)
+    # requires: obj
+    # Inputs
+    #   int is the int-th item in ram
+    #   None removes the last (or -1st) item in ram
+    #   "all" sets ram to []
+    def free(self, index):
+        if index is None:
+            self.storage.pop(-1)
+        elif index == "all":
+            self.storage = []
+        else:
+            self.storage.pop(index)
 
 
 # runtime

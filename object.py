@@ -1,44 +1,70 @@
 # import
-from atribs import model, thread as thread
-import atribs.personality
+from random import randint
+import atribs.thread
+import atribs.model
+import atribs.damage
 import atribs.memory
+import atribs.personality
+
+
 # setup
 class object:
-    def __init__(self, mod=atribs.model.sysModel(), trd=thread.trd(), tag={"name": None}):
+    def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(), tag={"name": None}):
         self.mod = mod
         self.trd = trd
         self.tag = tag
         # required tags
-            # name
+        # name
 
     def makeModelAssembly(self):
         oldModel = self.mod
+        # noinspection PyTypeChecker
         self.tag.update({"oldModel": oldModel})
         self.mod = "assem"
 
+    # damages the internal of obj (mem type only on usr)
+    # Use: usr.Sysh.object.internal(<wep>)
+    # Requires: usr|obj, wep
+    def internalDamage(self, wep):
+        for i in wep.dmg.damages:
+            if i[1] == "mem":
+                working = True
+                while working:
+                    # noinspection PyBroadException
+                    try:
+                        self.mem.real.pop(randint(0, 9999999999))
+                    except IndexError:
+                        print("mem.remove fail /n retrying")
+                    except:
+                        print("unknown error, is this a user?")
+                    else:
+                        working = False
 
-class user:
-    def __init__(self, mod=atribs.model.sysModel(), trd=thread.trd(), prs=atribs.personality, mem=atribs.memory,
-                 tag={"name": None}):
-        self.mod = mod
-        self.tag = tag
-        self.trd = trd
-        self.prs = prs
-        # working on it
-        self.mem = mem
-        # [internal,real,storeage]
-        # [obj,obj,...]timesort
+            elif "trd" == i[1]:
+                self.trd.tsk.current = None
+            else:
+                print("unsupported")
 
-    #def load(self, block, index, usr):
-    #    if block == 0:
-    #        print("no internal access")
-    #    elif block == 1:
-    #        self.trd.ram.load(usr, self.mem.real[index])
-    #    else:
-    #        self.trd.ram.load(usr, self.mem.extrnal[index])
+    # modifies the value of <stat>
+    # Use: obj.Sysh.thread.damage.stat(<wep>, <index of stat to modify>)
+    # Requires: obj, wep, matching stat in obj tags and dmg profile of wep
+    def statDamage(self, wep, dmgIndex):
+        for key in self.tag["stat"].keys():
+            if key == wep.dmg.damages[dmgIndex][1]:
+                self.tag["stat"][key] -= wep.dmg[dmgIndex][0]
+            else:
+                print("obj does not have the stat ", wep.dmg[dmgIndex][1], " \nDid you mispell it?")
+
+    # remove health based on atk
+    # Use: obj.Sysh.thread.damage.attack(<wep>)
+    # Requires: obj wih health tag, wep with health in prof
+    def attack(self, wep):
+        for i in wep.dmg.damages:
+            if i[1] == "health":
+                self.tag["health"] -= i[0]
 
     # Recomended once a year
-    def usershipQuery(obj):
+    def usershipQuery(self):
         print("can get info from and modify $HostUni")
         rww = input("y/n")
         print("can get and store objects in memory")
@@ -60,25 +86,55 @@ class user:
                 break
             if i == 'n':
                 fail = True
-                if isinstance(obj, user):
-                    oldUsrDta = [obj.prs + obj.mem]
-                    objActual = object(obj.mod, obj.trd, obj.tag)
-                    obj.tag.update({"notes": oldUsrDta})
-                    print(obj.tag["name"], "is Now Object")
+                if isinstance(self, user):
+                    oldUsrDta = [self.prs, self.mem]
+                    objActual = object(self.mod, self.trd, self.tag)
+                    # noinspection PyTypeChecker
+                    self.tag.update({"oldUsrDta": oldUsrDta})
+                    print(self.tag["name"], "is Now Object")
                     return objActual
                 else:
-                    print(obj.tag["name"], "is Object")
+                    print(self.tag["name"], "is Object")
         if not fail:
-            if isinstance(obj, object):
-                usr = user(obj.mod, obj.trd, obj.tag["notes"][0], obj.tag["notes"][1], obj.tag)
-                print(obj.tag["name"], "is Now User")
+            if isinstance(self, object):
+                usr = user(self.mod, self.trd, self.tag["notes"][0], self.tag["notes"][1], self.tag)
+                print(self.tag["name"], "is Now User")
                 return usr
             else:
-                print(obj.tag["name"], "is User")
+                print(self.tag["name"], "is User")
 
 
-class weapon:
-    def __init__(self, mod, trd, dmg, tag):
+class user(object):
+    def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(), prs=atribs.personality.prs(),
+                 mem=atribs.memory.mem(), tag={"name": None}):
+        self.mod = mod
+        self.tag = tag
+        self.trd = trd
+        self.prs = prs
+        # working on it
+        self.mem = mem
+        # [internal,real,storeage]
+        # [obj,obj,...]timesort
+
+    # saves a copy of ram ro memory
+    # use: <usr> = Sysh.thread.ram.store(<usr>, <string>, <int between 0 and 100>)
+    # requires: usr
+    def storeToMemory(self, storedRamName, storedRamImportance):
+        dta = data([self.trd.ram.storage], {"name": storedRamName, "relevancy": [0, 0, storedRamImportance]})
+        self.mem.store(1, dta)
+
+    def loadToRam(self, block, index):
+        if block == 0:
+            print("no internal access")
+        elif block == 1:
+            self.trd.ram.load(self.mem.real[index])
+        else:
+            self.trd.ram.load(self.mem.external[index])
+
+
+class weapon(object):
+    def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(),
+                 dmg=atribs.damage.dmg(), tag={"name": None}):
         self.mod = mod
         self.tag = tag
         self.trd = trd
@@ -87,7 +143,7 @@ class weapon:
 
 
 class data:
-    def __init__(self, storage, tag):
+    def __init__(self, storage=None, tag={"name": None}):
         self.tag = tag
         self.storage = storage
         # anything you want to store

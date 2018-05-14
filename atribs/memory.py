@@ -1,6 +1,5 @@
 # import
 import re
-import thread.ram
 import hashlib
 import object
 
@@ -36,11 +35,10 @@ class mem:
             query = input()
         for d in self.__dict__:
             for i in d:
-                for t in i.tag:
-                    if re.match(str(t), r"*(.)" + query + r"*(.)"):
-                        print(t)
-                    else:
-                        print(None)
+                if re.match(str(i), r"*(.)" + query + r"*(.)"):
+                    print(i)
+                else:
+                    print(None)
 
     def modify(self, block, index, value):
         if block == 0:
