@@ -6,60 +6,57 @@ import time
 # tasker
 # tsk=[profile,profile,profile,...]
 # profile=[f0,f1,f2,...]
-# first profile is current profile
 
-# steps through each command in current profile
-# use <obj> = Sysh.thread.tasker.step(<obj>)
-# requires: obj
-def step(obj):
-    print(obj.trd["tsk"][0][0])
-    obj.trd["tsk"][0].pop(0)
-    if obj.trd["tsk"][0] == []:
-        obj.trd["tsk"].pop(0)
-    return obj
+class trd:
+    def __init__(self, current=[], profiles=[]):
+        self.current = current
+        self.profiles = profiles
 
+    def nextCurrent(self):
+        self.current = self.profiles[0]
+        self.profiles.pop(0)
 
-# runs entire profile
-# use <obj> = Sysh.thread.tasker.run(<obj>)
-# requires: obj
-def run(obj):
-    for i in obj.trd["tsk"][0]:
-        print(i)
-    obj.trd["tsk"].pop(0)
-    return obj
+    # steps through each command in current profile
+    # use <self> = Sysh.thread.tasker.step(<self>)
+    # requires: self
+    def step(self):
+        print(self.current[0])
+        self.current.pop(0)
+        if self.current == []:
+            self.nextCurrent()
 
+    # runs entire profile
+    # use <self> = Sysh.thread.tasker.run(<self>)
+    # requires: self
+    def run(self):
+        for i in self.current:
+            print(i)
+        self.nextCurrent()
 
-# sets the current profile to <profile>
-# use <obj> = Sysh.thread.tasker.setCurrentProfile(<obj>, <task profile>)
-# requires: obj
-def setCurrentProfile(obj, profile):
-    obj.trd["tsk"].insert(0, profile)
-    return obj
+    # sets the current profile to <profile>
+    # use <self> = Sysh.thread.tasker.setCurrentProfile(<self>, <task profile>)
+    # requires: self
+    def setCurrentProfile(self, profile):
+        self.current = profile
 
+    # adds a new profile to the end of the tasking queue
+    # use <self> = Sysh.thread.tasker.addProflie(<self>, <task profile>)
+    # requires: self
+    def addProfile(self, profile):
+        self.profiles.append(profile)
 
-# adds a new profile to the end of the tasking queue
-# use <obj> = Sysh.thread.tasker.addProflie(<obj>, <task profile>)
-# requires: obj
-def addProfile(obj, profile):
-    obj.trd["tsk"].append(profile)
-    return obj
+    # ends a task
+    # use <self> = Sysh.thread.tasker.quitTask(<self>, <index>)
+    # requires: self
+    def quitTask(self, index):
+        self.profiles.pop(index)
 
-
-# ends a task
-# use <obj> = Sysh.thread.tasker.quitTask(<obj>, <index>)
-# requires: obj
-def quitTask(obj, index):
-    obj.trd["tsk"].pop(index)
-    return obj
-
-
-# waits <t> seconds before running <obj>
-# use <obj> = Sysh.thread.tasker.wait(<obj>, <int/float>)
-# requires: obj
-def wait(obj, t):
-    time.sleep(t)
-    obj = run(obj)
-    return obj
+    # waits <t> seconds before running <self>
+    # use <self> = Sysh.thread.tasker.wait(<self>, <int/float>)
+    # requires: self
+    def wait(self, t):
+        time.sleep(t)
+        self.run()
 
 
 # runtime
