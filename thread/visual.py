@@ -3,14 +3,34 @@
 # feed=[raw,pitch,yaw,roll,[obj]]
 
 
-# set camera rotation
-# use: <obj> = rotate(<obj>, <int representing pitch>, <int representing yaw>, <int representing roll>)
-# requires: obj
-def rotate(obj, p, y, r):
-    obj.trd["vis"][1] = p
-    obj.trd["vis"][2] = y
-    obj.trd["vis"][3] = r
-    return obj
+class vis:
+    def __init__(self, rawImg=[], pitch=0, yaw=0, roll=0, idObj=[]):
+        self.rawImg = rawImg
+        self.p = pitch
+        self.y = yaw
+        self.r = roll
+        self.idObj = idObj
+
+    # set camera rotation
+    # use: <obj> = rotate(<obj>, <int representing pitch>, <int representing yaw>, <int representing roll>)
+    # requires: obj
+    def rotate(self, p, y, r):
+        self.p = p
+        self.y = y
+        self.r = r
+
+    # obj ID at some point
+
+    def clearImg(self):
+        self.rawImg = []
+
+    def clearId(self):
+        self.idObj = []
+
+    def resetPos(self):
+        self.p = 0
+        self.y = 0
+        self.r = 0
 
 
 # runtime

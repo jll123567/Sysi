@@ -2,12 +2,14 @@ import object
 
 
 class trd:
-    def __init__(self, ram=None, tsk=None, mov=None, lang=None, cpx=None):
-        self.mov = mov
-        self.lang = lang
+    def __init__(self, ram=None, tsk=None, mov=None, lang=None, cpx=None, vis=None, transf=None):
         self.ram = ram
         self.tsk = tsk
+        self.mov = mov
+        self.lang = lang
         self.cpx = cpx
+        self.vis = vis
+        self.transf = transf
 
     # sores audio data to ram
     # Use: <obj> = Sysh.thread.language.store(<obj>)
