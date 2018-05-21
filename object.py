@@ -37,6 +37,7 @@ class object:
                         print("mem.remove fail /n retrying")
                     except:
                         print("unknown error, is this a user?")
+                        working = False
                     else:
                         working = False
 
@@ -150,17 +151,18 @@ class data:
 
 
 class container:
-    def __init__(self, org, bnd, tag):
+    def __init__(self, org=[None, 0, 0, 0], bnd=["h,0,0,0-0,0,0"], tag={"name": None}):
         self.org = org
         # [supercont,x,y,z]
         # if is largest cont do None
         self.bnd = bnd
-        # [“(h/s)x,y,z-x,y,z”]
+        # [“(h/s,)x,y,z-x,y,z”,...]
         self.tag = tag
 
 
 class scene:
-    def __init__(self, scp, obj, loc, tag):
+    def __init__(self, scp=[], obj=[], loc=container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"name": "defaultContainer"}),
+                 tag={"name": None}):
         self.scp = scp
         # [time(time,tl branch),command0,command1,...]
         self.obj = obj
@@ -172,9 +174,12 @@ class scene:
         # use a super cont that will contain all relevant containers
         self.tag = tag
 
+    def unplotTl(self):
+        self.scp[0] = ["-", "-"]
+
 
 class universe:
-    def __init__(self, tl, scn, obj, cont, funct, rule, tag):
+    def __init__(self, tl, scn=[], obj=[], cont=[], funct=[], rule=[], tag={"name": None}):
         self.tl = tl
         # time line(wip)
         self.scn = scn
@@ -191,6 +196,95 @@ class universe:
         self.rule = rule
         # phisx and other functions to always run while in uni
         self.tag = tag
+
+    # [[master line end point],[id,parent id,start time,end time],...]
+
+    # for scenes
+    # scn.scp[0] = [id, start]
+    def forkTl(self, lineId, parent, offset, endpoint):
+        count = 0
+        invalid = True
+        for i in self.tl:
+            if count == 0:
+                if lineId == 0:
+                    print("invalid id")
+                    invalid = True
+                else:
+                    invalid = False
+                    count += 1
+            else:
+                if i[0] == lineId:
+                    print("id already in use")
+                    invalid = True
+                    count += 1
+                else:
+                    count += 1
+        if not invalid:
+            self.tl.append([lineId, parent, offset, endpoint])
+
+    def pruneTl(self, lineId):
+        for i in self.tl:
+            if i[0] == lineId:
+                self.tl.pop(i.index())
+        for i in self.scn:
+            if i.scp[0][1] == lineId:
+                i.unplotTl()
+
+    def plotTl(self, scn, lineId, t):
+        inUni = False
+        for i in self.tl:
+            if i[0] == lineId:
+                if i[3] < t:
+                    self.extendTl(lineId, t - i[3])
+                inUni = True
+        if not inUni:
+            print(lineId, " is not a valid line in ", self.tag["name"])
+        else:
+            if scn.scp[0] != ["-", "-"]:
+                scn.scp.insert(0, [t, lineId])
+            else:
+                scn.scp[0] = [t, lineId]
+
+    def extendTl(self, lineId, timeToAdd):
+        for i in self.tl:
+            if i[0] == lineId:
+                i[3] += timeToAdd
+
+    def getTotalOffsetTl(self, lineId, off=0):
+        for i in self.tl:
+            if i[0] == lineId:
+                off += i[3]
+                if i[1] == 0:
+                    return off
+                else:
+                    self.getTotalOffsetTl(i[1], off)
+
+    # timePerSymb is either "h","d"
+    def viewTl(self, timePerSymb):
+        def acuratePlot(uni, branchId, tps):
+            offset = 0
+            text = "."
+            for thisScene in uni.scn:
+                if thisScene.scp[0] == branchId:
+                    new = (("-" * ((thisScene.scp[0] - offset) / tps)) + "|")
+                    text += new
+                    offset = thisScene.scp[0]
+                if uni.scn[uni.scn.index(thisScene) + 1].scp[1] != branchId:
+                    text += "."
+            return text
+
+        if timePerSymb == "h":
+            timePerSymb = 60 * 60
+        elif timePerSymb == "d":
+            timePerSymb = 60 * 60 * 24
+        else:
+            timePerSymb = timePerSymb
+
+        for i in self.tl:
+            if i.len() == 1:
+                print(acuratePlot(self, 0, timePerSymb))
+            else:
+                print((" " * (self.getTotalOffsetTl(i[1]))) + (acuratePlot(self, i[0], timePerSymb)))
 
 
 # runtime
