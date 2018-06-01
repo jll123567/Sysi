@@ -5,7 +5,8 @@ import object
 # setup
 class sceneList(object.data):
     def __init__(self, storage=None, tag={"name": None, "dataType": "sceneList"}):
-        super().__init__(storage, tag)
+        self.storage = storage
+        self.tag = tag
 
     def loadScene(self, scn):
         self.storage.append(scn)
