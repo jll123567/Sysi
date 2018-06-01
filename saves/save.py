@@ -56,7 +56,7 @@ def objToJson(filename, obj):
     file = open(filename + ".json", "w")
     if isinstance(obj, object.object):
         jsonString = json.dumps({"mod": obj.mod, "trd": obj.trd, "tag": obj.tag})
-    elif isinstance(obj, object.atribs):
+    elif isinstance(obj, object.user):
         jsonString = json.dumps({"mod": obj.mod, "trd": obj.trd, "prs": obj.prs, "mem": obj.mem, "tag": obj.tag})
     elif isinstance(obj, object.weapon):
         jsonString = json.dumps({"mod": obj.mod, "trd": obj.trd, "dmg": obj.dmg, "tag": obj.tag})
@@ -85,7 +85,7 @@ def jsonToObj(filepath):
     jsonString = json.loads(jsonString)
     if "mod" in jsonString:
         if "mem" in jsonString:
-            usr = object.atribs(jsonString["mod"], jsonString["trd"], jsonString["prs"],
+            usr = object.user(jsonString["mod"], jsonString["trd"], jsonString["prs"],
                                 jsonString["mem"], jsonString["tag"])
             return usr
         elif "dmg" in jsonString:
@@ -111,7 +111,7 @@ def jsonToObj(filepath):
 
 # testing
 testObj = object.object({"wow": "hello"}, {"also dict": "yep"}, {"name": "testObj"})
-testUsr = object.atribs("i", "am", "full", "of", "string")
+testUsr = object.user("i", "am", "full", "of", "string")
 testWep = object.weapon(0.1, 0.2, 0.3, 0.5)
 testDta = object.data(("huh", "what?"), ("oh", 0, 2))
 testCont = object.container([0, 1, 2, 3], ["hi", "bye"], ["so", True])
