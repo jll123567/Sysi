@@ -22,6 +22,48 @@ class object:
         self.tag.update({"oldModel": oldModel})
         self.mod = "assem"
 
+    # damages the internal of obj (mem type only on usr)
+    # Use: usr.Sysh.object.internal(<wep>)
+    # Requires: usr|obj, wep
+    def internalDamage(self, wep):
+        for i in wep.dmg.damages:
+            if i[1] == "mem":
+                working = True
+                while working:
+                    # noinspection PyBroadException
+                    try:
+                        self.mem.real.pop(randint(0, 9999999999))
+                    except IndexError:
+                        print("mem.remove fail /n retrying")
+                    except:
+                        print("unknown error, is this a user?")
+                        working = False
+                    else:
+                        working = False
+
+            elif "trd" == i[1]:
+                self.trd.tsk.current = None
+            else:
+                print("unsupported")
+
+    # modifies the value of <stat>
+    # Use: obj.Sysh.thread.damage.stat(<wep>, <index of stat to modify>)
+    # Requires: obj, wep, matching stat in obj tags and dmg profile of wep
+    def statDamage(self, wep, dmgIndex):
+        for key in self.tag["stat"].keys():
+            if key == wep.dmg.damages[dmgIndex][1]:
+                self.tag["stat"][key] -= wep.dmg[dmgIndex][0]
+            else:
+                print("obj does not have the stat ", wep.dmg[dmgIndex][1], " \nDid you mispell it?")
+
+    # remove health based on atk
+    # Use: obj.Sysh.thread.damage.attack(<wep>)
+    # Requires: obj wih health tag, wep with health in prof
+    def attack(self, wep):
+        for i in wep.dmg.damages:
+            if i[1] == "health":
+                self.tag["health"] -= i[0]
+
     # Recomended once a year
     def usershipQuery(self):
         print("can get info from and modify $HostUni")
@@ -99,52 +141,6 @@ class weapon(object):
         self.trd = trd
         self.dmg = dmg
         # damage profile
-
-    # damages the internal of obj (mem type only on usr)
-    # Use: obj = wep.internalDamage(<obj>)
-    # Requires: usr|obj, wep
-    def internalDamage(self, obj):
-        for i in self.dmg.damages:
-            if i[1] == "mem":
-                working = True
-                while working:
-                    # noinspection PyBroadException
-                    try:
-                        obj.mem.real.pop(randint(0, 9999999999))
-                    except IndexError:
-                        print("mem.remove fail \n retrying")
-                    except:
-                        print("unknown error, is this a user?")
-                        working = False
-                    else:
-                        working = False
-
-            elif "trd" == i[1]:
-                obj.trd.tsk.current = None
-            else:
-                print("unsupported")
-        return obj
-
-    # modifies the value of <stat>
-    # Use: obj = wep.statDamage(<obj>, <index of stat to modify>)
-    # Requires: obj, wep, matching stat in obj tags and dmg profile of wep
-    def statDamage(self, obj, dmgIndex):
-        for key in obj.tag["stat"].keys():
-            if key == self.dmg.damages[dmgIndex][1]:
-                obj.tag["stat"][key] -= self.dmg[dmgIndex][0]
-            else:
-                raise Exception("obj does not have the stat " + str(self.dmg[dmgIndex][1]) + " \nDid you mispell it?")
-        return obj
-
-    # remove health based on atk
-    # Use: wep.simpleDamage(<obj>)
-    # Requires: obj wih health tag, wep with health in prof
-    def simpleDamage(self, obj):
-        for i in self.dmg.damages:
-            if i[1] == "health":
-                obj.tag["health"] -= i[0]
-                return obj
-        raise Exception(self.tag["name"] + "does not do health damage")
 
 
 class data:
