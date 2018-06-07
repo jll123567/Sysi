@@ -3,43 +3,45 @@ import object
 
 
 # setup
-# err({"code":"type severeity:message", "resolutions":["opt0", ...], "selected": int})
+# err({"code":"type severity:message", "resolutions":["opt0", ...], "selected": int})
 # type : 0 resolved 1 warning 2 error immediate action required
-# severeity: 0 resolved 1 low 2 med 3 high 4 critical 5 fatal
+# severity: 0 resolved 1 low 2 med 3 high 4 critical 5 fatal
 # message: string to describe the issue
 # resolutions: what can be done to fix the issue
-# selected: an integar that is the index of the resolution you want(None if no resolution selected) ex: want b [a,b,c,d] selected:1
+# selected: an integer that is the index of the resolution you want(None if no resolution selected)
+# noinspection PyDefaultArgument
 class err(object.data):
-    def __init__(self, errType, severity, message, resolutions, selected, tag):
-        self.errDta = {"code": (str(errType) + str(severity) + ":" + message),
-                       "resolutions": resolutions,
-                       "selected": selected}
+    def __init__(self, errType, severity, message, resolutions, selected, tag={"name": None}):
+        super(err, self).__init__()
+        self.storage = {"code": (str(errType) + str(severity) + ":" + message),
+                        "resolutions": resolutions,
+                        "selected": selected}
         self.tag = tag
 
     def setError(self, errType, severity, message, resolutions, selected):
-        self.errDta["code"](str(errType) + str(severity) + ":" + message)
-        self.errDta["resolutions"] = resolutions
-        self.errDta["selected"] = selected
+        self.storage["code"](str(errType) + str(severity) + ":" + message)
+        self.storage["resolutions"] = resolutions
+        self.storage["selected"] = selected
 
     def clearError(self):
-        self.errDta = None
+        self.storage = None
 
     def resolveError(self):
-        resolveing = True
-        print(self.errDta["code"])
+        resolving = True
+        print(self.storage["code"])
         count = 0
-        for i in self.errDta["resolutions"]:
+        for i in self.storage["resolutions"]:
             print(str(count) + ":" + i)
             count += 1
-        while resolveing:
+        while resolving:
             try:
                 selected = input("resolution?:")
-                self.errDta["selected"] = int(selected)
+                self.storage["selected"] = int(selected)
             except ValueError:
                 print("int only")
             else:
-                resolveing = False
-        print(self.errDta, self.tag)
+                resolving = False
+        print(self.storage, self.tag)
 
 
 # Runtime

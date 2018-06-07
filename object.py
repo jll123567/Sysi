@@ -8,6 +8,7 @@ import atribs.personality
 
 
 # setup
+# noinspection PyDefaultArgument,PyShadowingBuiltins
 class object:
     def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(), tag={"name": None}):
         self.mod = mod
@@ -28,18 +29,8 @@ class object:
     def internalDamage(self, wep):
         for i in wep.dmg.damages:
             if i[1] == "mem":
-                working = True
-                while working:
-                    # noinspection PyBroadException
-                    try:
-                        self.mem.real.pop(randint(0, 9999999999))
-                    except IndexError:
-                        print("mem.remove fail /n retrying")
-                    except:
-                        print("unknown error, is this a user?")
-                        working = False
-                    else:
-                        working = False
+                if isinstance(self, user):
+                    self.mem.real.pop(randint(0, self.mem.real.len()))
 
             elif "trd" == i[1]:
                 self.trd.tsk.current = None
@@ -54,7 +45,7 @@ class object:
             if key == wep.dmg.damages[dmgIndex][1]:
                 self.tag["stat"][key] -= wep.dmg[dmgIndex][0]
             else:
-                print("obj does not have the stat ", wep.dmg[dmgIndex][1], " \nDid you mispell it?")
+                print("obj does not have the stat ", wep.dmg[dmgIndex][1], " \nDid you misspell it?")
 
     # remove health based on atk
     # Use: obj.Sysh.thread.damage.attack(<wep>)
@@ -74,7 +65,7 @@ class object:
         rea = input("y/n")
         print("can add new functions to tasker")
         lrn = input("y/n")
-        print("attempts to reserve or increase the intregrity and freewill of objects or users")
+        print("attempts to reserve or increase the integrity and freewill of objects or users")
         mor = input("y/n")
         print("does not == another obj")
         unq = input("y/n")
@@ -105,7 +96,9 @@ class object:
                 print(self.tag["name"], "is User")
 
 
+# noinspection PyDefaultArgument
 class user(object):
+    # noinspection SpellCheckingInspection
     def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(), prs=atribs.personality.prs(),
                  mem=atribs.memory.mem(), tag={"name": None}):
         self.mod = mod
@@ -114,7 +107,7 @@ class user(object):
         self.prs = prs
         # working on it
         self.mem = mem
-        # [internal,real,storeage]
+        # [internal,real,storage]
         # [obj,obj,...]timesort
 
     # saves a copy of ram ro memory
@@ -133,6 +126,7 @@ class user(object):
             self.trd.ram.load(self.mem.external[index])
 
 
+# noinspection PyDefaultArgument
 class weapon(object):
     def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(),
                  dmg=atribs.damage.dmg(), tag={"name": None}):
@@ -143,6 +137,7 @@ class weapon(object):
         # damage profile
 
 
+# noinspection PyDefaultArgument
 class data:
     def __init__(self, storage=None, tag={"name": None}):
         self.tag = tag
@@ -150,6 +145,7 @@ class data:
         # anything you want to store
 
 
+# noinspection PyDefaultArgument
 class container:
     def __init__(self, org=[None, 0, 0, 0], bnd=["h,0,0,0-0,0,0"], tag={"name": None}):
         self.org = org
@@ -160,6 +156,7 @@ class container:
         self.tag = tag
 
 
+# noinspection PyDefaultArgument,PyTypeChecker
 class scene:
     def __init__(self, scp=[], obj=[], loc=container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"name": "defaultContainer"}),
                  tag={"name": None}):
@@ -178,6 +175,7 @@ class scene:
         self.scp[0] = ["-", "-"]
 
 
+# noinspection PyDefaultArgument
 class universe:
     def __init__(self, tl, scn=[], obj=[], cont=[], funct=[], rule=[], tag={"name": None}):
         self.tl = tl

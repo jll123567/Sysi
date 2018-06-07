@@ -3,8 +3,10 @@ import object
 
 
 # setup
+# noinspection PyDefaultArgument
 class sceneList(object.data):
-    def __init__(self, storage=None, tag={"name": None, "dataType": "sceneList"}):
+    def __init__(self, storage=None, tag={"name": None}):
+        super(sceneList, self).__init__()
         self.storage = storage
         self.tag = tag
 
@@ -38,6 +40,7 @@ class sceneList(object.data):
     def switchCont(self, index, cont):
         self.storage[index].loc = cont
 
+    # noinspection PyTypeChecker
     def pause(self):
         if not self.tag["paused"]:
             self.tag["paused"] = True
