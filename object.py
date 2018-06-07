@@ -1,3 +1,4 @@
+# coding=utf-8
 # import
 from random import randint
 import atribs.thread
@@ -94,6 +95,25 @@ class object:
                 return usr
             else:
                 print(self.tag["name"], "is User")
+
+    def removeParent(self):
+
+        def getParentMov(obj):
+            par = obj.sub.parent[0]
+            if par.trd.mov == "sub":
+                return getParentMov(par)
+            else:
+                return par.trd.mov
+
+        parentMov = getParentMov(self)
+        offset = self.trd.sub.parent[1]
+        self.trd.mov.x = parentMov[0] + offset[0]
+        self.trd.mov.y = parentMov[1] + offset[1]
+        self.trd.mov.z = parentMov[2] + offset[2]
+        self.trd.mov.a = parentMov[3]
+        self.trd.mov.b = parentMov[4]
+        self.trd.mov.c = parentMov[5]
+        self.trd.sub.parent = None
 
 
 # noinspection PyDefaultArgument
