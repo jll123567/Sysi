@@ -11,7 +11,7 @@ def setOut(obj, output):
 
 
 def removeOutTags(obj):
-    obj.tag.pop("dataType")
+    del obj.tag["dataType"]
     return obj
 
 

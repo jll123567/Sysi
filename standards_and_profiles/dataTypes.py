@@ -11,7 +11,7 @@ def setType(dta, dataType):
 
 
 def removeTypeTags(dta):
-    dta.tag.pop("dataType")
+    del dta.tag["dataType"]
     return dta
 
 

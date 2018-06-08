@@ -17,10 +17,10 @@ def modifyTags(obj, atk, defence, agi, lck):
 
 
 def removeTags(obj):
-    obj.tag.pop("atk")
-    obj.tag.pop("def")
-    obj.tag.pop("agi")
-    obj.tag.pop("lck")
+    del obj.tag["atk"]
+    del obj.tag["def"]
+    del obj.tag["agi"]
+    del obj.tag["lck"]
     return obj
 
 
