@@ -54,7 +54,7 @@ def updatePage(head, body, idToModify):
         if i.storage[2] == idToModify:
             if head is not None:
                 i.storage[0] = head
-            if body != None:
+            if body is not None:
                 i.storage[1] = body
 
 

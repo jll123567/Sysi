@@ -5,7 +5,7 @@
 # if obj is a sub obj mov will equal "sub"
 
 
-class mov():
+class mov:
     def __init__(self, x=0, y=0, z=0, a=0, b=0, c=0):
         self.x = x
         self.y = y
@@ -83,4 +83,4 @@ class mov():
 
 # runtime
 if __name__ == "__main__":
-    print("move thread bolck v10.0")
+    print("move thread block v10.0")

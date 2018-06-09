@@ -2,14 +2,14 @@
 
 #setup
 def p0(a,r):
-    if r==None:
+    if r is None:
         print("end")
     else:
         print(r)
         a+=1
         p1(a,"arg")
 def p1(a,r):
-    if r==None:
+    if r is None:
         print("end")
     else:
         a+=1

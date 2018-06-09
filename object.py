@@ -99,7 +99,7 @@ class object:
     def removeParent(self):
 
         def getParentMov(obj):
-            par = obj.sub.parent[0]
+            par = obj.trd.sub.parent[0]
             if par.trd.mov == "sub":
                 return getParentMov(par)
             else:
