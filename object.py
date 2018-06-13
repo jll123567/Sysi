@@ -6,6 +6,7 @@ import atribs.model
 import atribs.damage
 import atribs.memory
 import atribs.personality
+from math import sqrt
 
 
 # setup
@@ -144,6 +145,25 @@ class user(object):
             self.trd.ram.load(self.mem.real[index])
         else:
             self.trd.ram.load(self.mem.external[index])
+
+    def checkIteg(objPast, objCurrent):
+        if objPast.tag["health"] > objCurrent.tag["health"]:
+            return "reduced"
+        else:
+            return "maintained"
+
+    def checkWill(objPast, objCurrent):
+        if objPast.tag["fucntlist"] > objCurrent.tag["functlist"]:
+            return "reduced"
+        else:
+            return "maintained"
+
+    def calculate_relevancy(obj):
+        if obj.tag["relevancy"][1] == 0:
+            return 100 + (sqrt(obj.tag["relevancy"][1]) * 10) + 25 + (obj.tag["relevancy"][2])
+        else:
+            return (100 * ((1 / 3) ** obj.tag["relevancy"][0])) + (sqrt(obj.tag["relevancy"][1]) * 10) + (
+            obj.tag["relevancy"][2])
 
 
 # noinspection PyDefaultArgument
