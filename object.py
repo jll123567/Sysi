@@ -165,6 +165,14 @@ class user(object):
             return (100 * ((1 / 3) ** obj.tag["relevancy"][0])) + (sqrt(obj.tag["relevancy"][1]) * 10) + (
             obj.tag["relevancy"][2])
 
+    def loadQueue(self, realIndex):
+        self.trd.que = self.mem.real[realIndex].storage
+
+    def saveQueue(self, tags):
+        lastQueue = data(self.trd.que, tags)
+        self.mem.store(1, lastQueue)
+        print("queue saved to: ", lastQueue, "@", self.tag["name"], ".mem.real")
+
 
 # noinspection PyDefaultArgument
 class weapon(object):

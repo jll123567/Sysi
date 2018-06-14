@@ -2,9 +2,10 @@ import object
 
 
 class trd:
-    def __init__(self, ram=None, tsk=None, mov=None, lang=None, cpx=None, vis=None, transf=None, sub=None):
+    def __init__(self, ram=None, tsk=None, que=None, mov=None, lang=None, cpx=None, vis=None, transf=None, sub=None):
         self.ram = ram
         self.tsk = tsk
+        self.que = que
         self.mov = mov
         self.lang = lang
         self.cpx = cpx
