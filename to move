@@ -1,5 +1,3 @@
-to thread
-    queue
 to std/prof
     errQueue
     priv
