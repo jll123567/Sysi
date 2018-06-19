@@ -39,5 +39,5 @@ def opinion():
 
 # runtime
 if __name__ == "__main__":
-    print("argument score v10.0")
+    print("argument score v11.0")
     evidence()

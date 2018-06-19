@@ -141,4 +141,4 @@ def msgDisplay(server, channel, usr):
 
 # runtime
 if __name__ == "__main__":
-    print("system chat v10.0")
+    print("system chat v11.0")

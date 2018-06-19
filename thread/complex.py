@@ -22,4 +22,4 @@ def postSolution(obj, solution, problemIndex):
 
 # runtime
 if __name__ == "__main__":
-    print("complex logic v10.0")
+    print("complex logic v11.0")

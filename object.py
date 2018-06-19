@@ -122,4 +122,4 @@ class universe:
 
 # runtime
 if __name__ == "__main__":
-    print("object definitions v10.0")
+    print("object definitions v11.0")

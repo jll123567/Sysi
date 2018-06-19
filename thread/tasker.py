@@ -64,4 +64,4 @@ def wait(obj, t):
 
 # runtime
 if __name__ == "__main__":
-    print("tasker v10.0")
+    print("tasker v11.0")

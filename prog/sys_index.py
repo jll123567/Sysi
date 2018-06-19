@@ -6,9 +6,9 @@ import object
 # format:
 # dta([head,body,id],tags)
 last_id = 0
-index = object.data([object.data(["Hello, world!", "sysh V10.0 is here. Hope you're hyped. :D", 1],
+index = object.data([object.data(["Hello, world!", "sysh v11.0 is here. Hope you're hyped. :D", 1],
                                  {'uni': 'main', 'id': 'idx1', 'name': 'Hello, world!',
-                                  'terms': ['sys', 'Hello,world!', 'v10.0']})],
+                                  'terms': ['sys', 'Hello,world!', 'v11.0']})],
                     {"name": "index", "uni": "main", "id": "dt0", "terms": ["index", "sys", "data"]})
 for i in index.storage:
     if i.storage[2] > last_id:
@@ -81,7 +81,7 @@ def typer():
 
 # runtime
 if __name__ == "__main__":
-    print("system index v10.0")
+    print("system index v11.0")
     typer()
     readPage(1)
     sleep(2)

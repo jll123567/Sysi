@@ -102,4 +102,4 @@ def sdump(scn):
 
 # runtime
 if __name__ == "__main__":
-    print("dumpualization functions v10.0")
+    print("dumpualization functions v11.0")

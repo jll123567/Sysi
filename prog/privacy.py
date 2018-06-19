@@ -55,4 +55,4 @@ def obscureText(text, method):
 
 # runtime
 if __name__ == "__main__":
-    print(" privacy v10.0")
+    print(" privacy v11.0")

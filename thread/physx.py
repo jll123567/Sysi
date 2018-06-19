@@ -51,4 +51,4 @@ def repel(o0, o1, force):
 
 # runtime
 if __name__ == "__main__":
-    print("physx v10.0")
+    print("physx v11.0")

@@ -26,4 +26,4 @@ def removeTags(obj):
 
 # runtime
 if __name__ == "__main__":
-    print("RPG stats v10.0")
+    print("RPG stats v11.0")

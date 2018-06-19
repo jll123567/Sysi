@@ -37,4 +37,4 @@ def move(obj):
 
 # runtime
 if __name__ == "__main__":
-    print("move thread bolck v10.0")
+    print("move thread bolck v11.0")

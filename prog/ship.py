@@ -26,4 +26,4 @@ def dispDb(db):
 
 # runtime
 if __name__ == "__main__":
-    print("shipping v10.0 \n please do not use this for serious reasons...")
+    print("shipping v11.0 \n please do not use this for serious reasons...")

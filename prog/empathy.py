@@ -18,4 +18,4 @@ def checkWill(objPast, objCurrent):
 
 # runtime
 if __name__ == "__main__":
-    print("empathy definitions v10.0")
+    print("empathy definitions v11.0")

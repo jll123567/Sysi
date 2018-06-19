@@ -61,4 +61,4 @@ def saveAsHash(obj):
 
 # runtime
 if __name__ == "__main__":
-    print("user memory v10.0")
+    print("user memory v11.0")

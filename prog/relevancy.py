@@ -14,4 +14,4 @@ def calculate_relevancy(obj):
 
 # runtime
 if __name__ == "__main__":
-    print("relevancy calc V10.0")
+    print("relevancy calc v11.0")

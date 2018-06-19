@@ -66,4 +66,4 @@ def free(obj, index):
 
 # runtime
 if __name__ == "__main__":
-    print("random access memory manager v10.0")
+    print("random access memory manager v11.0")

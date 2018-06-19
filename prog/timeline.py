@@ -104,4 +104,4 @@ def view(uni, timePerSymb):
 
 
 if __name__ == "__main__":
-    print("time management v10.0")
+    print("time management v11.0")

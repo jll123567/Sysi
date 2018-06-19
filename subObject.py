@@ -78,7 +78,7 @@ def removeSub(obj):
 
 # runtime
 if __name__ == "__main__":
-    print("subObjects v10")
+    print("subObjects v11")
 # to test
 # functions
 # assemblies and non assemblies

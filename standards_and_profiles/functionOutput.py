@@ -28,4 +28,4 @@ def removeOutTags(obj):
 #   var ?
 # runtime
 if __name__ == "__main__":
-    print("output tags v10.0")
+    print("output tags v11.0")
