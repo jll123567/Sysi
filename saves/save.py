@@ -61,7 +61,7 @@ def objToJson(filename, obj):
     elif isinstance(obj, object.weapon):
         jsonString = json.dumps({"mod": obj.mod, "trd": obj.trd, "dmg": obj.dmg, "tag": obj.tag})
     elif isinstance(obj, object.data):
-        jsonString = json.dumps({"d": obj.storage, "tag": obj.tag})
+        jsonString = json.dumps({"storage": obj.storage, "tag": obj.tag})
     elif isinstance(obj, object.container):
         jsonString = json.dumps({"org": obj.bnd, "bnd": obj.bnd, "tag": obj.tag})
     elif isinstance(obj, object.scene):
@@ -95,7 +95,7 @@ def jsonToObj(filepath):
             obj = object.object(jsonString["mod"], jsonString["trd"], jsonString["tag"])
             return obj
     elif "d" in jsonString:
-        dta = object.data(jsonString["d"], jsonString["tag"])
+        dta = object.data(jsonString["storage"], jsonString["tag"])
         return dta
     elif "org" in jsonString:
         cont = object.container(jsonString["org"], jsonString["bnd"], jsonString["tag"])

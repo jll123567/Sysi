@@ -6,10 +6,10 @@ import object
 # format:
 # dta([head,body,id],tags)
 last_id = 0
-index = object.data([object.data(["Hello, world!", "sysh V10.0 is here. Hope you're hyped. :D", 1],
-                                 {'uni': 'main', 'id': 'idx1', 'name': 'Hello, world!',
-                                  'terms': ['sys', 'Hello,world!', 'v10.0']})],
-                    {"name": "index", "uni": "main", "id": "dt0", "terms": ["index", "sys", "data"]})
+index = object.data([object.data(["Hello, world!", "sysh V11.0 is here. Hope you're hyped. :D", 0],
+                                 {'uni': 'main', 'id': '0', 'name': 'Hello, world!',
+                                  'terms': ['sys', 'Hello,world!', 'v11.0']})],
+                    {"name": "index"})
 for i in index.storage:
     if i.storage[2] > last_id:
         last_id = i.storage[2]
@@ -82,7 +82,12 @@ def typer():
 # runtime
 if __name__ == "__main__":
     print("system index v10.0")
-    typer()
-    readPage(1)
-    sleep(2)
-    quickRead(1)
+    # typer()
+    # readPage(1)
+    # sleep(2)
+    # quickRead(1)
+    import saves.save
+    import json
+    index.storage[0] = json.dumps({"storage": index.storage[0].storage, "tag": index.storage[0].tag})
+    saves.save.objToJson("h", index)
+
