@@ -15,4 +15,4 @@ def DEPRICATEDphysDEPRICATED(wep, obj):
 
 # runtime
 if __name__ == "__main__":
-    print("damage profile/attack handler v10.0")
+    print("damage profile/attack handler v11.0")

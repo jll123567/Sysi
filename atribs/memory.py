@@ -58,4 +58,4 @@ def saveAsHash(obj):
 
 # runtime
 if __name__ == "__main__":
-    print("atribs memory v10.0")
+    print("atribs memory v11.0")

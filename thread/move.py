@@ -83,4 +83,4 @@ class mov:
 
 # runtime
 if __name__ == "__main__":
-    print("move thread block v10.0")
+    print("move thread block v11.0")

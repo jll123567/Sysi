@@ -33,4 +33,4 @@ class fileModel():
 
 # runtime
 if __name__ == "__main__":
-    print("model rigging v10.0")
+    print("model rigging v11.0")

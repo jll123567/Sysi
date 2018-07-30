@@ -83,7 +83,7 @@ def typer():
 
 # runtime
 if __name__ == "__main__":
-    print("system index v10.0")
+    print("system index v11.0")
     # typer()
     # readPage(1)
     # sleep(2)
