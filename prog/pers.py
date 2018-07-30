@@ -70,4 +70,4 @@ def clearPrs(usr):
 
 # runtime
 if __name__ == "__main__":
-    print("pers def and functionsv10.0")
+    print("pers def and functionsv11.0")

@@ -46,4 +46,4 @@ class err(object.data):
 
 # Runtime
 if __name__ == "__main__":
-    print("err v10.0")
+    print("err v11.0")

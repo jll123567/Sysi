@@ -36,4 +36,4 @@ def makeGroup(dta, groupType, name):
 
 # runtime
 if __name__ == "__main__":
-    print("groups v10.0")
+    print("groups v11.0")

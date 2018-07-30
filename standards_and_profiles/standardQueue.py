@@ -31,4 +31,4 @@ def makeValidTskProfile(stdQue):
 
 # runtime
 if __name__ == "__main__":
-    print("standard queue creator and converter v10.0")
+    print("standard queue creator and converter v11.0")

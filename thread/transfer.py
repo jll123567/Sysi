@@ -74,3 +74,5 @@ class transf:
 # runtime
 if __name__ == "__main__":
     print("basic transfer protocol v10.0")
+
+    print("basic transfer protocol v11.0")

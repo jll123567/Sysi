@@ -35,4 +35,4 @@ class vis:
 
 # runtime
 if __name__ == "__main__":
-    print("visuals v10.0")
+    print("visuals v11.0")

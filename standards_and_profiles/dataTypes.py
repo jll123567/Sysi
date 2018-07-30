@@ -19,4 +19,4 @@ def removeTypeTags(dta):
 
 # runtime
 if __name__ == "__main__":
-    print("data types tags v10.0")
+    print("data types tags v11.0")
