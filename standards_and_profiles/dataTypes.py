@@ -1,3 +1,5 @@
+##ADMIN TOOL##
+
 # setup
 def addTypeTags(dta):
     dta.tag.update({"dataType": ""})

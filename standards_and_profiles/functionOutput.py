@@ -1,3 +1,4 @@
+##ADMIN TOOL##
 # setup
 def addOutTags(obj):
     obj.tag.update({"out": ""})

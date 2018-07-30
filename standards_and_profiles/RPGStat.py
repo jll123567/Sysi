@@ -1,3 +1,4 @@
+##ADMIN TOOL##
 # setup
 # adds some simple stats from most role playing games, because I am a nerd.
 # hp not needed as it part of wep

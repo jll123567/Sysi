@@ -8,6 +8,7 @@
 #       0 neutral
 #       neg is - pos is +
 
+### I WILL FIX THIS AT A LATER DATE###
 
 def ship(u0, u1, shipType, db):
     db.storage.append([u0, u1, shipType])

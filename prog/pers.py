@@ -6,6 +6,7 @@
 # tasker profile(auto-get)
 # {"word": refrenceCount(int), "...": ...}
 
+##this is a tool to debug Usr.prs, dont use this regularly##
 
 def setPrs(usr, limit, goal, funct, usrDict):
     usr.prs = [limit, goal, funct, usrDict]

@@ -7,13 +7,16 @@ import time
 # tsk=[profile,profile,profile,...]
 # profile=[f0,f1,f2,...]
 
-class trd:
+class tsk:
     def __init__(self, current=[], profiles=[]):
         self.current = current
         self.profiles = profiles
 
     def nextCurrent(self):
-        self.current = self.profiles[0]
+        if isInsance(self.profiles[0], list):
+            self.current = self.profiles[0]
+        else:
+            self.current.append(self.profiles[0])
         self.profiles.pop(0)
 
     # steps through each command in current profile
@@ -23,7 +26,10 @@ class trd:
         print(self.current[0])
         self.current.pop(0)
         if self.current == []:
-            self.nextCurrent()
+            if self.profiles == []:
+                print("No remaining operations")
+            else:
+                self.nextCurrent()
 
     # runs entire profile
     # use <self> = Sysh.thread.tasker.run(<self>)

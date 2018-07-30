@@ -2,7 +2,7 @@
 import object
 import json
 
-
+###I WILL FIX THIS AT A LATER DATE###
 # setup
 # outputs the object as a json file
 # use: objToJson(<filename>, <obj>)

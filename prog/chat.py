@@ -7,6 +7,11 @@ import thread.language
 # [[usrlist],     [channels]]
 # [atribs,is_admin] [name,msg,stream,perms]
 #                      ["name:text"][level,[users,...]][r,w,s,l]
+
+
+
+###I WILL UPDATE THIS AT A LATER DATE###
+
 def addServer(server, pram):
     server.storage = pram
 

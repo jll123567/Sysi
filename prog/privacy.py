@@ -7,6 +7,8 @@ import re
 # obj.tag
 #    {"priv":[]}
 #        [[<obj> is public to(know me)],[objects public to <obj>(i know)]]
+
+###I WILL FIX THIS A A LATER DATE###
 def MakePrivate(o0, o1):
     for i in o0.tag["priv"][1]:
         if i == o1:
