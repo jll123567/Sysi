@@ -7,28 +7,28 @@ import object
 # dta([head,body,id],tags)
 last_id = 0
 index = object.data([object.data(["Hello, world!", "sysh V11.0 is here. Hope you're hyped. :D", 0],
-                                 {'uni': 'main', 'id': '0', 'name': 'Hello, world!',
-                                  'terms': ['sys', 'Hello,world!', 'v11.0']})],
+                                 {'name': 'Hello, world!','terms': ['sys', 'Hello,world!', 'v11.0']})],
                     {"name": "index"})
+
 for i in index.storage:
     if i.storage[2] > last_id:
         last_id = i.storage[2]
 
 
-def newPage(head, body, tags):
+def newPage(head, body, terms):
     global index, last_id
-    tags["id"] = ("idx" + str(last_id + 1))
-    index.storage.append(object.data([head, body, last_id + 1], tags))
+    terms["id"] = ("idx" + str(last_id + 1))
+    index.storage.append(object.data([head, body, last_id + 1], terms))
     last_id += 1
-    print("added:\nobject.data([\"" + head + "\",\"" + body + "\"," + str(last_id) + "]," + str(tags) + ")")
+    print("added:\nobject.data([\"" + head + "\",\"" + body + "\"," + str(last_id) + "]," + str(terms) + ")")
 
 
 def readPage(pageId):
     global index
     for i in index.storage:
         if i.storage[2] == pageId:
-            print("    ", i.storage[0])
-            print("\n", i.storage[1])
+            print(i.storage[0])
+            print("\n   ", i.storage[1])
             print("\nend of entry\n\n", pageId)
 
 
@@ -48,7 +48,7 @@ def quickRead(pageId):
             print("\nend of entry")
 
 
-def updatePage(head, body, idToModify):
+def updatePage(head, body, terms, idToModify):
     global index
     for i in index.storage:
         if i.storage[2] == idToModify:
