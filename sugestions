@@ -2,5 +2,6 @@ internal
     use external displays rather than HUD's
         phys, w/ secOverlay
     ask to install sys use guide, rather than just theach
+    warps by dist rather than 1-pe-uni
 external
     use external displays rather than HUD's
