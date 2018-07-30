@@ -4,51 +4,6 @@ import json
 
 
 # setup
-def saveUni(uni, fileName):
-    file = open(fileName + ".py", 'w')
-    sameBegin = "# AUTO GENERATED CODE\nimport object\ndef load():\n    uni=object.universe("
-    variableMiddle = str(uni.tl) + "," + str(uni.scn) + "," + str(uni.obj) + "," + str(uni.cont) + "," + str(
-        uni.funct) + "," + str(uni.rule) + "," + str(uni.tag)
-    sameEnd = ")\n    return uni\n# END AUTO GENERATED CODE\n# TO USE: IMPORT THIS FILE AND RUN " + fileName + ".load()"
-    file.write(sameBegin + variableMiddle + sameEnd)
-    file.close()
-
-
-def saveScn(scn, fileName):
-    file = open(fileName + ".py", 'w')
-    sameBegin = "# AUTO GENERATED CODE\nimport object\ndef load():\n    scn = object.scene("
-    variableMiddle = str(scn.scp) + "," + str(scn.obj) + "," + str(scn.loc) + "," + str(scn.tag)
-    sameEnd = ")\n    return scn\n# END AUTO GENERATED CODE\n# TO USE IMPORT THIS FILE AND RUN " + fileName + ".load()"
-    file.write(sameBegin + variableMiddle + sameEnd)
-    file.close()
-
-
-def saveScnExe(scn, fileName):
-    file = open(fileName + ".py", "w")
-    initialVar = ""
-    script = ""
-    printEnd = "    print("
-    for i in scn.obj:
-        initialVar += ("    " + i + "\n")
-    for i in scn.scp:
-        script += ("    " + i + "\n")
-    for i in scn.obj:
-        objVar = ""
-        for f in i:
-            if f == " " or f == "=":
-                break
-            else:
-                objVar += f
-        printEnd += (objVar + ", ")
-    printEnd += "'\\n End')\n"
-    fileStart = "# AUTO GENERATED CODE\nimport object\ndef load():\n    scn = object.scene("
-    saveScnStr = str(scn.scp) + "," + str(scn.obj) + "," + str(scn.loc) + "," + str(scn.tag)
-    saveEndExStart = ")\n    return scn\ndef execute():\n"
-    fileEnd = "# END AUTO GENERATED CODE\n# TO USE IMPORT THIS FILE AND RUN " + fileName + ".load()"
-    file.write(fileStart + saveScnStr + saveEndExStart + initialVar + script + printEnd + fileEnd)
-    file.close()
-
-
 # outputs the object as a json file
 # use: objToJson(<filename>, <obj>)
 # requires: obj, space for <filename>.json
@@ -121,34 +76,3 @@ testUni = object.universe(None, None, None, None, None, None, None)
 # runtime
 if __name__ == "__main__":
     print("Save v10.0")
-    objToJson("Heyy", testObj)
-    testObj = None
-    testObj = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
-    print(testObj.mod)
-    objToJson("Heyy", testUsr)
-    testUsr = None
-    testUsr = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
-    print(testUsr.prs)
-    objToJson("Heyy", testWep)
-    testWep = None
-    testWep = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
-    print(testWep.dmg)
-    objToJson("Heyy", testDta)
-    testDta = None
-    testDta = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
-    print(testDta.storage)
-    objToJson("Heyy", testCont)
-    testCont = None
-    testCont = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
-    print(testCont.bnd)
-    objToJson("Heyy", testScn)
-    testScn = None
-    testScn = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
-    print(testScn.scp)
-    objToJson("Heyy", testUni)
-    testUni = None
-    testUni = jsonToObj("C:/Users/Jacob Ledbtter/Desktop/code/python/Sysh/json testin/Heyy.json")
-    print(testUni.rule)
-    print("TEST COMPLETE")
-    # jasmine Bronte-Marie Williams is the best person i know (i approve this message) ~Jacob Ledbetter
-    # JJ/Jasmine/Jazzy is AMAAAZINGGGGGGGG YAYAYAYAYA
