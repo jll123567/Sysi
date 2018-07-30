@@ -13,7 +13,7 @@ class tsk:
         self.profiles = profiles
 
     def nextCurrent(self):
-        if isInsance(self.profiles[0], list):
+        if isinstance(self.profiles[0], list):
             self.current = self.profiles[0]
         else:
             self.current.append(self.profiles[0])
