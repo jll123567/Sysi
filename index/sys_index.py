@@ -10,9 +10,9 @@ index = object.data([object.data(["Hello, world!", "sysh V11.0 is here. Hope you
                                  {'name': 'Hello, world!','terms': ['sys', 'Hello,world!', 'v11.0']})],
                     {"name": "index"})
 
-for i in index.storage:
-    if i.storage[2] > last_id:
-        last_id = i.storage[2]
+for page in index.storage:
+    if page.storage[2] > last_id:
+        last_id = page.storage[2]
 
 
 def newPage(head, body, terms):
@@ -56,6 +56,8 @@ def updatePage(head, body, terms, idToModify):
                 i.storage[0] = head
             if body is not None:
                 i.storage[1] = body
+            if terms is not None:
+                i.tag["terms"] = terms
 
 
 def deletePage(pageId):
