@@ -64,6 +64,18 @@ class tsk:
         time.sleep(t)
         self.run()
 
+    # set the following task to loop infinately
+    # use self.loop(profile)
+    # requires self
+    def loop(self, profile):
+        name = ""
+        for char in profile[0]:
+            if char == '.':
+                break
+            else:
+                name += char
+        name += ".trd.tsk"
+        self.addProfile([profile, [name, "loop", profile]])
 
 # runtime
 if __name__ == "__main__":
