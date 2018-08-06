@@ -10,7 +10,7 @@ import re
 objList = []
 
 # noinspection PyPep8Naming
-def getAttribs(obj):
+def getAtribs(obj):
     objDict = str(obj.__dict__.keys())
     stringList = str(re.search(r"'.*'", objDict).group())
     words = []
