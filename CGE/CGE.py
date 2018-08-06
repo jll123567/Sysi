@@ -28,8 +28,9 @@ def getAttribs(obj):
 
 
 # noinspection PyPep8Naming
-def getMethods(obj, atribsList):
+def getMethods(obj):
     # noinspection PyPep8Naming
+    atribsList = getAtribs(obj)
     methodList = dir(obj)
     finalList = []
     for method in methodList:
@@ -39,6 +40,14 @@ def getMethods(obj, atribsList):
             continue
         finalList.append(method)
     return finalList
+
+
+def getOperations(objList):
+    operationList = []
+    for obj in objList:
+        for operation in obj.trd.tsk.current:
+            operationList.append(operation)
+    return operationList
 
 def performSelectedOperation(objIndex, subOjectRefrence, operation, paramaters=[]):
     global objList
