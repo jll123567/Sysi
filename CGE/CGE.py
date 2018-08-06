@@ -7,6 +7,7 @@ import re
 # CGE > sceneScript
 # ["sender","traget","oepration",[paramaters]]
 
+objList = []
 
 # noinspection PyPep8Naming
 def getAttribs(obj):
@@ -38,3 +39,21 @@ def getMethods(obj, atribsList):
             continue
         finalList.append(method)
     return finalList
+
+def performSelectedOperation(objIndex, subOjectRefrence, operation, paramaters=[]):
+    global objList
+    if subOjectRefrence == "trd.mov":
+        if paramaters.__len__() == 0:
+            getattr(objList[objIndex].trd.mov, operation)()
+        else:
+            getattr(objList[objIndex].trd.mov, operation)(*paramaters)
+    elif subOjectRefrence == "trd.tsk":
+        if paramaters.__len__() == 0:
+            getattr(objList[objIndex].trd.tsk, operation)()
+        else:
+            getattr(objList[objIndex].trd.tsk, operation)(*paramaters)
+    else:
+        if paramaters.__len__() == 0:
+            getattr(objList[objIndex], operation)()
+        else:
+            getattr(objList[objIndex], operation)(*paramaters)

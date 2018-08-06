@@ -3,6 +3,7 @@ import thread.tasker
 import thread.move
 import atribs.model
 import atribs.thread
+import CGE
 
 objList = [
     object.object(atribs.model.sysModel(), atribs.thread.trd(None, thread.tasker.tsk(), None, thread.move.mov(), None,
