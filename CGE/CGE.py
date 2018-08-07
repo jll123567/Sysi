@@ -51,18 +51,55 @@ def getOperations(objList):
 
 def performSelectedOperation(objIndex, subOjectRefrence, operation, paramaters=[]):
     global objList
-    if subOjectRefrence == "trd.mov":
-        if paramaters.__len__() == 0:
-            getattr(objList[objIndex].trd.mov, operation)()
-        else:
-            getattr(objList[objIndex].trd.mov, operation)(*paramaters)
-    elif subOjectRefrence == "trd.tsk":
-        if paramaters.__len__() == 0:
-            getattr(objList[objIndex].trd.tsk, operation)()
-        else:
-            getattr(objList[objIndex].trd.tsk, operation)(*paramaters)
-    else:
+    if subOjectRefrence == None:
         if paramaters.__len__() == 0:
             getattr(objList[objIndex], operation)()
         else:
             getattr(objList[objIndex], operation)(*paramaters)
+    else:
+        subObj = unpackSubObjFromExtension(objList[objIndex], subOjectRefrence)
+        if paramaters.__len__() == 0:
+            getattr(subObj, operation)()
+        else:
+            getattr(subObj, operation)(*paramaters)
+        objList[objIndex] = repackSubToFull(objList[objIndex], subObj, subOjectRefrence)
+
+
+def unpackSubObjFromExtension(obj, subObjRefrence):
+    subs = []
+    sub = ""
+    for char in subObjRefrence:
+        if char == '.':
+            subs.append(sub)
+            sub = ""
+        else:
+            sub += char
+    subs.append(sub)
+    extractedObj = obj
+    for subObj in subs:
+        extractedObj = getattr(extractedObj, subObj)
+    return extractedObj
+
+def repackSubToFull(fullObj, subObj, subObjRefrence):
+    subs = []
+    sub = ""
+    for char in subObjRefrence:
+        if char == '.':
+            subs.append(sub)
+            sub = ""
+        else:
+            sub += char
+    subs.append(sub)
+    currentSub = subs[-1]
+    subs.pop(-1)
+
+    while subs != []:
+        extractedObj = fullObj
+        for subObjs in subs:
+            extractedObj = getattr(extractedObj, subObjs)
+        setattr(extractedObj, currentSub, subObj)
+        subObj = extractedObj
+        currentSub = subs[-1]
+        subs.pop(-1)
+    setattr(fullObj, currentSub, subObj)
+    return fullObj
