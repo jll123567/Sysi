@@ -1,8 +1,11 @@
 import re
+
+
 class operationNotPossible(Exception):
-    def __init__(self, expression, message = "one or more operations are not available as listed"):
+    def __init__(self, expression, message="one or more operations are not available as listed"):
         self.expression = expression
         self.message = message
+
 
 # task > CGE
 # ["target(obj name)", "operation", [paramaters]]
@@ -11,6 +14,7 @@ class operationNotPossible(Exception):
 # ["sender","traget","oepration",[paramaters]]
 
 objList = []
+
 
 # noinspection PyPep8Naming
 def getAtribs(obj):
@@ -61,6 +65,8 @@ def resolveNameToIndex(name):
         if name == obj.tag["name"]:
             break
         ndx += 1
+    return ndx
+
 
 def areOperationsPosible(operationList):
     global objList
@@ -76,8 +82,9 @@ def areOperationsPosible(operationList):
                     mode = 'e'
                 if mode == 'n':
                     name += char
-                elif mode == 'e':
+                if mode == 'e':
                     ext += char
+            ext = ext[1:]
             methods = getMethods(unpackSubObjFromExtension(objList[resolveNameToIndex(name)], ext))
             if operation[1] not in methods:
                 return False
@@ -88,10 +95,9 @@ def areOperationsPosible(operationList):
     return True
 
 
-
-def performSelectedOperation(objIndex, subOjectRefrence, operation, paramaters=[]):
+def performSelectedOperation(objIndex, operation, subOjectRefrence=None, paramaters=[]):
     global objList
-    if subOjectRefrence == None:
+    if subOjectRefrence is None:
         if paramaters.__len__() == 0:
             try:
                 getattr(objList[objIndex], operation)()
@@ -128,9 +134,11 @@ def unpackSubObjFromExtension(obj, subObjRefrence):
             sub += char
     subs.append(sub)
     extractedObj = obj
+    # print(subs)
     for subObj in subs:
         extractedObj = getattr(extractedObj, subObj)
     return extractedObj
+
 
 def repackSubToFull(fullObj, subObj, subObjRefrence):
     subs = []
@@ -156,9 +164,32 @@ def repackSubToFull(fullObj, subObj, subObjRefrence):
     setattr(fullObj, currentSub, subObj)
     return fullObj
 
+def addObj(obj):
+    global objList
+    objList.append(obj)
+
 def update():
     global objList
     operationList = getOperations()
     if not areOperationsPosible(operationList):
         raise operationNotPossible
-    #run ops
+    for op in operationList:
+        print(op)
+        name = ""
+        ext = ""
+        mode = 'n'
+        if '.' in op[0]:
+            for char in op[0]:
+                if char == '.' and mode == 'n':
+                    mode = '.'
+                if char == '.' and mode == '.':
+                    mode = 'e'
+                if mode == 'n':
+                    name += char
+                if mode == 'e':
+                    ext += char
+            if ext == "":
+                ext = None
+            else:
+                ext = ext[1:]
+        performSelectedOperation(resolveNameToIndex(name), op[1], ext, op[2])
