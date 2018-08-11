@@ -22,10 +22,12 @@ for obj in objList:
     if obj.tag["name"] == "test/1":
         print("object 1")
         print("setting current profile([[test/1.trd.mov, accelerate, [3, 3, 3]], [test/1.trd.mov, move, ()]])")
-        objList[1].trd.tsk.setCurrentProfile([["test/1.trd.mov", "accelerate", [3, 3, 3]], ["test/1.trd.mov", "move",
+        objList[1].trd.tsk.setCurrentProfile([["test/1.trd.mov", "accelerate", [1, 1, 1]], ["test/1.trd.mov", "move",
                                                                                             []]])
         print("set next instruction to continue moving")
-        objList[1].trd.tsk.addProfile([["test/1.trd.mov", "move", []], ["test/1.trd.tsk", "loop",
-                                                                          [["test/1.trd.mov", "move", []]]]])
+        objList[1].trd.tsk.profiles = [[["test/1.trd.mov", "move", []], ["test/1.trd.tsk", "loop",
+                                                                          [["test/1.trd.mov", "move", []]]]]]
 CGE.objList = objList
-CGE.update()
+while CGE.objList[1].trd.mov.x < 100:
+    CGE.update()
+    print(CGE.objList[1].trd.mov.x)

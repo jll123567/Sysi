@@ -13,11 +13,14 @@ class tsk:
         self.profiles = profiles
 
     def nextCurrent(self):
-        if isinstance(self.profiles[0], list):
-            self.current = self.profiles[0]
+        if self.profiles != []:
+            if isinstance(self.profiles[0], list):
+                self.current = self.profiles[0]
+            else:
+                self.current = [self.profiles[0]]
+            self.profiles.pop(0)
         else:
-            self.current.append(self.profiles[0])
-        self.profiles.pop(0)
+            self.current = []
 
     # steps through each command in current profile
     # use <self> = Sysh.thread.tasker.step(<self>)
@@ -75,7 +78,7 @@ class tsk:
             else:
                 name += char
         name += ".trd.tsk"
-        self.addProfile([profile, [name, "loop", profile]])
+        self.addProfile([profile, [name, "loop", [profile]]])
 
 # runtime
 if __name__ == "__main__":

@@ -119,7 +119,7 @@ def performSelectedOperation(objIndex, operation, subOjectRefrence=None, paramat
             try:
                 getattr(subObj, operation)(*paramaters)
             except:
-                print("selected operation not posible with selected paramaters")
+               print("selected operation not posible with selected paramaters")
         objList[objIndex] = repackSubToFull(objList[objIndex], subObj, subOjectRefrence)
 
 
@@ -134,7 +134,6 @@ def unpackSubObjFromExtension(obj, subObjRefrence):
             sub += char
     subs.append(sub)
     extractedObj = obj
-    # print(subs)
     for subObj in subs:
         extractedObj = getattr(extractedObj, subObj)
     return extractedObj
@@ -164,6 +163,12 @@ def repackSubToFull(fullObj, subObj, subObjRefrence):
     setattr(fullObj, currentSub, subObj)
     return fullObj
 
+def moveThreadAlong():
+    global objList
+    for obj in objList:
+        obj.trd.tsk.nextCurrent()
+    print("shift completed")
+
 def addObj(obj):
     global objList
     objList.append(obj)
@@ -174,7 +179,6 @@ def update():
     if not areOperationsPosible(operationList):
         raise operationNotPossible
     for op in operationList:
-        print(op)
         name = ""
         ext = ""
         mode = 'n'
@@ -192,4 +196,7 @@ def update():
                 ext = None
             else:
                 ext = ext[1:]
+            pass
         performSelectedOperation(resolveNameToIndex(name), op[1], ext, op[2])
+    moveThreadAlong()
+
