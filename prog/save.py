@@ -3,7 +3,7 @@ import pickle
 
 
 def saveObj(obj, fileName):
-    with open(fileName, 'wb') as out:
+    with open("./"+fileName, 'wb') as out:
         pickle.dump(obj, out, -1)
 
 

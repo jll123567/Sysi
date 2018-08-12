@@ -88,8 +88,8 @@ if __name__ == "__main__":
     # readPage(1)
     # sleep(2)
     # quickRead(1)
-    import saves.save
+    import prog.save
     import json
     index.storage[0] = json.dumps({"storage": index.storage[0].storage, "tag": index.storage[0].tag})
-    saves.save.objToJson("h", index)
+    prog.save.objToJson("h", index)
 
