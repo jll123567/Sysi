@@ -2,19 +2,22 @@ import re
 
 
 class operationNotPossible(Exception):
-    def __init__(self, expression, message="one or more operations are not available as listed"):
+    def __init__(self, expression, message="one or more operations are not available as writen"):
         self.expression = expression
         self.message = message
 
 
 # task > CGE
-# ["target(obj name)", "operation", [paramaters]]
+# ["target(obj name)", "operation", [parameters]]
 
 # CGE > sceneScript
-# ["sender","traget","oepration",[paramaters]]
+# ["sender","target","operation",[parameters]]
 
 objList = []
 
+
+# TODO: make a way to export a Live run and all change done through CGE to a valid scene
+# also TODO: make a way to have CGE run update until a goal is reached
 
 # noinspection PyPep8Naming
 def getAtribs(obj):
@@ -68,7 +71,7 @@ def resolveNameToIndex(name):
     return ndx
 
 
-def areOperationsPosible(operationList):
+def areOperationsPossible(operationList):
     global objList
     for operation in operationList:
         if '.' in operation[0]:
@@ -95,38 +98,39 @@ def areOperationsPosible(operationList):
     return True
 
 
-def performSelectedOperation(objIndex, operation, subOjectRefrence=None, paramaters=[]):
+# noinspection PyDefaultArgument,PyBroadException
+def performSelectedOperation(objIndex, operation, subObjectReference=None, parameters=[]):
     global objList
-    if subOjectRefrence is None:
-        if paramaters.__len__() == 0:
+    if subObjectReference is None:
+        if parameters.__len__() == 0:
             try:
                 getattr(objList[objIndex], operation)()
             except:
-                print("selected operation not posible with selected paramaters")
+                print("selected operation not possible with selected parameters")
         else:
             try:
-                getattr(objList[objIndex], operation)(*paramaters)
+                getattr(objList[objIndex], operation)(*parameters)
             except:
-                print("selected operation not posible with selected paramaters")
+                print("selected operation not possible with selected parameters")
     else:
-        subObj = unpackSubObjFromExtension(objList[objIndex], subOjectRefrence)
-        if paramaters.__len__() == 0:
+        subObj = unpackSubObjFromExtension(objList[objIndex], subObjectReference)
+        if parameters.__len__() == 0:
             try:
                 getattr(subObj, operation)()
             except:
-                print("selected operation not posible with selected paramaters")
+                print("selected operation not possible with selected parameters")
         else:
             try:
-                getattr(subObj, operation)(*paramaters)
+                getattr(subObj, operation)(*parameters)
             except:
-               print("selected operation not posible with selected paramaters")
-        objList[objIndex] = repackSubToFull(objList[objIndex], subObj, subOjectRefrence)
+                print("selected operation not possible with selected parameters")
+        objList[objIndex] = repackSubToFull(objList[objIndex], subObj, subObjectReference)
 
 
-def unpackSubObjFromExtension(obj, subObjRefrence):
+def unpackSubObjFromExtension(obj, subObjReference):
     subs = []
     sub = ""
-    for char in subObjRefrence:
+    for char in subObjReference:
         if char == '.':
             subs.append(sub)
             sub = ""
@@ -139,10 +143,10 @@ def unpackSubObjFromExtension(obj, subObjRefrence):
     return extractedObj
 
 
-def repackSubToFull(fullObj, subObj, subObjRefrence):
+def repackSubToFull(fullObj, subObj, subObjReference):
     subs = []
     sub = ""
-    for char in subObjRefrence:
+    for char in subObjReference:
         if char == '.':
             subs.append(sub)
             sub = ""
@@ -152,6 +156,7 @@ def repackSubToFull(fullObj, subObj, subObjRefrence):
     currentSub = subs[-1]
     subs.pop(-1)
 
+    # noinspection PySimplifyBooleanCheck
     while subs != []:
         extractedObj = fullObj
         for subObjs in subs:
@@ -163,20 +168,23 @@ def repackSubToFull(fullObj, subObj, subObjRefrence):
     setattr(fullObj, currentSub, subObj)
     return fullObj
 
+
 def moveThreadAlong():
     global objList
     for obj in objList:
         obj.trd.tsk.nextCurrent()
     print("shift completed")
 
+
 def addObj(obj):
     global objList
     objList.append(obj)
 
+
 def update():
     global objList
     operationList = getOperations()
-    if not areOperationsPosible(operationList):
+    if not areOperationsPossible(operationList):
         raise operationNotPossible
     for op in operationList:
         name = ""
@@ -199,4 +207,3 @@ def update():
             pass
         performSelectedOperation(resolveNameToIndex(name), op[1], ext, op[2])
     moveThreadAlong()
-

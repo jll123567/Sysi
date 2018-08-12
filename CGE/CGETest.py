@@ -26,7 +26,7 @@ for obj in objList:
                                                                                             []]])
         print("set next instruction to continue moving")
         objList[1].trd.tsk.profiles = [[["test/1.trd.mov", "move", []], ["test/1.trd.tsk", "loop",
-                                                                          [["test/1.trd.mov", "move", []]]]]]
+                                                                         [["test/1.trd.mov", "move", []]]]]]
 CGE.objList = objList
 while CGE.objList[1].trd.mov.x < 100:
     CGE.update()
