@@ -27,7 +27,30 @@ for obj in objList:
         print("set next instruction to continue moving")
         objList[1].trd.tsk.profiles = [[["test/1.trd.mov", "move", []], ["test/1.trd.tsk", "loop",
                                                                          [["test/1.trd.mov", "move", []]]]]]
-CGE.objList = objList
-while CGE.objList[1].trd.mov.x < 100:
+CGE.objList = [objList[1]]
+while CGE.objList[0].trd.mov.x < 100:
     CGE.update()
-    print(CGE.objList[1].trd.mov.x)
+    print(CGE.objList[0].trd.mov.x)
+
+
+class weirdObjWithCustomFunct(object.object):
+    def __init__(self):
+        super().__init__()
+
+    @staticmethod
+    def printTheText():
+        print("theText")
+
+
+CGE.objList = []
+g = weirdObjWithCustomFunct()
+g.tag["name"] = "test/2"
+g.trd.tsk.setCurrentProfile([[g.tag["name"], "printTheText", []]])
+CGE.addObj(g)
+CGE.addObj(object.scene([[0, None, 30]], [], None, {"name": "test/embeddedScene"}))
+CGE.saveSceneInit()
+# breakpoint()
+for i in range(0, 3):
+    CGE.update(True)
+coolScene = CGE.exportScene([0, None, 30], "test/coolScene")
+print("a")

@@ -206,14 +206,12 @@ class container:
 
 # noinspection PyDefaultArgument,PyTypeChecker
 class scene:
-    def __init__(self, scp=[], obj=[], loc=container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"name": "defaultContainer"}),
+    def __init__(self, scp=[[0, None, 30]], obj=[], loc=container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"name": "defaultContainer"}),
                  tag={"name": None}):
         self.scp = scp
-        # [time(time,tl branch),command0,command1,...]
+        # [time(time,tl branch, shift per sec),command0,command1,...]
         self.obj = obj
         # objlist
-        # [usr, wep, obj, dta]
-        # ["obj0=object.w/e(s,t,u,f,f)", ...]
         self.loc = loc
         # cont
         # use a super cont that will contain all relevant containers
@@ -246,7 +244,7 @@ class universe:
     # [[master line end point],[id,parent id,start time,end time],...]
 
     # for scenes
-    # scn.scp[0] = [id, start]
+    # scn.scp[0] = [id, start, shifts per second]
     def forkTl(self, lineId, parent, offset, endpoint):
         count = 0
         invalid = True

@@ -1,11 +1,6 @@
 import re
-
-
-class operationNotPossible(Exception):
-    def __init__(self, expression, message="one or more operations are not available as writen"):
-        self.expression = expression
-        self.message = message
-
+import object
+import warnings
 
 # task > CGE
 # ["target(obj name)", "operation", [parameters]]
@@ -14,10 +9,10 @@ class operationNotPossible(Exception):
 # ["sender","target","operation",[parameters]]
 
 objList = []
+scene = object.scene()
 
 
-# TODO: make a way to export a Live run and all change done through CGE to a valid scene
-# also TODO: make a way to have CGE run update until a goal is reached
+# TODO: make a way to have CGE run update until a goal is reached
 
 # noinspection PyPep8Naming
 def getAtribs(obj):
@@ -56,15 +51,23 @@ def getOperations():
     global objList
     operationList = []
     for obj in objList:
-        for operation in obj.trd.tsk.current:
-            operationList.append(operation)
+        try:
+            for operation in obj.trd.tsk.current:
+                operationList.append(operation)
+        except AttributeError:
+            warnings.warn("the object " + obj.tag["name"] + "does not have a thread and/or tasker \n please add one "
+                                                            "if you want the object to do something",
+                          objectDoesNotContainTsk)
     return operationList
 
 
 def resolveNameToIndex(name):
     global objList
+    if objList.__len__() == 1:
+        return 0
     ndx = 0
     for obj in objList:
+        print(name == obj.tag["name"], name, obj.tag["name"])
         if name == obj.tag["name"]:
             break
         ndx += 1
@@ -106,24 +109,25 @@ def performSelectedOperation(objIndex, operation, subObjectReference=None, param
             try:
                 getattr(objList[objIndex], operation)()
             except:
-                print("selected operation not possible with selected parameters")
+                raise operationNotPossible("getattr(objList[objIndex], operation)()")
         else:
             try:
                 getattr(objList[objIndex], operation)(*parameters)
             except:
-                print("selected operation not possible with selected parameters")
+                raise operationNotPossible("getattr(objList[objIndex], operation)(*parameters)")
     else:
+        print(objIndex)
         subObj = unpackSubObjFromExtension(objList[objIndex], subObjectReference)
         if parameters.__len__() == 0:
             try:
                 getattr(subObj, operation)()
             except:
-                print("selected operation not possible with selected parameters")
+                raise operationNotPossible("getattr(subObj, operation)()")
         else:
             try:
                 getattr(subObj, operation)(*parameters)
             except:
-                print("selected operation not possible with selected parameters")
+                raise operationNotPossible("getattr(subObj, operation)(*parameters)")
         objList[objIndex] = repackSubToFull(objList[objIndex], subObj, subObjectReference)
 
 
@@ -172,7 +176,10 @@ def repackSubToFull(fullObj, subObj, subObjReference):
 def moveThreadAlong():
     global objList
     for obj in objList:
-        obj.trd.tsk.nextCurrent()
+        try:
+            obj.trd.tsk.nextCurrent()
+        except AttributeError:
+            pass
     print("shift completed")
 
 
@@ -181,11 +188,27 @@ def addObj(obj):
     objList.append(obj)
 
 
-def update():
+def saveSceneInit(cont=None):
+    global scene, objList
+    if cont is not None:
+        scene.loc = cont
+    scene.obj = objList
+
+
+def exportScene(tlInfo, name):
+    global scene
+    scene.scp[0] = tlInfo
+    scene.tag["name"] = name
+    return scene
+
+
+def update(saveToScene=False):
     global objList
     operationList = getOperations()
     if not areOperationsPossible(operationList):
         raise operationNotPossible
+    if saveToScene:
+        scene.scp.append(operationList)
     for op in operationList:
         name = ""
         ext = ""
@@ -205,5 +228,20 @@ def update():
             else:
                 ext = ext[1:]
             pass
-        performSelectedOperation(resolveNameToIndex(name), op[1], ext, op[2])
+        if ext == "":
+            name = op[0]
+            print("pso: ", name)
+            performSelectedOperation(resolveNameToIndex(name), op[1], None, op[2])
+        else:
+            performSelectedOperation(resolveNameToIndex(name), op[1], ext, op[2])
     moveThreadAlong()
+
+
+class operationNotPossible(Exception):
+    def __init__(self, expression, message="one or more operations are not available as writen"):
+        self.expression = expression
+        self.message = message
+
+
+class objectDoesNotContainTsk(Warning):
+    pass
