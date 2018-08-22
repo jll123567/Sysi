@@ -12,7 +12,8 @@ objList = []
 scene = object.scene()
 
 
-# TODO: make a way to have CGE run update until a goal is reached
+# TODO: add event logging
+# If your wondering why I haven't updated this I went a small vacation
 
 # noinspection PyPep8Naming
 def getAtribs(obj):
@@ -101,7 +102,7 @@ def areOperationsPossible(operationList):
     return True
 
 
-# noinspection PyDefaultArgument,PyBroadException
+# noinspection PyDefaultArgument
 def performSelectedOperation(objIndex, operation, subObjectReference=None, parameters=[]):
     global objList
     if subObjectReference is None:
@@ -235,6 +236,36 @@ def update(saveToScene=False):
         else:
             performSelectedOperation(resolveNameToIndex(name), op[1], ext, op[2])
     moveThreadAlong()
+
+
+def updateWithGoal(objName, subObjReference, comparator, goal, saveToScene=False):
+    global objList
+    if subObjReference is not None:
+        test = unpackSubObjFromExtension(resolveNameToIndex(objName), subObjReference)
+        del test
+    if subObjReference is None:
+        while goal != resolveNameToIndex(objName):
+            update(saveToScene)
+    elif comparator == '==':
+        while goal != unpackSubObjFromExtension(resolveNameToIndex(objName), subObjReference):
+            update(saveToScene)
+    elif comparator == '!=':
+        while goal == unpackSubObjFromExtension(resolveNameToIndex(objName), subObjReference):
+            update(saveToScene)
+    elif comparator == '>':
+        while goal <= unpackSubObjFromExtension(resolveNameToIndex(objName), subObjReference):
+            update(saveToScene)
+    elif comparator == '<':
+        while goal >= unpackSubObjFromExtension(resolveNameToIndex(objName), subObjReference):
+            update(saveToScene)
+    elif comparator == '>=':
+        while goal < unpackSubObjFromExtension(resolveNameToIndex(objName), subObjReference):
+            update(saveToScene)
+    elif comparator == '<=':
+        while goal != unpackSubObjFromExtension(resolveNameToIndex(objName), subObjReference):
+            update(saveToScene)
+    else:
+        print("the comparator inputted is not valid")
 
 
 class operationNotPossible(Exception):
