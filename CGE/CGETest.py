@@ -31,7 +31,7 @@ CGE.objList = [objList[1]]
 while CGE.objList[0].trd.mov.x < 100:
     CGE.update()
     print(CGE.objList[0].trd.mov.x)
-
+breakpoint()
 
 class weirdObjWithCustomFunct(object.object):
     def __init__(self):

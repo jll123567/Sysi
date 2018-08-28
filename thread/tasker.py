@@ -7,6 +7,8 @@ import time
 # tsk=[profile,profile,profile,...]
 # profile=[f0,f1,f2,...]
 
+#TODO:add functions to handle while and for loops
+
 class tsk:
     def __init__(self, current=[], profiles=[]):
         self.current = current

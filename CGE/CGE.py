@@ -12,9 +12,6 @@ objList = []
 scene = object.scene()
 
 
-# TODO: add event logging
-# If your wondering why I haven't updated this I went a small vacation
-
 # noinspection PyPep8Naming
 def getAtribs(obj):
     objDict = str(obj.__dict__.keys())
@@ -68,7 +65,7 @@ def resolveNameToIndex(name):
         return 0
     ndx = 0
     for obj in objList:
-        print(name == obj.tag["name"], name, obj.tag["name"])
+        #print(name == obj.tag["name"], name, obj.tag["name"])
         if name == obj.tag["name"]:
             break
         ndx += 1
@@ -117,7 +114,7 @@ def performSelectedOperation(objIndex, operation, subObjectReference=None, param
             except:
                 raise operationNotPossible("getattr(objList[objIndex], operation)(*parameters)")
     else:
-        print(objIndex)
+        #print(objIndex)
         subObj = unpackSubObjFromExtension(objList[objIndex], subObjectReference)
         if parameters.__len__() == 0:
             try:
@@ -231,10 +228,15 @@ def update(saveToScene=False):
             pass
         if ext == "":
             name = op[0]
-            print("pso: ", name)
+            #print("pso: ", name)
             performSelectedOperation(resolveNameToIndex(name), op[1], None, op[2])
         else:
             performSelectedOperation(resolveNameToIndex(name), op[1], ext, op[2])
+        if "evLog" in objList[resolveNameToIndex(name)].tag.keys():
+            objList[resolveNameToIndex(name)].tag["evLog"].append(op[1])
+        else:
+            objList[resolveNameToIndex(name)].tag.update({"evLog": [op[1]]})
+
     moveThreadAlong()
 
 
