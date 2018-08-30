@@ -72,7 +72,7 @@ class tsk:
     # set the following task to loop infinately
     # use self.loop(profile)
     # requires self
-    def loop(self, profile):
+    def loopInf(self, profile):
         name = ""
         for char in profile[0]:
             if char == '.':
@@ -80,7 +80,50 @@ class tsk:
             else:
                 name += char
         name += ".trd.tsk"
-        self.addProfile([profile, [name, "loop", [profile]]])
+        self.addProfile([profile, [name, "loopInf", [profile]]])
+
+    # determine the next task based on the state of object0 and object1(they don't need to be sysh.object.object s)
+    # use self.if(<comparator>string, <object0>any, <object1>any, <then>task profile, <els=None>task profile or None)
+    # requires self
+    def ifStatement(self, comparator, object0, object1, then, els=None):
+        if comparator == '==':
+            if object0 == object1:
+                self.profiles.insert(0, then)
+            else:
+                if els is not None:
+                    self.profiles.insert(0, els)
+        elif comparator == '!=':
+            if object0 != object1:
+                self.profiles.insert(0, then)
+            else:
+                if els is not None:
+                    self.profiles.insert(0, els)
+        elif comparator == '>':
+            if object0 > object1:
+                self.profiles.insert(0, then)
+            else:
+                if els is not None:
+                    self.profiles.insert(0, els)
+        elif comparator == '<':
+            if object0 < object1:
+                self.profiles.insert(0, then)
+            else:
+                if els is not None:
+                    self.profiles.insert(0, els)
+        elif comparator == '>=':
+            if object0 >= object1:
+                self.profiles.insert(0, then)
+            else:
+                if els is not None:
+                    self.profiles.insert(0, els)
+        elif comparator == '<=':
+            if object0 <= object1:
+                self.profiles.insert(0, then)
+            else:
+                if els is not None:
+                    self.profiles.insert(0, els)
+        else:
+            print("the comparator inputted is not valid")
 
 # runtime
 if __name__ == "__main__":
