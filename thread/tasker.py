@@ -7,15 +7,15 @@ import time
 # tsk=[profile,profile,profile,...]
 # profile=[f0,f1,f2,...]
 
-#TODO:add functions to handle while and for loops
 
+# noinspection PyDefaultArgument,PyMethodMayBeStatic
 class tsk:
     def __init__(self, current=[], profiles=[]):
         self.current = current
         self.profiles = profiles
 
     def nextCurrent(self):
-        if self.profiles != []:
+        if self.profiles:
             if isinstance(self.profiles[0], list):
                 self.current = self.profiles[0]
             else:
@@ -30,8 +30,8 @@ class tsk:
     def step(self):
         print(self.current[0])
         self.current.pop(0)
-        if self.current == []:
-            if self.profiles == []:
+        if not self.current:
+            if not self.profiles:
                 print("No remaining operations")
             else:
                 self.nextCurrent()
@@ -50,8 +50,14 @@ class tsk:
     def setCurrentProfile(self, profile):
         self.current = profile
 
+    # sets the current profile to <profile>
+    # use <self> = Sysh.thread.tasker.setCurrentProfile(<self>, <task profile>)
+    # requires: self
+    def appendCurrentProfile(self, operation):
+        self.current.append(operation)
+
     # adds a new profile to the end of the tasking queue
-    # use <self> = Sysh.thread.tasker.addProflie(<self>, <task profile>)
+    # use <self> = Sysh.thread.tasker.addProfile(<self>, <task profile>)
     # requires: self
     def addProfile(self, profile):
         self.profiles.append(profile)
@@ -69,7 +75,7 @@ class tsk:
         time.sleep(t)
         self.run()
 
-    # set the following task to loop infinately
+    # set the following task to loop infinitely
     # use self.loop(profile)
     # requires self
     def loopInf(self, profile):
@@ -86,6 +92,8 @@ class tsk:
     # use self.if(<comparator>string, <object0>any, <object1>any, <then>task profile, <els=None>task profile or None)
     # requires self
     def ifStatement(self, comparator, object0, object1, then, els=None):
+        if not isinstance(then[0], list):
+            then = [then]
         if comparator == '==':
             if object0 == object1:
                 self.profiles.insert(0, then)
@@ -124,6 +132,10 @@ class tsk:
                     self.profiles.insert(0, els)
         else:
             print("the comparator inputted is not valid")
+
+    def printMsg(self, msg):
+        print(msg)
+
 
 # runtime
 if __name__ == "__main__":

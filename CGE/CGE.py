@@ -8,6 +8,8 @@ import warnings
 # CGE > sceneScript
 # ["sender","target","operation",[parameters]]
 
+# TODO: add scene close if tsk.current and tsk.profiles of all objects is empty.
+
 objList = []
 scene = object.scene()
 
@@ -65,7 +67,7 @@ def resolveNameToIndex(name):
         return 0
     ndx = 0
     for obj in objList:
-        #print(name == obj.tag["name"], name, obj.tag["name"])
+        # print(name == obj.tag["name"], name, obj.tag["name"])
         if name == obj.tag["name"]:
             break
         ndx += 1
@@ -91,7 +93,7 @@ def areOperationsPossible(operationList):
             ext = ext[1:]
             methods = getMethods(unpackSubObjFromExtension(objList[resolveNameToIndex(name)], ext))
             if operation[1] not in methods:
-                return False
+                raise operationNotPossible(str(operation[1]) + " not in " + str(name + '.' + ext) + " method list")
 
         else:
             if operation[1] not in getMethods(objList[resolveNameToIndex(operation[0])]):
@@ -114,7 +116,7 @@ def performSelectedOperation(objIndex, operation, subObjectReference=None, param
             except:
                 raise operationNotPossible("getattr(objList[objIndex], operation)(*parameters)")
     else:
-        #print(objIndex)
+        # print(objIndex)
         subObj = unpackSubObjFromExtension(objList[objIndex], subObjectReference)
         if parameters.__len__() == 0:
             try:
@@ -202,9 +204,17 @@ def exportScene(tlInfo, name):
 
 def update(saveToScene=False):
     global objList
+    objIdx = 0
+    for _ in objList:
+        if not objList[objIdx].trd.tsk.current:
+            continue
+        if not isinstance(objList[objIdx].trd.tsk.current[0], list):
+            objList[objIdx].trd.tsk.current[0] = [objList[objIdx].trd.tsk.current[0]]
+        objIdx += 1
     operationList = getOperations()
-    if not areOperationsPossible(operationList):
-        raise operationNotPossible
+    # if not
+    areOperationsPossible(operationList)
+    # raise operationNotPossible(operationList)
     if saveToScene:
         scene.scp.append(operationList)
     for op in operationList:
@@ -228,7 +238,7 @@ def update(saveToScene=False):
             pass
         if ext == "":
             name = op[0]
-            #print("pso: ", name)
+            # print("pso: ", name)
             performSelectedOperation(resolveNameToIndex(name), op[1], None, op[2])
         else:
             performSelectedOperation(resolveNameToIndex(name), op[1], ext, op[2])
