@@ -5,10 +5,10 @@ import warnings
 # task > CGE
 # ["target(obj name)", "operation", [parameters]]
 
+
 # CGE > sceneScript
 # ["sender","target","operation",[parameters]]
 
-# TODO: add scene close if tsk.current and tsk.profiles of all objects is empty.
 
 objList = []
 scene = object.scene()
@@ -175,12 +175,18 @@ def repackSubToFull(fullObj, subObj, subObjReference):
 
 def moveThreadAlong():
     global objList
+    objsEmpty = 0
     for obj in objList:
+        if obj.trd.tsk.profiles.__len__() == 0:
+            objsEmpty = 0
         try:
             obj.trd.tsk.nextCurrent()
         except AttributeError:
             pass
     print("shift completed")
+    if objsEmpty == objList.__len__():
+        print("all object's threads empty \ndumping objects from list")
+        objList = []
 
 
 def addObj(obj):
@@ -204,6 +210,8 @@ def exportScene(tlInfo, name):
 
 def update(saveToScene=False):
     global objList
+    if not objList:
+        return "No objects to process"
     objIdx = 0
     for _ in objList:
         if not objList[objIdx].trd.tsk.current:
