@@ -9,8 +9,7 @@ import thread.language
 #                      ["name:text"][level,[users,...]][r,w,s,l]
 
 
-
-###I WILL UPDATE THIS AT A LATER DATE###
+# ##I WILL UPDATE THIS AT A LATER DATE## #
 
 def addServer(server, pram):
     server.storage = pram
@@ -124,7 +123,7 @@ def streamListen(server, channel, usr):
                             thread.language.listen(usr, i[2][0])
                             n = input("dc?")
                             if n == 'y':
-                                connectedToStream =False
+                                connectedToStream = False
                             else:
                                 continue
                     else:

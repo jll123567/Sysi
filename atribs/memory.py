@@ -9,6 +9,7 @@ import object
 # [obj,obj,...]stored in order of date added
 
 class mem:
+    # noinspection PyDefaultArgument
     def __init__(self, internal=[], real=[], external=[]):
         self.internal = internal
         self.real = real

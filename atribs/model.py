@@ -1,6 +1,6 @@
 # setup
 
-# model stores any sort of model of the selfect
+# model stores model of the object
 # accepts png, stl, and the method below
 #
 # Model format:
@@ -13,7 +13,8 @@
 # note: parents have a model of "assem"
 
 
-class sysModel():
+class sysModel:
+    # noinspection PyDefaultArgument
     def __init__(self, geom={"scale": 1, "lines": ["0,0,0-0,0,0"]},
                  skel={"scale": 1, "points": ["0,0,0", ["0,0,0"]]},
                  ani={"default": {"scale": 1, "animation": [["0,0,0", "0,0,0", ]]}},
@@ -26,7 +27,8 @@ class sysModel():
     def addAnimation(self, animation):
         self.ani.update(animation)
 
-class fileModel():
+
+class fileModel:
     def __init__(self, file):
         self.file = file
 

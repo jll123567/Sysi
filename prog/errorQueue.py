@@ -12,10 +12,8 @@ queue = []
 def errorQueue(errs):
     global queue
     for i in errs:
-        queue.append(i)
-    for i in queue:
         print(str(len(queue)) + " left to resolve")
-        error.resolveError(i)
+        i.resolveError()
     print("queue empty exiting")
 
 

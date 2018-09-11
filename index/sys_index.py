@@ -7,7 +7,7 @@ import object
 # dta([head,body,id],tags)
 last_id = 0
 index = object.data([object.data(["Hello, world!", "sysh V11.0 is here. Hope you're hyped. :D", 0],
-                                 {'name': 'Hello, world!','terms': ['sys', 'Hello,world!', 'v11.0']})],
+                                 {'name': 'Hello, world!', 'terms': ['sys', 'Hello,world!', 'v11.0']})],
                     {"name": "index"})
 
 for page in index.storage:
@@ -67,6 +67,7 @@ def deletePage(pageId):
             index.storage.pop(index(i))
 
 
+# noinspection SpellCheckingInspection
 def typer():
     working = True
     terms = []
@@ -84,12 +85,3 @@ def typer():
 # runtime
 if __name__ == "__main__":
     print("system index v11.0")
-    # typer()
-    # readPage(1)
-    # sleep(2)
-    # quickRead(1)
-    import prog.save
-    import json
-    index.storage[0] = json.dumps({"storage": index.storage[0].storage, "tag": index.storage[0].tag})
-    prog.save.objToJson("h", index)
-
