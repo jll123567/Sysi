@@ -27,6 +27,10 @@ class sysModel:
     def addAnimation(self, animation):
         self.ani.update(animation)
 
+    def changeMaterial(self, texture, physx):
+        self.mat["texture"] = texture
+        self.mat["physx"] = physx
+
 
 class fileModel:
     def __init__(self, file):

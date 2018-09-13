@@ -17,19 +17,19 @@ class mem:
 
     def forget(self, block, index):
         if block == 0:
-            print("no internal access")
+            print("no internal forgetting")
         elif block == 1:
             self.real.pop(index)
         else:
-            self.external.pop(index)
+            print("requires direct mod")
 
     def store(self, block, obj):
         if block == 0:
-            print("no internal access")
+            self.internal.append(obj)
         elif block == 1:
             self.real.append(obj)
         else:
-            self.external.append(obj)
+            print("requires direct mod")
 
     def find(self, query):
         if query is None:
@@ -43,18 +43,20 @@ class mem:
 
     def modify(self, block, index, value):
         if block == 0:
-            print("no internal access")
+            print("no internal modify")
         elif block == 1:
-            self.external[index] = value
+            self.internal[index] = value
         else:
-            self.external[index] = value
+            print("requires direct mod")
     
     
 # converts an object to a "hashed" (shortened data preserving tags)
-def saveAsHash(obj):
+def saveObjHash(obj):
     info = obj
     dta = object.data((hashlib.md5(info.encode('utf-8')).hexdigest()), obj.tag)
     return dta
+
+# TODO: add checksum bc its more acurate
 
 
 # runtime

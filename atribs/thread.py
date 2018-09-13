@@ -26,7 +26,3 @@ class trd:
         self.sub.parent = [parent, offset],
         self.sub.children = []
         self.mov = "sub"
-
-    def setParent(self, parent, offset):
-        self.sub.parent = [parent, offset]
-        self.mov = "sub"
