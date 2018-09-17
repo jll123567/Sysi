@@ -1,12 +1,12 @@
 # import
-import thread.language
 
 
 # setup
 # server=dta
 # [[usrlist],     [channels]]
-# [atribs,is_admin] [name,msg,stream,perms]
-#                      ["name:text"][level,[users,...]][r,w,s,l]
+# usrlist = [atribs,is_admin]
+# channels = [name,msg,stream,perms]
+# perm = ["name:text"][level,[users,...]][r,w,s,l]
 
 
 # ##I WILL UPDATE THIS AT A LATER DATE## #
@@ -15,9 +15,9 @@ def addServer(server, pram):
     server.storage = pram
 
 
-def delServer(server, uname):
+def delServer(server, name):
     for i in server.storage[0]:
-        if i[0] == uname:
+        if i[0] == name:
             if i[1]:
                 print(server.tag["name"], " removed")
                 server.storage = None
@@ -120,7 +120,7 @@ def streamListen(server, channel, usr):
                     if i[3][count][3]:
                         connectedToStream = True
                         while connectedToStream:
-                            thread.language.listen(usr, i[2][0])
+                            usr.thread.language.listen(i[2][0])
                             n = input("dc?")
                             if n == 'y':
                                 connectedToStream = False
