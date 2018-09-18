@@ -23,6 +23,9 @@ class sub:
         self.parent = parent
         self.children = children
 
+    def setParent(self, parent, offset):
+        self.parent = [parent, offset]
+
     def setChildren(self, children):
         self.children = children
 

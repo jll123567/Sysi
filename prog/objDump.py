@@ -14,8 +14,8 @@ def udump(usr):
     try:
         print(usr.tag["name"])
         print(" memory")
-        dump_parser(usr.mem[1], 1)
-        dump_parser(usr.mem[2], 1)
+        dump_parser(usr.mem.real, 1)
+        dump_parser(usr.mem.external, 1)
         print(" model")
         dump_parser(usr.mod, 1)
         print(" ram")
