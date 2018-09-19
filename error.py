@@ -9,14 +9,14 @@ import object
 # message: string to describe the issue
 # resolutions: what can be done to fix the issue
 # selected: an integer that is the index of the resolution you want(None if no resolution selected)
-# noinspection PyDefaultArgument
+#
 class err(object.data):
-    def __init__(self, errType, severity, message, resolutions, selected, tag={"name": None}):
-        super(err, self).__init__()
-        self.storage = {"code": (str(errType) + str(severity) + ":" + message),
-                        "resolutions": resolutions,
-                        "selected": selected}
-        self.tag = tag
+    def __init__(self, errType, severity, message, resolutions, selected, tag=None):
+        if tag is None:
+            tag = {"name": None}
+        super().__init__(
+            {"code": (str(errType) + str(severity) + ":" + message), "resolutions": resolutions, "selected": selected},
+            tag)
 
     def setError(self, errType, severity, message, resolutions, selected):
         self.storage["code"](str(errType) + str(severity) + ":" + message)

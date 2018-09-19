@@ -3,19 +3,25 @@ import object
 
 
 # setup
-# noinspection PyDefaultArgument
+#
 class sceneList(object.data):
-    def __init__(self, storage=None, tag={"name": None}):
-        super(sceneList, self).__init__()
-        self.storage = storage
-        self.tag = tag
+    def __init__(self, storage=None, tag=None):
+        if tag is None:
+            tag = {"name": None}
+        super().__init__(storage, tag)
 
     def loadScene(self, scn):
         self.storage.append(scn)
 
-    def newScene(self, newScp=[], newObj=[],
+    def newScene(self, newScp=None, newObj=None,
                  newLoc=object.container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"name": "defaultContainer"}),
-                 newTag={"name": "emptyScene"}):
+                 newTag=None):
+        if newScp is None:
+            newScp = []
+        if newObj is None:
+            newObj = []
+        if newTag is None:
+            newTag = {"name": "emptyScene"}
         self.storage.append(object.scene(newScp, newObj, newLoc, newTag))
 
     def loadObj(self, index, obj):

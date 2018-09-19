@@ -1,10 +1,19 @@
-# noinspection PyDefaultArgument
+#
 class prs:
     # noinspection SpellCheckingInspection
-    def __init__(self, goals=[], limits=[], functions=[]):
-        self.goals = goals
-        self.limits = limits
-        self.functions = functions
+    def __init__(self, goals=None, limits=None, functions=None):
+        if goals is None:
+            self.goals = []
+        else:
+            self.goals = goals
+        if limits is None:
+            self.limits = []
+        else:
+            self.limits = limits
+        if functions is None:
+            self.functions = []
+        else:
+            self.functions = functions
 
         # setup
         # [limits,goals,functions,dict]

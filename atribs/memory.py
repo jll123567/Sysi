@@ -9,11 +9,20 @@ import object
 # [obj,obj,...]stored in order of date added
 
 class mem:
-    # noinspection PyDefaultArgument
-    def __init__(self, internal=[], real=[], external=[]):
-        self.internal = internal
-        self.real = real
-        self.external = external
+    #
+    def __init__(self, internal=None, real=None, external=None):
+        if internal is None:
+            self.internal = []
+        else:
+            self.internal = internal
+        if real is None:
+            self.real = []
+        else:
+            self.real = real
+        if external is None:
+            self.external = []
+        else:
+            self.external = external
 
     def forget(self, block, index):
         if block == 0:
@@ -56,7 +65,7 @@ def saveObjHash(obj):
     dta = object.data((hashlib.md5(info.encode('utf-8')).hexdigest()), obj.tag)
     return dta
 
-# TODO: add checksum bc its more acurate
+# TODO: add checksum bc its more accurate
 
 
 # runtime

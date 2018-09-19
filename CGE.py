@@ -101,8 +101,10 @@ def areOperationsPossible(operationList):
     return True
 
 
-# noinspection PyDefaultArgument
-def performSelectedOperation(objIndex, operation, subObjectReference=None, parameters=[]):
+#
+def performSelectedOperation(objIndex, operation, subObjectReference=None, parameters=None):
+    if  parameters is None:
+        parameters = []
     global objList
     if subObjectReference is None:
         if parameters.__len__() == 0:
@@ -160,8 +162,7 @@ def repackSubToFull(fullObj, subObj, subObjReference):
     currentSub = subs[-1]
     subs.pop(-1)
 
-    # noinspection PySimplifyBooleanCheck
-    while subs != []:
+    while subs:
         extractedObj = fullObj
         for subObjs in subs:
             extractedObj = getattr(extractedObj, subObjs)

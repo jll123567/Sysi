@@ -6,18 +6,21 @@ import atribs.model
 import atribs.damage
 import atribs.memory
 import atribs.personality
+import prog.idGen
 from math import sqrt
 
 
 # setup
-# noinspection PyDefaultArgument,PyShadowingBuiltins
 class object:
-    def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(), tag={"name": None}):
+    def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(), tag=None):
         self.mod = mod
         self.trd = trd
-        self.tag = tag
+        if tag is None:
+            self.tag = {"id": None}
+        else:
+            self.tag = tag
         # required tags
-        # name
+        # id
 
     def makeModelAssembly(self):
         oldModel = self.mod
@@ -117,13 +120,16 @@ class object:
         self.trd.sub.parent = None
 
 
-# noinspection PyDefaultArgument
+#
 class user(object):
     # noinspection SpellCheckingInspection
     def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(), prs=atribs.personality.prs(),
-                 mem=atribs.memory.mem(), tag={"name": None}):
+                 mem=atribs.memory.mem(), tag=None):
         self.mod = mod
-        self.tag = tag
+        if tag is None:
+            self.tag = {"id": None}
+        else:
+            self.tag = tag
         self.trd = trd
         self.prs = prs
         # working on it
@@ -135,7 +141,8 @@ class user(object):
     # use: <usr> = Sysh.thread.ram.store(<usr>, <string>, <int between 0 and 100>)
     # requires: usr
     def storeToMemory(self, storedRamName, storedRamImportance):
-        dta = data([self.trd.ram.storage], {"name": storedRamName, "relevancy": [0, 0, storedRamImportance]})
+        dta = data([self.trd.ram.storage],
+                   {"id": prog.idGen.generateGenericId(), "name": storedRamName, "relevancy": [0, 0, storedRamImportance]})
         self.mem.store(1, dta)
 
     def loadToRam(self, block, index):
@@ -163,7 +170,7 @@ class user(object):
             return 100 + (sqrt(obj.tag["relevancy"][1]) * 10) + 25 + (obj.tag["relevancy"][2])
         else:
             return (100 * ((1 / 3) ** obj.tag["relevancy"][0])) + (sqrt(obj.tag["relevancy"][1]) * 10) + (
-            obj.tag["relevancy"][2])
+                obj.tag["relevancy"][2])
 
     def loadQueue(self, realIndex):
         self.trd.que = self.mem.real[realIndex].storage
@@ -171,75 +178,117 @@ class user(object):
     def saveQueue(self, tags):
         lastQueue = data(self.trd.que, tags)
         self.mem.store(1, lastQueue)
-        print("queue saved to: ", lastQueue, "@", self.tag["name"], ".mem.real")
+        print("queue saved to: ", lastQueue, "@", self.tag["id"], ".mem.real")
 
 
-# noinspection PyDefaultArgument
+#
 class weapon(object):
     def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(),
-                 dmg=atribs.damage.dmg(), tag={"name": None}):
+                 dmg=atribs.damage.dmg(), tag=None):
         self.mod = mod
-        self.tag = tag
+        if tag is None:
+            self.tag = {"id": None}
+        else:
+            self.tag = tag
         self.trd = trd
         self.dmg = dmg
         # damage profile
 
 
-# noinspection PyDefaultArgument
+#
 class data:
-    def __init__(self, storage=None, tag={"name": None}):
-        self.tag = tag
+    def __init__(self, storage=None, tag=None):
+        if tag is None:
+            self.tag = {"id": None}
+        else:
+            self.tag = tag
         self.storage = storage
         # anything you want to store
 
 
-# noinspection PyDefaultArgument
+#
 class container:
-    def __init__(self, org=[None, 0, 0, 0], bnd=["h,0,0,0-0,0,0"], tag={"name": None}):
-        self.org = org
+    def __init__(self, org=None, bnd=None, tag=None):
+        if org is None:
+            self.org = [None, 0, 0, 0]
+        else:
+            self.org = org
         # [supercont,x,y,z]
         # if is largest cont do None
-        self.bnd = bnd
+        if bnd is None:
+            self.bnd = ["h,0,0,0-0,0,0"]
+        else:
+            self.bnd = bnd
         # [“(h/s,)x,y,z-x,y,z”,...]
-        self.tag = tag
+        if tag is None:
+            self.tag = {"id": None}
+        else:
+            self.tag = tag
 
 
-# noinspection PyDefaultArgument,PyTypeChecker
+# ,PyTypeChecker
 class scene:
-    def __init__(self, scp=[[0, None, 30]], obj=[], loc=container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"name": "defaultContainer"}),
-                 tag={"name": None}):
-        self.scp = scp
+    def __init__(self, scp=None, obj=None,
+                 loc=container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"id": None, "name": "defaultContainer"}), tag=None):
+        if scp is None:
+            self.scp = [[0, None, 30]]
+        else:
+            self.scp = scp
         # [time(time,tl branch, shift per sec),command0,command1,...]
-        self.obj = obj
+        if obj is None:
+            self.obj = []
+        else:
+            self.obj = obj
         # objlist
         self.loc = loc
         # cont
         # use a super cont that will contain all relevant containers
-        self.tag = tag
+        if tag is None:
+            self.tag = {"id": None}
+        else:
+            self.tag = tag
 
     def unplotTl(self):
         self.scp[0] = ["-", "-"]
 
 
-# noinspection PyDefaultArgument
+#
 class universe:
-    def __init__(self, tl, scn=[], obj=[], cont=[], funct=[], rule=[], tag={"name": None}):
+    def __init__(self, tl, scn=None, obj=None, cont=None, funct=None, rule=None, tag=None):
         self.tl = tl
         # time line(wip)
-        self.scn = scn
+        if scn is None:
+            self.scn = []
+        else:
+            self.scn = scn
         # scene list in or
         # der like(0,0)(0,1)(1,0)(1,1)
-        self.obj = obj
+        if obj is None:
+            self.obj = []
+        else:
+            self.obj = obj
         # objlist
         # [usr, wep, obj, dta]
         # ["obj0=object.w/e(s,t,u,f,f)", ...]
-        self.cont = cont
+        if cont is None:
+            self.cont = []
+        else:
+            self.cont = cont
         # container struct
-        self.funct = funct
+        if funct is None:
+            self.funct = []
+        else:
+            self.funct = funct
         # functions unique to uni
-        self.rule = rule
-        # phisx and other functions to always run while in uni
-        self.tag = tag
+        if rule is None:
+            self.rule = []
+        else:
+            self.rule = rule
+            # phisx and other functions to always run while in uni
+        if tag is None:
+            self.tag = {"id": None}
+        else:
+            self.tag = tag
 
     # [[master line end point],[id,parent id,start time,end time],...]
 

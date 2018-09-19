@@ -5,7 +5,7 @@
 # e is for exact code like tasks and i is for general strings
 
 
-# noinspection PyDefaultArgument
+#
 class que:
     def __init__(self, tasks=[]):
         self.tasks = tasks

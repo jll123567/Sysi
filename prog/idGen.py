@@ -1,5 +1,5 @@
 import object
-
+import warnings
 
 # TODO: make the ID generator dummy
 def generateUniversalId(uni, obj):
@@ -39,6 +39,14 @@ def generateUniversalId(uni, obj):
 def generateGenericId(objList, obj):
     genIdPreChk = 0
     for listObj in objList:
+        try:
+            _ = listObj.tag["id"]
+        except AttributeError:
+            warnings.warn(print("while assigning a generic ID, an object in the list given was found without an ID\n does it have a tag?", listObjDoesNotHaveAnId))
+        except KeyError:
+            warnings.warn(print(
+                "while assigning a generic ID, an object in the list given was found without an ID\n does it have a tag?",
+                listObjDoesNotHaveAnId))
         idFromObj = str(listObj.tag["id"])
         slashCnt = 0
         idFromObjProcessed = ""
@@ -69,6 +77,9 @@ def generateGenericId(objList, obj):
         objTypeLetter = 'o'
     genId = objTypeLetter + "/" + str(genIdPreChk) + str(chkSumRes)
     return genId
+
+class listObjDoesNotHaveAnId(Warning):
+    pass
 
 
 if __name__ == "__main__":

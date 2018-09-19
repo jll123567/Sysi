@@ -17,7 +17,7 @@
 # ex child: "sub": {"parent": [parent0, [1,1,1]], "children":[child1]}
 
 
-# noinspection PyDefaultArgument
+#
 class sub:
     def __init__(self, parent=None, children=[]):
         self.parent = parent

@@ -14,15 +14,24 @@
 
 
 class sysModel:
-    # noinspection PyDefaultArgument
-    def __init__(self, geom={"scale": 1, "lines": ["0,0,0-0,0,0"]},
-                 skel={"scale": 1, "points": ["0,0,0", ["0,0,0"]]},
-                 ani={"default": {"scale": 1, "animation": [["0,0,0", "0,0,0", ]]}},
-                 mat={"texture": None, "physx": [None]}):
-        self.geom = geom
-        self.skel = skel
-        self.ani = ani
-        self.mat = mat
+    #
+    def __init__(self, geom=None, skel=None, ani=None, mat=None):
+        if geom is None:
+            self.geom = {"scale": 1, "lines": ["0,0,0-0,0,0"]}
+        else:
+            self.geom = geom
+        if skel is None:
+            self.skel = {"scale": 1, "points": ["0,0,0", ["0,0,0"]]}
+        else:
+            self.skel = skel
+        if ani is None:
+            self.ani = {"default": {"scale": 1, "animation": [["0,0,0", "0,0,0", ]]}}
+        else:
+            self.ani = ani
+        if mat is None:
+            self.mat = {"texture": None, "physx": [None]}
+        else:
+            self.mat = mat
 
     def addAnimation(self, animation):
         self.ani.update(animation)

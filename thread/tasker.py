@@ -8,7 +8,7 @@ import time
 # profile=[f0,f1,f2,...]
 
 
-# noinspection PyDefaultArgument,PyMethodMayBeStatic
+# ,PyMethodMayBeStatic
 class tsk:
     def __init__(self, current=[], profiles=[]):
         self.current = current

@@ -1,10 +1,13 @@
 # wep.dmg = [[amount (int), value to modify(string)], ...]
-# noinspection PyDefaultArgument
+#
 
 
 class dmg:
-    def __init__(self, damages={"health": 0}):
-        self.damages = damages
+    def __init__(self, damages=None):
+        if damages is None:
+            self.damages = {"health": 0}
+        else:
+            self.damages = damages
 
 
 # a place holder for damage at the model, just stat dmg
