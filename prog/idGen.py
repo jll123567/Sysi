@@ -35,3 +35,13 @@ def generateUniversalId(uni, obj):
         objTypeLett = 'o'
     genId = uni.tag["name"] + '/' + objTypeLett + "/" + str(genIdPreChk) + str(chkSumRes)
     return genId
+
+
+if __name__ == "__main__":
+    u = object.universe(None, [], [], [], [], [], {"name": "testUni", "id": "/un/00"})
+    dsfads = object.object()
+    dsfads.tag["name"] = "a"
+    dsfads.tag.update({"id": generateUniversalId(u, dsfads)})
+    u.obj.append(dsfads)
+    ob1 = object.object()
+
