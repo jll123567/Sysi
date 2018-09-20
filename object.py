@@ -16,7 +16,7 @@ class object:
         self.mod = mod
         self.trd = trd
         if tag is None:
-            self.tag = {"id": None}
+            self.tag = {"id": None, "name": None}
         else:
             self.tag = tag
         # required tags
@@ -127,7 +127,7 @@ class user(object):
                  mem=atribs.memory.mem(), tag=None):
         self.mod = mod
         if tag is None:
-            self.tag = {"id": None}
+            self.tag = {"id": None, "name": None, "alias": []}
         else:
             self.tag = tag
         self.trd = trd
@@ -142,7 +142,8 @@ class user(object):
     # requires: usr
     def storeToMemory(self, storedRamName, storedRamImportance):
         dta = data([self.trd.ram.storage],
-                   {"id": prog.idGen.generateGenericId(), "name": storedRamName, "relevancy": [0, 0, storedRamImportance]})
+                   {"id": None, "name": storedRamName, "relevancy": [0, 0, storedRamImportance]})
+        dta.tag["id"] = prog.idGen.generateGenericId(self.mem.real, dta)
         self.mem.store(1, dta)
 
     def loadToRam(self, block, index):
@@ -153,13 +154,13 @@ class user(object):
         else:
             self.trd.ram.load(self.mem.external[index])
 
-    def checkIteg(objPast, objCurrent):
+    def checkIteg(self, objPast, objCurrent):
         if objPast.tag["health"] > objCurrent.tag["health"]:
             return "reduced"
         else:
             return "maintained"
 
-    def checkWill(objPast, objCurrent):
+    def checkWill(self, objPast, objCurrent):
         if objPast.tag["fucntlist"] > objCurrent.tag["functlist"]:
             return "reduced"
         else:
@@ -187,7 +188,7 @@ class weapon(object):
                  dmg=atribs.damage.dmg(), tag=None):
         self.mod = mod
         if tag is None:
-            self.tag = {"id": None}
+            self.tag = {"id": None, "name": None}
         else:
             self.tag = tag
         self.trd = trd
@@ -199,7 +200,7 @@ class weapon(object):
 class data:
     def __init__(self, storage=None, tag=None):
         if tag is None:
-            self.tag = {"id": None}
+            self.tag = {"id": None, "name": None}
         else:
             self.tag = tag
         self.storage = storage
@@ -221,7 +222,7 @@ class container:
             self.bnd = bnd
         # [“(h/s,)x,y,z-x,y,z”,...]
         if tag is None:
-            self.tag = {"id": None}
+            self.tag = {"id": None, "name": None}
         else:
             self.tag = tag
 
@@ -244,7 +245,7 @@ class scene:
         # cont
         # use a super cont that will contain all relevant containers
         if tag is None:
-            self.tag = {"id": None}
+            self.tag = {"id": None, "name": None}
         else:
             self.tag = tag
 
@@ -286,7 +287,7 @@ class universe:
             self.rule = rule
             # phisx and other functions to always run while in uni
         if tag is None:
-            self.tag = {"id": None}
+            self.tag = {"id": None, "name": None}
         else:
             self.tag = tag
 
