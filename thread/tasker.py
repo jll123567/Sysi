@@ -8,11 +8,16 @@ import time
 # profile=[f0,f1,f2,...]
 
 
-# ,PyMethodMayBeStatic
 class tsk:
-    def __init__(self, current=[], profiles=[]):
-        self.current = current
-        self.profiles = profiles
+    def __init__(self, current=None, profiles=None):
+        if current is None:
+            self.current = []
+        else:
+            self.current = current
+        if profiles is None:
+            self.profiles = []
+        else:
+            self.profiles = profiles
 
     def nextCurrent(self):
         if self.profiles:

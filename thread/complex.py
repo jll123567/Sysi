@@ -2,9 +2,15 @@
 
 
 class cpx:
-    def __init__(self, problems=[], solutions=[]):
-        self.problems = problems
-        self.solutions = solutions
+    def __init__(self, problems=None, solutions=None):
+        if problems is None:
+            self.problems = []
+        else:
+            self.problems = problems
+        if solutions is None:
+            self.solutions = []
+        else:
+            self.solutions = solutions
 
     # makes a new unsolved problem labled <problem> at <obj>.trd["cpx"] with the default solution None
     # Use: <obj> = Sysh.thread.complex.ne   wProblem(<obj>, <string or dta>)
@@ -19,7 +25,6 @@ class cpx:
     # Requires:obj with cpx core @ trd
     def postSolution(self, solution, problemIndex):
         self.solutions.insert(problemIndex, solution)
-
 
 
 # runtime

@@ -5,14 +5,23 @@
 
 
 class audioSterio:
-    def __init__(self, l=[], r=[]):
-        self.left = l
-        self.right = r
+    def __init__(self, l=None, r=None):
+        if l is None:
+            self.l = []
+        else:
+            self.left = l
+        if r is None:
+            self.r = []
+        else:
+            self.right = r
 
 
 class audioMono:
-    def __init__(self, s=[]):
-        self.sound = s
+    def __init__(self, s=None):
+        if s is None:
+            self.s = []
+        else:
+            self.sound = s
 
 
 class lang:
@@ -74,7 +83,7 @@ class lang:
     def speak(self, outObj):
         out = outObj
         out.tag.update({"audioData": []})
-        for i in self.spoken.s:
+        for i in self.speakQue.s:
             out.tag["audioData"].append(i)
         return out
 

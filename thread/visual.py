@@ -4,12 +4,18 @@
 
 
 class vis:
-    def __init__(self, rawImg=[], pitch=0, yaw=0, roll=0, idObj=[]):
-        self.rawImg = rawImg
+    def __init__(self, rawImg=None, pitch=0, yaw=0, roll=0, idObj=None):
+        if rawImg is None:
+            self.rawImg = []
+        else:
+            self.rawImg = rawImg
         self.p = pitch
         self.y = yaw
         self.r = roll
-        self.idObj = idObj
+        if idObj is None:
+            self.idObj = []
+        else:
+            self.idObj = idObj
 
     # set camera rotation
     # use: <obj> = rotate(<obj>, <int representing pitch>, <int representing yaw>, <int representing roll>)

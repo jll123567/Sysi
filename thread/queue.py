@@ -7,8 +7,11 @@
 
 #
 class que:
-    def __init__(self, tasks=[]):
-        self.tasks = tasks
+    def __init__(self, tasks=None):
+        if tasks is None:
+            self.tasks = []
+        else:
+            self.tasks = tasks
 
     def close(self):
         self.tasks = []

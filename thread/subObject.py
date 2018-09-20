@@ -19,9 +19,12 @@
 
 #
 class sub:
-    def __init__(self, parent=None, children=[]):
+    def __init__(self, parent=None, children=None):
         self.parent = parent
-        self.children = children
+        if children is None:
+            self.children = []
+        else:
+            self.children = children
 
     def setParent(self, parent, offset):
         self.parent = [parent, offset]
