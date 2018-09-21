@@ -13,7 +13,7 @@ import object
 class err(object.data):
     def __init__(self, errType, severity, message, resolutions, selected, tag=None):
         if tag is None:
-            tag = {"name": None}
+            tag = {"name": None, "id": None}
         super().__init__(
             {"code": (str(errType) + str(severity) + ":" + message), "resolutions": resolutions, "selected": selected},
             tag)

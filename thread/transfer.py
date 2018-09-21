@@ -15,7 +15,7 @@ class transf:
     # requires: 2 obj (sender and obj) and dta
     def send(self, sender, dta):
         pkg = dta
-        pkg.tag.update({"sender": sender.tag["name"]})
+        pkg.tag.update({"sender": sender.tag["id"]})
         self.interface = pkg
 
     # clears the interface
@@ -73,6 +73,4 @@ class transf:
 
 # runtime
 if __name__ == "__main__":
-    print("basic transfer protocol v11.0")
-
     print("basic transfer protocol v11.0")

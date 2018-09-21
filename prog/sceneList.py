@@ -1,28 +1,30 @@
 # import
 import object
-
+import prog.idGen
 
 # setup
 #
 class sceneList(object.data):
     def __init__(self, storage=None, tag=None):
         if tag is None:
-            tag = {"name": None}
+            tag = {"name": None, "id": None}
         super().__init__(storage, tag)
 
     def loadScene(self, scn):
         self.storage.append(scn)
 
     def newScene(self, newScp=None, newObj=None,
-                 newLoc=object.container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"name": "defaultContainer"}),
+                 newLoc=object.container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"name": "defaultContainer", "id":None}),
                  newTag=None):
         if newScp is None:
             newScp = []
         if newObj is None:
             newObj = []
         if newTag is None:
-            newTag = {"name": "emptyScene"}
-        self.storage.append(object.scene(newScp, newObj, newLoc, newTag))
+            newTag = {"name": "emptyScene", "id": None}
+        scn = object.scene(newScp, newObj, newLoc, newTag)
+        scn.tag.update({"id": prog.idGen.generateGenericId(self.storage, scn)})
+        self.storage.append(scn)
 
     def loadObj(self, index, obj):
         self.storage[index].obj.append(obj)

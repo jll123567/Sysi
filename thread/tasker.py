@@ -84,14 +84,14 @@ class tsk:
     # use self.loop(profile)
     # requires self
     def loopInf(self, profile):
-        name = ""
+        objId = ""
         for char in profile[0]:
             if char == '.':
                 break
             else:
-                name += char
-        name += ".trd.tsk"
-        self.addProfile([profile, [name, "loopInf", [profile]]])
+                objId += char
+        objId += ".trd.tsk"
+        self.addProfile([profile, [objId, "loopInf", [profile]]])
 
     # determine the next task based on the state of object0 and object1(they don't need to be sysh.object.object s)
     # use self.if(<comparator>string, <object0>any, <object1>any, <then>task profile, <els=None>task profile or None)

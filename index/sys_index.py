@@ -6,7 +6,7 @@ import object
 # format:
 # dta([head,body,id],tags)
 index = object.data([object.data(["Hello, world!", "sysh V11.0 is here. :D", 0],
-                                 {'name': 'Hello, world!', 'terms': ['sys', 'Hello,world!', 'v11.0']})],
+                                 {'name': 'Hello, world!', 'terms': ['sys', 'Hello,world!', 'v11.0'], "id": None})],
                     {"name": "index"})
 
 

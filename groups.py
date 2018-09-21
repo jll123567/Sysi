@@ -22,15 +22,16 @@ class group(object.data):
         if groupRelevance is not None:
             self.tag.update({"groupRelevance": groupRelevance})
 
+
 # create group with list of elements
 def createGroup(objList, groupType, name):
-    grp = object.data(objList, {"name": name, "groupType": groupType, "groupCount": len(objList)})
+    grp = object.data(objList, {"name": name, "groupType": groupType, "groupCount": len(objList), "id": None})
     return grp
 
 
-    # takes data with a valid group in dta.storage and makes a group
+# takes data with a valid group in dta.storage and makes a group
 def makeGroup(dta, groupType, name):
-    grp = object.data(dta.storage, {"name": name, "groupType": groupType, "groupCount": len(dta.storage)})
+    grp = object.data(dta.storage, {"name": name, "groupType": groupType, "groupCount": len(dta.storage), "id": None})
     return grp
 
 

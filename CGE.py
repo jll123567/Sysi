@@ -61,14 +61,14 @@ def getOperations():
     return operationList
 
 
-def resolveNameToIndex(name):
+def resolveIdToIndex(objId):
     global objList
     if objList.__len__() == 1:
         return 0
     ndx = 0
     for obj in objList:
         # print(name == obj.tag["name"], name, obj.tag["name"])
-        if name == obj.tag["name"]:
+        if objId == obj.tag["id"]:
             break
         ndx += 1
     return ndx
@@ -78,7 +78,7 @@ def areOperationsPossible(operationList):
     global objList
     for operation in operationList:
         if '.' in operation[0]:
-            name = ""
+            objId = ""
             ext = ""
             mode = 'n'
             for char in operation[0]:
@@ -87,23 +87,23 @@ def areOperationsPossible(operationList):
                 if char == '.' and mode == '.':
                     mode = 'e'
                 if mode == 'n':
-                    name += char
+                    objId += char
                 if mode == 'e':
                     ext += char
             ext = ext[1:]
-            methods = getMethods(unpackSubObjFromExtension(objList[resolveNameToIndex(name)], ext))
+            methods = getMethods(unpackSubObjFromExtension(objList[resolveIdToIndex(objId)], ext))
             if operation[1] not in methods:
-                raise operationNotPossible(str(operation[1]) + " not in " + str(name + '.' + ext) + " method list")
+                raise operationNotPossible(str(operation[1]) + " not in " + str(objId + '.' + ext) + " method list")
 
         else:
-            if operation[1] not in getMethods(objList[resolveNameToIndex(operation[0])]):
+            if operation[1] not in getMethods(objList[resolveIdToIndex(operation[0])]):
                 return False
     return True
 
 
 #
 def performSelectedOperation(objIndex, operation, subObjectReference=None, parameters=None):
-    if  parameters is None:
+    if parameters is None:
         parameters = []
     global objList
     if subObjectReference is None:
@@ -227,7 +227,7 @@ def update(saveToScene=False):
     if saveToScene:
         scene.scp.append(operationList)
     for op in operationList:
-        name = ""
+        objId = ""
         ext = ""
         mode = 'n'
         if '.' in op[0]:
@@ -237,7 +237,7 @@ def update(saveToScene=False):
                 if char == '.' and mode == '.':
                     mode = 'e'
                 if mode == 'n':
-                    name += char
+                    objId += char
                 if mode == 'e':
                     ext += char
             if ext == "":
@@ -246,44 +246,44 @@ def update(saveToScene=False):
                 ext = ext[1:]
             pass
         if ext == "":
-            name = op[0]
+            objId = op[0]
             # print("pso: ", name)
-            performSelectedOperation(resolveNameToIndex(name), op[1], None, op[2])
+            performSelectedOperation(resolveIdToIndex(objId), op[1], None, op[2])
         else:
-            performSelectedOperation(resolveNameToIndex(name), op[1], ext, op[2])
-        if "evLog" in objList[resolveNameToIndex(name)].tag.keys():
-            objList[resolveNameToIndex(name)].tag["evLog"].append(op[1])
+            performSelectedOperation(resolveIdToIndex(objId), op[1], ext, op[2])
+        if "evLog" in objList[resolveIdToIndex(objId)].tag.keys():
+            objList[resolveIdToIndex(objId)].tag["evLog"].append(op[1])
         else:
-            objList[resolveNameToIndex(name)].tag.update({"evLog": [op[1]]})
+            objList[resolveIdToIndex(objId)].tag.update({"evLog": [op[1]]})
 
     moveThreadAlong()
 
 
-def updateWithGoal(objName, subObjReference, comparator, goal, saveToScene=False):
+def updateWithGoal(objId, subObjReference, comparator, goal, saveToScene=False):
     global objList
     if subObjReference is not None:
-        test = unpackSubObjFromExtension(resolveNameToIndex(objName), subObjReference)
+        test = unpackSubObjFromExtension(resolveIdToIndex(objId), subObjReference)
         del test
     if subObjReference is None:
-        while goal != resolveNameToIndex(objName):
+        while goal != resolveIdToIndex(objId):
             update(saveToScene)
     elif comparator == '==':
-        while goal != unpackSubObjFromExtension(resolveNameToIndex(objName), subObjReference):
+        while goal != unpackSubObjFromExtension(resolveIdToIndex(objId), subObjReference):
             update(saveToScene)
     elif comparator == '!=':
-        while goal == unpackSubObjFromExtension(resolveNameToIndex(objName), subObjReference):
+        while goal == unpackSubObjFromExtension(resolveIdToIndex(objId), subObjReference):
             update(saveToScene)
     elif comparator == '>':
-        while goal <= unpackSubObjFromExtension(resolveNameToIndex(objName), subObjReference):
+        while goal <= unpackSubObjFromExtension(resolveIdToIndex(objId), subObjReference):
             update(saveToScene)
     elif comparator == '<':
-        while goal >= unpackSubObjFromExtension(resolveNameToIndex(objName), subObjReference):
+        while goal >= unpackSubObjFromExtension(resolveIdToIndex(objId), subObjReference):
             update(saveToScene)
     elif comparator == '>=':
-        while goal < unpackSubObjFromExtension(resolveNameToIndex(objName), subObjReference):
+        while goal < unpackSubObjFromExtension(resolveIdToIndex(objId), subObjReference):
             update(saveToScene)
     elif comparator == '<=':
-        while goal != unpackSubObjFromExtension(resolveNameToIndex(objName), subObjReference):
+        while goal != unpackSubObjFromExtension(resolveIdToIndex(objId), subObjReference):
             update(saveToScene)
     else:
         print("the comparator inputted is not valid")

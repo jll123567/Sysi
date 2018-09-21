@@ -96,9 +96,4 @@ class listObjDoesNotHaveAnId(Warning):
 
 
 if __name__ == "__main__":
-    testUni = object.universe(None)
-    testUni.obj = [object.object(), object.object(), object.object()]
-    testUni.tag["name"] = "testUni"
-    testUni.tag["id"] = generateUniversalId(testUni, testUni)
-    for i in testUni.obj:
-        i.tag.update({"id": generateUniversalId(testUni, i)})
+    print("v11.0 id generation")
