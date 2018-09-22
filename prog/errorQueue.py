@@ -1,6 +1,3 @@
-# import
-import error
-
 # setup
 # a small bug tracker like thing(idk)
 # errorQueue(array of errors)
@@ -11,12 +8,12 @@ queue = []
 
 def errorQueue(errs):
     global queue
-    for i in errs:
+    for err in errs:
         print(str(len(queue)) + " left to resolve")
-        i.resolveError()
+        err.resolveError()
     print("queue empty exiting")
 
 
 # runtime
 if __name__ == "__main__":
-    print("ready\nawaiting errorQueus(errs) call")
+    print("ready\nawaiting errorQueues(errs) call")
