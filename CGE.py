@@ -297,3 +297,5 @@ class operationNotPossible(Exception):
 
 class objectDoesNotContainTsk(Warning):
     pass
+if __name__ == "__main__":
+    print("ContentGenerationEnginev11.0")

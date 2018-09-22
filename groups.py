@@ -10,10 +10,8 @@ import object
 # groupRelevance is a string desc of why these objects are grouped(optional)
 
 class group(object.data):
-    def __init__(self, storage, tag):
-        super(group, self).__init__()
-        self.storage = storage
-        self.tag = tag
+    def __init__(self, storage=None, tag=None):
+        super().__init__(storage, tag)
 
     # adds the groupSort and or groupRelevance tags (None for unused)
     def addOptionalTags(self, groupSort, groupRelevance):

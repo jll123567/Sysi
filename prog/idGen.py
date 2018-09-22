@@ -36,13 +36,15 @@ def generateUniversalId(uni, obj):
     elif isinstance(obj, object.universe):
         objTypeLetter = 'un'
     else:
-        objTypeLetter = 'o'
+        objTypeLetter = 'ol'
     genId = uni.tag["name"] + '/' + objTypeLetter + "/" + str(genIdPreChk) + str(chkSumRes)
     return genId
 
 
 def generateGenericId(objList, obj):
     genIdPreChk = 0
+    if objList is None:
+        objList = []
     for listObj in objList:
         try:
             _ = listObj.tag["id"]

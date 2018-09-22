@@ -18,6 +18,13 @@ class transf:
         pkg.tag.update({"sender": sender.tag["id"]})
         self.interface = pkg
 
+    def receive(self, sender):
+        try:
+            self.interface = sender.trd.transf.interface
+        except AttributeError:
+            print("listed sender:" + str(sender.tag["name"]) + "'s transf interface was not found\ndoes it have a "
+                                                               "trd.transf")
+
     # clears the interface
     # use obj = clearInterface(<obj>)
     # requires obj with transf interface

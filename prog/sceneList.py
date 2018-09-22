@@ -2,10 +2,13 @@
 import object
 import prog.idGen
 
+
 # setup
 #
 class sceneList(object.data):
     def __init__(self, storage=None, tag=None):
+        if storage is None:
+            storage = []
         if tag is None:
             tag = {"name": None, "id": None}
         super().__init__(storage, tag)
@@ -14,7 +17,7 @@ class sceneList(object.data):
         self.storage.append(scn)
 
     def newScene(self, newScp=None, newObj=None,
-                 newLoc=object.container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"name": "defaultContainer", "id":None}),
+                 newLoc=object.container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"name": "defaultContainer", "id": None}),
                  newTag=None):
         if newScp is None:
             newScp = []
@@ -59,3 +62,5 @@ class sceneList(object.data):
 # runtime
 if __name__ == "__main__":
     print(" scene handle v11.0")
+    f = sceneList()
+    f.newScene()
