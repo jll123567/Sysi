@@ -30,7 +30,7 @@ class tsk:
             self.current = []
 
     # steps through each command in current profile
-    # use <self> = Sysh.thread.tasker.step(<self>)
+    # use <self> = Sysh.threadModules.tasker.step(<self>)
     # requires: self
     def step(self):
         print(self.current[0])
@@ -42,7 +42,7 @@ class tsk:
                 self.nextCurrent()
 
     # runs entire profile
-    # use <self> = Sysh.thread.tasker.run(<self>)
+    # use <self> = Sysh.threadModules.tasker.run(<self>)
     # requires: self
     def run(self):
         for i in self.current:
@@ -50,31 +50,31 @@ class tsk:
         self.nextCurrent()
 
     # sets the current profile to <profile>
-    # use <self> = Sysh.thread.tasker.setCurrentProfile(<self>, <task profile>)
+    # use <self> = Sysh.threadModules.tasker.setCurrentProfile(<self>, <task profile>)
     # requires: self
     def setCurrentProfile(self, profile):
         self.current = profile
 
     # sets the current profile to <profile>
-    # use <self> = Sysh.thread.tasker.setCurrentProfile(<self>, <task profile>)
+    # use <self> = Sysh.threadModules.tasker.setCurrentProfile(<self>, <task profile>)
     # requires: self
     def appendCurrentProfile(self, operation):
         self.current.append(operation)
 
     # adds a new profile to the end of the tasking queue
-    # use <self> = Sysh.thread.tasker.addProfile(<self>, <task profile>)
+    # use <self> = Sysh.threadModules.tasker.addProfile(<self>, <task profile>)
     # requires: self
     def addProfile(self, profile):
         self.profiles.append(profile)
 
     # ends a task
-    # use <self> = Sysh.thread.tasker.quitTask(<self>, <index>)
+    # use <self> = Sysh.threadModules.tasker.quitTask(<self>, <index>)
     # requires: self
     def quitTask(self, index):
         self.profiles.pop(index)
 
     # waits <t> seconds before running <self>
-    # use <self> = Sysh.thread.tasker.wait(<self>, <int/float>)
+    # use <self> = Sysh.threadModules.tasker.wait(<self>, <int/float>)
     # requires: self
     def wait(self, t):
         time.sleep(t)

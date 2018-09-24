@@ -5,7 +5,7 @@
 # separates queue into 6 smaller queues that follow each other
 # def addStdQueue(usr):
 #     std = {"status": [], "preservation": [], "limit": [], "command": [], "personal": [], "aimless": []}
-#     usr = thread.queue.
+#     usr = threadModules.queue
 #     return usr
 
 

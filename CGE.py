@@ -55,7 +55,7 @@ def getOperations():
             for operation in obj.trd.tsk.current:
                 operationList.append(operation)
         except AttributeError:
-            warnings.warn("the object " + obj.tag["name"] + "does not have a thread and/or tasker \n please add one "
+            warnings.warn("the object " + obj.tag["name"] + "does not have a threadModules and/or tasker \n please add one "
                                                             "if you want the object to do something",
                           objectDoesNotContainTsk)
     return operationList

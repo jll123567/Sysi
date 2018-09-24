@@ -14,16 +14,16 @@ class mov:
         self.b = b
         self.c = c
 
-    # sets obj's position in the thread
-    # use: <obj> = Sysh.thread.move.warp(<obj>, <int/float>, <int/float>, <int/float>)
+    # sets obj's position in the threadModules
+    # use: <obj> = Sysh.threadModules.move.warp(<obj>, <int/float>, <int/float>, <int/float>)
     # requires: obj
     def warp(self, x, y, z):
         self.x = x
         self.y = y
         self.z = z
 
-    # sets object acceleration in thread
-    # use: <obj> = Sysh.thread.move.accelerate(<obj>, <int/float>, <int/float>, <int/float>)
+    # sets object acceleration in threadModules
+    # use: <obj> = Sysh.threadModules.move.accelerate(<obj>, <int/float>, <int/float>, <int/float>)
     # requires: obj
     def accelerate(self, a, b, c):
         self.a = a
@@ -31,7 +31,7 @@ class mov:
         self.c = c
 
     # moves obj based on acceleration
-    # use: <obj> = Sysh.thread.move.move(<obj>)
+    # use: <obj> = Sysh.threadModules.move.move(<obj>)
     # requires: obj
     def move(self):
         self.x += self.a
@@ -83,4 +83,4 @@ class mov:
 
 # runtime
 if __name__ == "__main__":
-    print("move thread block v11.0")
+    print("move threadModules block v11.0")

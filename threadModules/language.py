@@ -30,7 +30,7 @@ class lang:
         self.speakQue = speakQue
 
     # gets sound from input
-    # Use: <obj> = Sysh.thread.language.listen(<obj>, <inputSource>)
+    # Use: <obj> = Sysh.threadModules.language.listen(<obj>, <inputSource>)
     # Requires: obj, Audio Input
     def listen(self, inputSource):
         listining = 0
@@ -40,7 +40,7 @@ class lang:
             listining += 1
 
     # tunes based on direction and minimum volume as an int
-    # Use: <obj> = Sysh.thread.language.tune(<obj>, <int>, <int between -100 and 100> <same as last one>)
+    # Use: <obj> = Sysh.threadModules.language.tune(<obj>, <int>, <int between -100 and 100> <same as last one>)
     # Requires: obj
     def tune(self, minVolume, minPan, maxPan):
         for i in self.heard.left:
@@ -64,7 +64,7 @@ class lang:
                 continue
 
     # removes spoken audio
-    # Use: <obj> = Sysh.thread.language.scilence(<obj>)
+    # Use: <obj> = Sysh.threadModules.language.scilence(<obj>)
     # Requires: obj
     def silence(self):
         self.speakQue = []
@@ -72,13 +72,13 @@ class lang:
     # sounds mono[vol0,vol1,vol2]
 
     # queue <sounds> to obj out
-    # Use: <obj> = Sysh.thread.language.queueSpeak(<obj>, <sounds>)
+    # Use: <obj> = Sysh.threadModules.language.queueSpeak(<obj>, <sounds>)
     # Requires: obj, Mono Audio Input
     def queueSpeak(self, sounds):
         self.speakQue = sounds
 
     # output to an output obj
-    # Use: <obj> = Sysh.thread.language.speak(<obj>, <place for output>)
+    # Use: <obj> = Sysh.threadModules.language.speak(<obj>, <place for output>)
     # Requires: obj with audio output
     def speak(self, outObj):
         out = outObj

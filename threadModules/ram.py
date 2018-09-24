@@ -11,20 +11,20 @@ class ram:
         self.storage = storage
 
     # loads <dta> into ram
-    # use: <obj> = Sysh.thread.ram.laod(<obj>, <any>)
+    # use: <obj> = Sysh.threadModules.ram.laod(<obj>, <any>)
     # requires: obj
     def load(self, dta):
         self.storage.append(dta)
 
     # reads <obj>'s ram
-    # use: Sysh.thread.ram.read(<obj>)
+    # use: Sysh.threadModules.ram.read(<obj>)
     # requires: obj
     def read(self):
         for i in self.storage:
             print(i)
 
     # searches ram for <query> using re.search
-    # use: <obj> = Sysh.thread.ram.search(<obj>, <str or other re useable match>)
+    # use: <obj> = Sysh.threadModules.ram.search(<obj>, <str or other re useable match>)
     # requires: obj
     def search(self, query):
         matched = True
@@ -37,7 +37,7 @@ class ram:
             print("no results. try obj.sysh.thred.ram.read()")
 
     # removes the <index>th iem from ram
-    # use: <obj> = Sysh.thread.ram.free(<obj>, <int, None, or string "all">)
+    # use: <obj> = Sysh.threadModules.ram.free(<obj>, <int, None, or string "all">)
     # requires: obj
     # Inputs
     #   int is the int-th item in ram

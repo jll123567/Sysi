@@ -43,7 +43,7 @@ class object:
                 print("unsupported")
 
     # modifies the value of <stat>
-    # Use: obj.Sysh.thread.damage.stat(<wep>, <index of stat to modify>)
+    # Use: obj.Sysh.threadModules.damage.stat(<wep>, <index of stat to modify>)
     # Requires: obj, wep, matching stat in obj tags and dmg profile of wep
     def statDamage(self, wep, dmgIndex):
         for key in self.tag["stat"].keys():
@@ -53,7 +53,7 @@ class object:
                 print("obj does not have the stat ", wep.dmg[dmgIndex][1], " \nDid you misspell it?")
 
     # remove health based on atk
-    # Use: obj.Sysh.thread.damage.attack(<wep>)
+    # Use: obj.Sysh.threadModules.damage.attack(<wep>)
     # Requires: obj wih health tag, wep with health in prof
     def attack(self, wep):
         for i in wep.dmg.damages:
@@ -138,7 +138,7 @@ class user(object):
         # [obj,obj,...]timesort
 
     # saves a copy of ram ro memory
-    # use: <usr> = Sysh.thread.ram.store(<usr>, <string>, <int between 0 and 100>)
+    # use: <usr> = Sysh.threadModules.ram.store(<usr>, <string>, <int between 0 and 100>)
     # requires: usr
     def storeToMemory(self, storedRamName, storedRamImportance):
         dta = data([self.trd.ram.storage],

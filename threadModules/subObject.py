@@ -1,7 +1,7 @@
 # setup
 
 # objects can be like groups without being groups
-# parent and child objects have a "sub" section in their thread
+# parent and child objects have a "sub" section in their threadModules
 
 # "sub": {"parent": [reference, offset], "children": [reference, ...]}
 

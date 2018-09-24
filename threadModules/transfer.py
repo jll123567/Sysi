@@ -11,7 +11,7 @@ class transf:
         self.interface = interface
 
     # sends <data> form an object to another
-    # use <obj> = Sysh.thread.transfer.send(<obj>, <sender>, <dta>
+    # use <obj> = Sysh.threadModules.transfer.send(<obj>, <sender>, <dta>
     # requires: 2 obj (sender and obj) and dta
     def send(self, sender, dta):
         pkg = dta
@@ -34,7 +34,7 @@ class transf:
     # socket code based off: https://docs.python.org/3/howto/sockets.html
 
     # sets <obj>'s transfer interface to a socket
-    # use <obj> = Sysh.thread.transfer.makeSocketInterface(<obj>)
+    # use <obj> = Sysh.threadModules.transfer.makeSocketInterface(<obj>)
     # requires obj with a transfer interface (<obj>.trd["transf"])
     def makeSocketInterface(self):
         self.interface = socket.socket()
