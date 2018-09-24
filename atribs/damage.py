@@ -1,7 +1,8 @@
-# wep.dmg = [[amount (int), value to modify(string)], ...]
-#
+# Definition for damage profile
+# ModType:Def
 
-
+# Damage Profiles (wep.dmg)
+# damages = {atrib to modify: ammouunt(int), ...}
 class dmg:
     def __init__(self, damages=None):
         if damages is None:
@@ -10,15 +11,6 @@ class dmg:
             self.damages = damages
 
 
-# a place holder for damage at the model, just stat dmg
-# def DEPRECATED phys DEPRECATED(wep, obj):
-#    apl = wep.dmg[1] - obj.tag["stat"]["defence"]
-#    if apl < 0:
-#        apl = 0
-#    obj.tag["health"] -= apl
-#    return obj
-
-
-# runtime
+# Info at run
 if __name__ == "__main__":
-    print("damage profile/attack handler v11.0")
+    print("Definition for damage profile\nModType:Def")
