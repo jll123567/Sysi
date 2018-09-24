@@ -1,9 +1,9 @@
 import object
-import thread.tasker as task
+import thread.tasker
 
 
 class trd:
-    def __init__(self, ram=None, tsk=task.tsk(), que=None, mov=None, lang=None, cpx=None, vis=None, transf=None,
+    def __init__(self, ram=None, tsk=thread.tasker.tsk(), que=None, mov=None, lang=None, cpx=None, vis=None, transf=None,
                  sub=None):
         self.ram = ram
         self.tsk = tsk
