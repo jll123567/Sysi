@@ -1,6 +1,11 @@
-#
+# Description of the usr.prs atribute
+# Module type:def
+
+
+# user peronality(general behavior guide) Goals([] of boolean expressions that define goals)*, limits([] of boolean
+# expressions that define limits(goals to avoid))*, functions([] of available functions)*
+# note that order of goals/ limits determines importance(goal[0] is more important that goal[1])
 class prs:
-    # noinspection SpellCheckingInspection
     def __init__(self, goals=None, limits=None, functions=None):
         if goals is None:
             self.goals = []
@@ -15,19 +20,15 @@ class prs:
         else:
             self.functions = functions
 
-        # setup
-        # [limits,goals,functions,dict]
-        # "functname()"
-        # goals are bool checks that a atribs attempts to mke true and are in urgency order
-        # limits are similar but are meant to not be made true and are still in urgency order
-        # tasker profile(auto-get)
-        # {"word": referenceCount(int), "...": ...}
-
+    # sets the values of limit, goal and funct
+    # limit([] of limits)*, goal([] of goals)*, funct([] of functions availiable)
     def setPrs(self, limit, goal, funct):
         self.limits = limit
         self.goals = goal
         self.functions = funct
 
+    # adds a new goal at goals[index]
+    # k
     def newGoal(self, goal, index):
         self.goals.insert(index, goal)
 

@@ -1,6 +1,7 @@
 # Definition for damage profile
 # ModType:Def
 
+
 # Damage Profiles (wep.dmg)
 # damages = {atrib to modify: ammouunt(int), ...}
 class dmg:
