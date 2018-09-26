@@ -3,7 +3,7 @@
 
 
 # Damage Profiles (wep.dmg)
-# damages = {atrib to modify: ammouunt(int), ...}
+# damages = {attribute to modify: amount(int), ...}
 class dmg:
     def __init__(self, damages=None):
         if damages is None:

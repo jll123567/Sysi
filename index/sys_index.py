@@ -1,27 +1,37 @@
-# import
+# a set of pages for what sys is and how to use it, along with functions for adding more pages
+# module type: prog
 # from time import sleep
 import object
 
-# setup
-# format:
+# index page format:
 # dta([head,body,id],tags)
+
+
+# storage object for pages
 index = object.data([object.data(["Hello, world!", "sysh V11.0 is here. :D", 0],
                                  {'name': 'Hello, world!', 'terms': ['sys', 'Hello,world!', 'v11.0'], "id": None})],
                     {"name": "index"})
 
 
-def newPage(head, body, pageTags):
+# create a new page
+# head(str)*, body(str)*, terms(list)*
+# Console Output(str)
+def newPage(head, body, terms):
     global index
     pageId = 0
     for page in index.storage:
         if page.storage[2] > pageId:
             pageId = page.storage[2]
     pageId += 1
-    pageTags["id"] = ("idx" + str(pageId))
-    index.storage.append(object.data([head, body, pageId], pageTags))
-    print("added:\nobject.data([\"" + head + "\",\"" + body + "\"," + str(pageId) + "]," + str(pageTags) + ")")
+    page = object.data([head, body, pageId], None)
+    page.tag.update({"id": ("idx" + str(pageId)), "terms": terms, "name": head})
+    index.storage.append(page)
+    print("added:\nobject.data([\"" + head + "\",\"" + body + "\"," + str(pageId) + "]," + str(page.tag) + ")")
 
 
+# prints the page with pageId to the console
+# pageId(int)*
+# Console Output(str)
 def readPage(pageId):
     global index
     for i in index.storage:
@@ -49,6 +59,9 @@ def readPage(pageId):
 # what was I even using this for???
 
 
+# change information of a page
+# head(str)*, body(str)*, terms(list)*, idToModify(int)*
+# No output
 def updatePage(head, body, terms, idToModify):
     global index
     for i in index.storage:
@@ -61,6 +74,9 @@ def updatePage(head, body, terms, idToModify):
                 i.tag["terms"] = terms
 
 
+# remove the page
+# pageId(int)*
+# No output
 def deletePage(pageId):
     global index
     for i in index.storage:
@@ -68,6 +84,9 @@ def deletePage(pageId):
             index.storage.pop(index(i))
 
 
+# small typing thing
+# input()
+# Console Output(str)
 def typer():
     working = True
     terms = []
@@ -82,6 +101,7 @@ def typer():
     newPage(title, body, {"name": title, "uni": "main", "terms": terms, "id": None})
 
 
-# runtime
+# info at run
 if __name__ == "__main__":
-    print("system index v11.0")
+    print("A set of pages for what sys is and how to use it, along with functions for adding more pages\nmodule type: "
+          "prog")
