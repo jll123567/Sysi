@@ -1,11 +1,14 @@
-# setup
-# a small bug tracker like thing(idk)
-# errorQueue(array of errors)
-# addToQueue(err)
+# a small bug tracker like thing
+# module type: prog
 
+
+# error queue(fill with err
 queue = []
 
 
+# queues and resolves a list of errors
+# errs([err])*
+# Console output(str)
 def errorQueue(errs):
     global queue
     for err in errs:
@@ -14,6 +17,6 @@ def errorQueue(errs):
     print("queue empty exiting")
 
 
-# runtime
+# info at run
 if __name__ == "__main__":
-    print("ready\nawaiting errorQueues(errs) call")
+    print("a small bug tracker like thing\nmodule type: prog")

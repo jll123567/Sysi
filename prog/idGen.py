@@ -1,8 +1,12 @@
+# id generation for objects
+# module type: prog
 import object
 import warnings
 
 
-# TODO: make the ID generator dummy
+# generate an object id with its uni as a base
+# uni(uni)*, obj(obj)*
+# objId(str)
 def generateUniversalId(uni, obj):
     genIdPreChk = 0
     for uniObj in uni.obj:
@@ -41,6 +45,9 @@ def generateUniversalId(uni, obj):
     return genId
 
 
+# generates am id for obj using ovjList as a base
+# objList([obj])*, obj(obj)*
+# objId(str)
 def generateGenericId(objList, obj):
     genIdPreChk = 0
     if objList is None:
@@ -93,9 +100,12 @@ def generateGenericId(objList, obj):
     return genId
 
 
+# a warning in case an object doesnt have an id
+# No attributes
 class listObjDoesNotHaveAnId(Warning):
     pass
 
 
+# info at run
 if __name__ == "__main__":
-    print("v11.0 id generation")
+    print("id generation for objects\nmodule type: prog")

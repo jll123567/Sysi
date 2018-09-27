@@ -1,7 +1,7 @@
-# import
+# a chat system that doesnt quite work and hasn't been implemented
+# module type: prog
 
-
-# setup
+# server formatting:
 # server=dta
 # [[usrlist],     [channels]]
 # usrlist = [atribs,is_admin]
@@ -9,12 +9,16 @@
 # perm = ["name:text"][level,[users,...]][r,w,s,l]
 
 
-# ##I WILL UPDATE THIS AT A LATER DATE## #
-
+# make a new server out of server
+# server(dta)* pram([])*
+# No output
 def addServer(server, pram):
     server.storage = pram
 
 
+# clear a server to empty
+# server(dta)*, usr(usr)*
+# No output
 def delServer(server, usr):
     for i in server.storage[0]:
         if i[0] == usr:
@@ -26,6 +30,9 @@ def delServer(server, usr):
                 print("access denied:must be admin")
 
 
+# add a channel to the server
+# server(dta)*, chName(str)*, prams([])*, usr(usr)*
+# No output
 def addChannel(server, chName, perms, usr):
     for i in server.storage[0]:
         if i[0] == usr.tag["id"]:
@@ -35,19 +42,25 @@ def addChannel(server, chName, perms, usr):
                 print("access denied:must be admin")
 
 
-def delChannel(server, channel, usr):
+# remove a channel from a server
+# server(dta)*, channelName(str)*, usr(usr)*
+# No output
+def delChannel(server, channelName, usr):
     for i in server.storage[0]:
         if i[0] == usr.tag["id"]:
             if i[1]:
                 count = 0
                 for f in server.storage[1]:
-                    if channel == f[0]:
+                    if channelName == f[0]:
                         server.storage[1].pop(count)
-                        print(channel, " removed")
+                        print(channelName, " removed")
                     else:
                         count += 1
 
 
+# add a new message to a channel
+# server(dta)*, channel(str)*, message(str)*, usr(usr)*
+# No output
 def addMessage(server, channel, message, usr):
     count = 0
     for i in server.storage[0]:
@@ -62,6 +75,9 @@ def addMessage(server, channel, message, usr):
             count += 1
 
 
+# remove message from channel
+# server(dta)*, channel(str)*, index(int)*, usr(usr)*
+# No output
 def delMessage(server, channel, index, usr):
     for i in server.storage[0]:
         if i[0] == usr.tag["id"]:
@@ -76,10 +92,16 @@ def delMessage(server, channel, index, usr):
                             f[1].pop(index)
 
 
+# add a user to the server
+# server(dta)*, usr(usr)*, is_admin(bool)
+# No output
 def invite(server, usr, is_admin):
     server.storage[0].append([usr.tag["id"], is_admin])
 
 
+# remove user frm user list
+# server(dta)*, usr(usr)*
+# No output
 def removeUser(server, usr):
     count = 0
     for i in server.storage[0]:
@@ -89,12 +111,17 @@ def removeUser(server, usr):
             count += 1
 
 
+# join user to audio stream
+# serve(dta)*, channel(str)*, usr(usr)*
 def joinStream(server, channel, usr):
     for i in server.storage[1]:
         if i[1] == channel:
             i[2][2].append([usr.tag["id"], usr.trd["lang"][1]])
 
 
+# im not sure honestly
+# server(dta)*, channel(str)*
+# No output
 def updateStream(server, channel):
     for i in server.storage[1]:
         if i[0] == channel:
@@ -111,6 +138,9 @@ def updateStream(server, channel):
                 i[2][0] = 100
 
 
+# send steam audio to usr.trd.lang.in
+# server(dta)*, channel(str)*, usr(usr)*
+# No output
 def streamListen(server, channel, usr):
     for i in server.storage[1]:
         if i[0] == channel:
@@ -130,6 +160,9 @@ def streamListen(server, channel, usr):
                         count += 1
 
 
+# display all the messages user can see
+# server(dta)*, channel(str)*, usr(usr)*
+# Console output(str)
 def msgDisplay(server, channel, usr):
     for i in server.storage[1]:
         if i[0] == channel:
@@ -143,6 +176,6 @@ def msgDisplay(server, channel, usr):
                         count += 1
 
 
-# runtime
+# info at run
 if __name__ == "__main__":
-    print("system chat v11.0")
+    print("a chat system that doesnt quite work and hasn't been implemented\nmodule type: prog")
