@@ -1,5 +1,5 @@
 # A definition for a privacy method and a text obfuscator
-# module type: standard
+# module type: standard/prog
 # obj.tag
 #    {"priv":[]}
 #        [[<obj> is public to(knows me)],[objects public to <obj>(i know)]]
@@ -33,6 +33,9 @@ def intrude(o0, o1):
     o0.tag["priv"][1].append(o1)
 
 
+# obscures text(non recoverable)
+# text(str)*, method(int 0-3)*
+# obscured text(str)/Console Output(str)
 def obscureText(text, method):
     if method == 0:
         return text
@@ -60,6 +63,6 @@ def obscureText(text, method):
         print("not a valid method")
 
 
-# runtime
+# Info at run
 if __name__ == "__main__":
-    print(" privacy v11.0")
+    print("A definition for a privacy method and a text obfuscator\nmodule type: standard/prog")
