@@ -1,5 +1,5 @@
 # Definition for user memory
-# mod type: def
+# module type: def
 import re
 import hashlib
 import object
@@ -85,4 +85,4 @@ def saveObjHash(obj):
 
 # info at run
 if __name__ == "__main__":
-    print("Definition for user memory\nmod type: def")
+    print("Definition for user memory\nmodule type: def")

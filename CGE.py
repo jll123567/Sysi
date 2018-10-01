@@ -55,9 +55,10 @@ def getOperations():
             for operation in obj.trd.tsk.current:
                 operationList.append(operation)
         except AttributeError:
-            warnings.warn("the object " + obj.tag["name"] + "does not have a threadModules and/or tasker \n please add one "
-                                                            "if you want the object to do something",
-                          objectDoesNotContainTsk)
+            warnings.warn(
+                "the object " + obj.tag["name"] + "does not have a threadModules and/or tasker \n please add one "
+                                                  "if you want the object to do something",
+                objectDoesNotContainTsk)
     return operationList
 
 
@@ -297,5 +298,7 @@ class operationNotPossible(Exception):
 
 class objectDoesNotContainTsk(Warning):
     pass
+
+
 if __name__ == "__main__":
     print("ContentGenerationEnginev11.0")

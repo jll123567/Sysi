@@ -5,6 +5,15 @@
 # user personality(general behavior guide) Goals([] of boolean expressions that define goals)*, limits([] of boolean
 # expressions that define limits(goals to avoid))*, functions([] of available functions)*
 # note that order of goals/ limits determines importance(goal[0] is more important that goal[1])
+# Terms:
+#     aimless:has no goals
+#     unsatisfiable:has one or more unsolvable goals
+#     satisfied:has met all goals
+#     unlimited:has no limiters
+#     limited:has limiters
+#     simulated:object pers does not belong to a free user
+#    Note:
+#        pers only helps predict atribs behavior but does not code for behavior. Use trd.tsk for this.
 class prs:
     def __init__(self, goals=None, limits=None, functions=None):
         if goals is None:
