@@ -1,10 +1,10 @@
-# import
+# definition for scenePlayback(but its not working)
+# Module type: broke
+# todo: fix and doc me
 import object
 import prog.idGen
 
 
-# setup
-#
 class sceneList(object.data):
     def __init__(self, storage=None, tag=None):
         if storage is None:
