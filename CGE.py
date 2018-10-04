@@ -1,3 +1,6 @@
+# The Content Generation engine
+# objects in objList are simulated and run based on the instructions in trd.tsk
+# Module type: prog
 import re
 import object
 import warnings
@@ -14,7 +17,6 @@ objList = []
 scene = object.scene()
 
 
-# noinspection PyPep8Naming
 def getAtribs(obj):
     objDict = str(obj.__dict__.keys())
     stringList = str(re.search(r"'.*'", objDict).group())
@@ -32,9 +34,7 @@ def getAtribs(obj):
     return words
 
 
-# noinspection PyPep8Naming
 def getMethods(obj):
-    # noinspection PyPep8Naming
     atribsList = getAtribs(obj)
     methodList = dir(obj)
     finalList = []
@@ -301,4 +301,4 @@ class objectDoesNotContainTsk(Warning):
 
 
 if __name__ == "__main__":
-    print("ContentGenerationEnginev11.0")
+    print("ContentGenerationEngine11.0")

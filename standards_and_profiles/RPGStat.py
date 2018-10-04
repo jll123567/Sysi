@@ -1,30 +1,38 @@
-##ADMIN TOOL##
-# setup
-# adds some simple stats from most role playing games, because I am a nerd.
-# hp not needed as it part of wep
+# adds some simple stats from most role playing games.
+# hp not needed as it part of obj
+# module type: std
 
 
+# add the stat tag
+# obj(obj)*
+# updatedObj(obj)
 def addTags(obj):
-    obj.tag.update({"stat": {"atk": 0, "def": 0, "agi": 0, "lck": 0}})
+    obj.tag.update({"stat": {"atk": 0, "def": 0, "agi": 0, "int": 0}})
     return obj
 
 
-def modifyTags(obj, atk, defence, agi, lck):
-    obj.tag["atk"] = atk
-    obj.tag["def"] = defence
-    obj.tag["agi"] = agi
-    obj.tag["lck"] = lck
+# modify the stat tag
+# obj(obj)*, atk(int)*, defence(int)*, agi(agi)*, intelligence(int)
+# updatedObj(obj)
+def modifyTags(obj, atk, defence, agi, intl):
+    obj.tag["stat"]["atk"] = atk
+    obj.tag["stat"]["def"] = defence
+    obj.tag["stat"]["agi"] = agi
+    obj.tag["stat"]["int"] = intl
     return obj
 
 
+# remove the stat tag
+# obj(obj)*
+# updatedObj(obj)
 def removeTags(obj):
-    del obj.tag["atk"]
-    del obj.tag["def"]
-    del obj.tag["agi"]
-    del obj.tag["lck"]
+    del obj.tag["stat"]["atk"]
+    del obj.tag["stat"]["def"]
+    del obj.tag["stat"]["agi"]
+    del obj.tag["stat"]["int"]
     return obj
 
 
-# runtime
+# info at run
 if __name__ == "__main__":
-    print("RPG stats v11.0")
+    print("adds some simple stats from most role playing games.\nhp not needed as it part of obj\nmodule type: std")
