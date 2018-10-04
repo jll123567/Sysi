@@ -4,7 +4,7 @@
 import re
 import object
 import warnings
-
+# todo finish documentation
 # task > CGE
 # ["target(obj name)", "operation", [parameters]]
 
