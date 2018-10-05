@@ -9,6 +9,10 @@ import warnings
 # objId(str)
 def generateUniversalId(uni, obj):
     genIdPreChk = 0
+    objList = []
+    for subList in [uni.obj, uni.scn, uni.cont]:
+        for objS in subList:
+            objList.append(objS)
     for uniObj in uni.obj:
         if uniObj.tag["id"] is None:
             pass

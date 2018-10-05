@@ -1,22 +1,25 @@
 # The Content Generation engine
 # objects in objList are simulated and run based on the instructions in trd.tsk
 # Module type: prog
+# task > CGE
+# ["target(obj name)", "operation", [parameters]]
+# CGE > sceneScript
+# ["sender","target","operation",[parameters]]
 import re
 import object
 import warnings
-# todo finish documentation
-# task > CGE
-# ["target(obj name)", "operation", [parameters]]
+import prog.idGen as idGen
 
 
-# CGE > sceneScript
-# ["sender","target","operation",[parameters]]
-
-
+# list of objects to iterate
 objList = []
+# scene to save changes to
 scene = object.scene()
 
 
+# get the attributes of obj as a list
+# obj(obj)*
+# attributes([str])
 def getAtribs(obj):
     objDict = str(obj.__dict__.keys())
     stringList = str(re.search(r"'.*'", objDict).group())
@@ -34,6 +37,9 @@ def getAtribs(obj):
     return words
 
 
+# get the methods of an object
+# obj(obj)*
+# methodList([str])
 def getMethods(obj):
     atribsList = getAtribs(obj)
     methodList = dir(obj)
@@ -47,6 +53,9 @@ def getMethods(obj):
     return finalList
 
 
+# get the operations that CGE needs to prform this shift
+# No inputs
+# operationList([operations])
 def getOperations():
     global objList
     operationList = []
@@ -62,6 +71,9 @@ def getOperations():
     return operationList
 
 
+# resolve the object's id to its position in the objList
+# objectId(str)*
+# index(int)
 def resolveIdToIndex(objId):
     global objList
     if objList.__len__() == 1:
@@ -75,6 +87,9 @@ def resolveIdToIndex(objId):
     return ndx
 
 
+# returns true if all methods in the operation list are usable on the target object
+# operationList([operation])*
+# operationsPossible(bool)
 def areOperationsPossible(operationList):
     global objList
     for operation in operationList:
@@ -102,20 +117,22 @@ def areOperationsPossible(operationList):
     return True
 
 
-#
-def performSelectedOperation(objIndex, operation, subObjectReference=None, parameters=None):
+# apply the operation to the target object
+# object index(int)*, method to apply(str)*, refrencees to sub objects(str), paramaters for the method([any])
+# No output
+def performSelectedOperation(objIndex, method, subObjectReference=None, parameters=None):
     if parameters is None:
         parameters = []
     global objList
     if subObjectReference is None:
         if parameters.__len__() == 0:
             try:
-                getattr(objList[objIndex], operation)()
+                getattr(objList[objIndex], method)()
             except:
                 raise operationNotPossible("getattr(objList[objIndex], operation)()")
         else:
             try:
-                getattr(objList[objIndex], operation)(*parameters)
+                getattr(objList[objIndex], method)(*parameters)
             except:
                 raise operationNotPossible("getattr(objList[objIndex], operation)(*parameters)")
     else:
@@ -123,17 +140,20 @@ def performSelectedOperation(objIndex, operation, subObjectReference=None, param
         subObj = unpackSubObjFromExtension(objList[objIndex], subObjectReference)
         if parameters.__len__() == 0:
             try:
-                getattr(subObj, operation)()
+                getattr(subObj, method)()
             except:
                 raise operationNotPossible("getattr(subObj, operation)()")
         else:
             try:
-                getattr(subObj, operation)(*parameters)
+                getattr(subObj, method)(*parameters)
             except:
                 raise operationNotPossible("getattr(subObj, operation)(*parameters)")
         objList[objIndex] = repackSubToFull(objList[objIndex], subObj, subObjectReference)
 
 
+# get a subobject from its extension
+# obj(obj)*, subObjRefrence(str)*
+# subObj(obj)
 def unpackSubObjFromExtension(obj, subObjReference):
     subs = []
     sub = ""
@@ -150,6 +170,9 @@ def unpackSubObjFromExtension(obj, subObjReference):
     return extractedObj
 
 
+# take an updated subObj and put it into the original obj
+# fullObj(obj)*, subObj(obj)*, subObjRefrence(str)*
+# fullObj(obj)
 def repackSubToFull(fullObj, subObj, subObjReference):
     subs = []
     sub = ""
@@ -175,6 +198,9 @@ def repackSubToFull(fullObj, subObj, subObjReference):
     return fullObj
 
 
+# preps the objList for the next shift
+# No input
+# No output
 def moveThreadAlong():
     global objList
     objsEmpty = 0
@@ -191,11 +217,17 @@ def moveThreadAlong():
         objList = []
 
 
+# adds obj to the objList
+# obj(obj)*
+# No output
 def addObj(obj):
     global objList
     objList.append(obj)
 
 
+# save the state of the objList as the inital state of a scene, with optional container setting
+# cont(container)
+# No output
 def saveSceneInit(cont=None):
     global scene, objList
     if cont is not None:
@@ -203,13 +235,18 @@ def saveSceneInit(cont=None):
     scene.obj = objList
 
 
-def exportScene(tlInfo, name):
+# get the finished scene recording
+# timeLine information([str])*, scene name(str)*, universe to gen id(uni)*
+# scene(scene)
+def exportScene(tlInfo, name, universe):
     global scene
     scene.scp[0] = tlInfo
     scene.tag["name"] = name
+    scene.tag["id"] = idGen.generateUniversalId(universe, scene)
     return scene
 
 
+# todo finish doc
 def update(saveToScene=False):
     global objList
     if not objList:
