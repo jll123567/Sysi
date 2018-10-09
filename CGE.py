@@ -10,7 +10,6 @@ import object
 import warnings
 import prog.idGen as idGen
 
-
 # list of objects to iterate
 objList = []
 # scene to save changes to
@@ -53,7 +52,7 @@ def getMethods(obj):
     return finalList
 
 
-# get the operations that CGE needs to prform this shift
+# get the operations that CGE needs to perform this shift
 # No inputs
 # operationList([operations])
 def getOperations():
@@ -118,7 +117,7 @@ def areOperationsPossible(operationList):
 
 
 # apply the operation to the target object
-# object index(int)*, method to apply(str)*, refrencees to sub objects(str), paramaters for the method([any])
+# object index(int)*, method to apply(str)*, references to sub objects(str), parameters for the method([any])
 # No output
 def performSelectedOperation(objIndex, method, subObjectReference=None, parameters=None):
     if parameters is None:
@@ -151,8 +150,8 @@ def performSelectedOperation(objIndex, method, subObjectReference=None, paramete
         objList[objIndex] = repackSubToFull(objList[objIndex], subObj, subObjectReference)
 
 
-# get a subobject from its extension
-# obj(obj)*, subObjRefrence(str)*
+# get a sub object from its extension
+# obj(obj)*, subObjReference(str)*
 # subObj(obj)
 def unpackSubObjFromExtension(obj, subObjReference):
     subs = []
@@ -171,7 +170,7 @@ def unpackSubObjFromExtension(obj, subObjReference):
 
 
 # take an updated subObj and put it into the original obj
-# fullObj(obj)*, subObj(obj)*, subObjRefrence(str)*
+# fullObj(obj)*, subObj(obj)*, subObjReference(str)*
 # fullObj(obj)
 def repackSubToFull(fullObj, subObj, subObjReference):
     subs = []
@@ -225,7 +224,7 @@ def addObj(obj):
     objList.append(obj)
 
 
-# save the state of the objList as the inital state of a scene, with optional container setting
+# save the state of the objList as the initial state of a scene, with optional container setting
 # cont(container)
 # No output
 def saveSceneInit(cont=None):
@@ -246,7 +245,9 @@ def exportScene(tlInfo, name, universe):
     return scene
 
 
-# todo finish doc
+# update the objects in objList based on obj Thread
+# saveToScene(bool)
+# no object message(str)/None
 def update(saveToScene=False):
     global objList
     if not objList:
@@ -297,7 +298,10 @@ def update(saveToScene=False):
     moveThreadAlong()
 
 
-def updateWithGoal(objId, subObjReference, comparator, goal, saveToScene=False):
+# update the objList while a boolean expression is true
+# id of obj to check against(int)*, comparator(str)*, goal(any)*, saveToScene(bool), subObjReference(str)
+# No output/console output(str)
+def updateWithGoal(objId, comparator, goal, subObjReference=None, saveToScene=False):
     global objList
     if subObjReference is not None:
         test = unpackSubObjFromExtension(resolveIdToIndex(objId), subObjReference)
@@ -327,15 +331,21 @@ def updateWithGoal(objId, subObjReference, comparator, goal, saveToScene=False):
         print("the comparator inputted is not valid")
 
 
+# warning if the an operation is not possible as listed
+# expression(warning.expression)*, message(str)
 class operationNotPossible(Exception):
     def __init__(self, expression, message="one or more operations are not available as writen"):
         self.expression = expression
         self.message = message
 
 
+# warning if an object doesn't have a trd.tsk
+# None
 class objectDoesNotContainTsk(Warning):
     pass
 
 
+# Info at run
 if __name__ == "__main__":
-    print("ContentGenerationEngine11.0")
+    print("The Content Generation engine\nobjects in objList are simulated and run based on the instructions in "
+          "trd.tsk\nModule type: prog")
