@@ -1,9 +1,11 @@
-# lang
+# lang handling
+# module type: def
 # feed=[in,out]
 # in=[[vol,vol,vol],[Right version of sound]] each index is one mS
 # out=[vol,vol,vol](mono output)
 
 
+#
 class audioSterio:
     def __init__(self, l=None, r=None):
         if l is None:
