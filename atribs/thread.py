@@ -21,15 +21,15 @@ class trd:
         self.sub = sub
 
     # stores audio data to ram
-    # No input
-    # No output
+    # none
+    # none
     def storeHeard(self):
         dta = object.data(self.lang.heard, {})
         self.ram.storage.append(dta)
 
     # makes an object a child object of parent
     # parent(object.object)*, offset([float, float, float])*
-    # No output
+    # none
     def makeChild(self, parent, offset):
         self.sub.parent = [parent, offset],
         self.sub.children = []

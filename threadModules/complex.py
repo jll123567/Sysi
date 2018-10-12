@@ -18,14 +18,14 @@ class cpx:
 
     # makes a new unsolved problem labled <problem> at <obj>.trd["cpx"] with the default solution None
     # problem(any)*
-    # No output
+    # none
     def newProblem(self, problem):
         self.problems.append(problem)
         self.solutions.append(None)
 
     # post the solution of a problem
     # solution(any)*, problemIndex(int)
-    # No output
+    # none
     def postSolution(self, solution, problemIndex=0):
         self.solutions.insert(problemIndex, solution)
 

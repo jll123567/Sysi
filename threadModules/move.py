@@ -1,10 +1,13 @@
-# setup
+# movement and position tracking
+# module type: def
 # mov
 #    x pos,y pos,z pos,x accel,y accel, z accel
 #
 # if obj is a sub obj mov will equal "sub"
 
 
+# thread module for position and movement
+# x pos(float)*, y pos(float)*, z pos(float)*, x accel(float)*, y accel(float)*, z accel(float)*
 class mov:
     def __init__(self, x=0, y=0, z=0, a=0, b=0, c=0):
         self.x = x
@@ -15,29 +18,32 @@ class mov:
         self.c = c
 
     # sets obj's position in the threadModules
-    # use: <obj> = Sysh.threadModules.move.warp(<obj>, <int/float>, <int/float>, <int/float>)
-    # requires: obj
+    # x(float)*, y(float)*, z(float)*
+    # none
     def warp(self, x, y, z):
         self.x = x
         self.y = y
         self.z = z
 
     # sets object acceleration in threadModules
-    # use: <obj> = Sysh.threadModules.move.accelerate(<obj>, <int/float>, <int/float>, <int/float>)
-    # requires: obj
+    # x accel(float)*, y accel(float)*, z accel(float)*
+    # none
     def accelerate(self, a, b, c):
         self.a = a
         self.b = b
         self.c = c
 
     # moves obj based on acceleration
-    # use: <obj> = Sysh.threadModules.move.move(<obj>)
-    # requires: obj
+    # none
+    # none
     def move(self):
         self.x += self.a
         self.y += self.b
         self.z += self.c
 
+    # accelerates this obj based on a force and an obj's mov
+    # o1(mov)*, force(float)*
+    # none
     def attract(self, o1, force):
         if self.x > o1.x:
             self.a = (force * -1)
@@ -59,6 +65,9 @@ class mov:
             self.c = 0
         self.move()
 
+    # accelerates this obj based on a force and an obj's mov
+    # o1(mov)*, force(float)*
+    # none
     def repel(self, o1, force):
         if self.x > o1.x:
             self.a = force
@@ -81,6 +90,6 @@ class mov:
         self.move()
 
 
-# runtime
+# Info at run
 if __name__ == "__main__":
-    print("move threadModules block v11.0")
+    print("movement and position tracking\nmodule type: def")

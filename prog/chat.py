@@ -11,14 +11,14 @@
 
 # make a new server out of server
 # server(dta)* pram([])*
-# No output
+# none
 def addServer(server, pram):
     server.storage = pram
 
 
 # clear a server to empty
 # server(dta)*, usr(usr)*
-# No output
+# none
 def delServer(server, usr):
     for i in server.storage[0]:
         if i[0] == usr:
@@ -32,7 +32,7 @@ def delServer(server, usr):
 
 # add a channel to the server
 # server(dta)*, chName(str)*, prams([])*, usr(usr)*
-# No output
+# none
 def addChannel(server, chName, perms, usr):
     for i in server.storage[0]:
         if i[0] == usr.tag["id"]:
@@ -44,7 +44,7 @@ def addChannel(server, chName, perms, usr):
 
 # remove a channel from a server
 # server(dta)*, channelName(str)*, usr(usr)*
-# No output
+# none
 def delChannel(server, channelName, usr):
     for i in server.storage[0]:
         if i[0] == usr.tag["id"]:
@@ -60,7 +60,7 @@ def delChannel(server, channelName, usr):
 
 # add a new message to a channel
 # server(dta)*, channel(str)*, message(str)*, usr(usr)*
-# No output
+# none
 def addMessage(server, channel, message, usr):
     count = 0
     for i in server.storage[0]:
@@ -77,7 +77,7 @@ def addMessage(server, channel, message, usr):
 
 # remove message from channel
 # server(dta)*, channel(str)*, index(int)*, usr(usr)*
-# No output
+# none
 def delMessage(server, channel, index, usr):
     for i in server.storage[0]:
         if i[0] == usr.tag["id"]:
@@ -94,14 +94,14 @@ def delMessage(server, channel, index, usr):
 
 # add a user to the server
 # server(dta)*, usr(usr)*, is_admin(bool)
-# No output
+# none
 def invite(server, usr, is_admin):
     server.storage[0].append([usr.tag["id"], is_admin])
 
 
 # remove user frm user list
 # server(dta)*, usr(usr)*
-# No output
+# none
 def removeUser(server, usr):
     count = 0
     for i in server.storage[0]:
@@ -121,7 +121,7 @@ def joinStream(server, channel, usr):
 
 # im not sure honestly
 # server(dta)*, channel(str)*
-# No output
+# none
 def updateStream(server, channel):
     for i in server.storage[1]:
         if i[0] == channel:
@@ -140,7 +140,7 @@ def updateStream(server, channel):
 
 # send steam audio to usr.trd.lang.in
 # server(dta)*, channel(str)*, usr(usr)*
-# No output
+# none
 def streamListen(server, channel, usr):
     for i in server.storage[1]:
         if i[0] == channel:

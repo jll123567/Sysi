@@ -1,39 +1,44 @@
 # lang handling
 # module type: def
 # feed=[in,out]
-# in=[[vol,vol,vol],[Right version of sound]] each index is one mS
-# out=[vol,vol,vol](mono output)
+# in=[[amplitude,amplitude,amplitude],[Right version of sound]] each index is one mS
+# out=[amplitude,amplitude,amplitude](monone)
 
 
-#
-class audioSterio:
-    def __init__(self, l=None, r=None):
-        if l is None:
-            self.l = []
+# stereo audio for lang
+# left input([int]), right input([int])
+class audiostereo:
+    def __init__(self, left=None, right=None):
+        if left is None:
+            self.left = []
         else:
-            self.left = l
-        if r is None:
-            self.r = []
+            self.left = left
+        if right is None:
+            self.right = []
         else:
-            self.right = r
+            self.right = right
 
 
+# mono audio
+# sound input([int])
 class audioMono:
-    def __init__(self, s=None):
-        if s is None:
-            self.s = []
+    def __init__(self, sound=None):
+        if sound is None:
+            self.sound = []
         else:
-            self.sound = s
+            self.sound = sound
 
 
+# language thread module
+# heard audio(audiostereo), spoken(audioMono)
 class lang:
-    def __init__(self, heard=audioSterio(), speakQue=audioMono()):
+    def __init__(self, heard=audiostereo(), speakQue=audioMono()):
         self.heard = heard
         self.speakQue = speakQue
 
     # gets sound from input
-    # Use: <obj> = Sysh.threadModules.language.listen(<obj>, <inputSource>)
-    # Requires: obj, Audio Input
+    # inputSource(audioStereo)*
+    # none
     def listen(self, inputSource):
         listining = 0
         while listining < 1000:
@@ -42,8 +47,7 @@ class lang:
             listining += 1
 
     # tunes based on direction and minimum volume as an int
-    # Use: <obj> = Sysh.threadModules.language.tune(<obj>, <int>, <int between -100 and 100> <same as last one>)
-    # Requires: obj
+    # min Volume to reeve(int)*, minimum panning(int -100(l) to 100(r))*, maximim panning(int -100(l) to 100(r))*
     def tune(self, minVolume, minPan, maxPan):
         for i in self.heard.left:
             if abs(i) < minVolume:
@@ -65,31 +69,19 @@ class lang:
             else:
                 continue
 
-    # removes spoken audio
-    # Use: <obj> = Sysh.threadModules.language.scilence(<obj>)
-    # Requires: obj
+    # clears spoken audio
+    # none
+    # none
     def silence(self):
         self.speakQue = []
 
-    # sounds mono[vol0,vol1,vol2]
-
     # queue <sounds> to obj out
-    # Use: <obj> = Sysh.threadModules.language.queueSpeak(<obj>, <sounds>)
-    # Requires: obj, Mono Audio Input
+    # sounds(audioMono)*
+    # none
     def queueSpeak(self, sounds):
         self.speakQue = sounds
 
-    # output to an output obj
-    # Use: <obj> = Sysh.threadModules.language.speak(<obj>, <place for output>)
-    # Requires: obj with audio output
-    def speak(self, outObj):
-        out = outObj
-        out.tag.update({"audioData": []})
-        for i in self.speakQue.s:
-            out.tag["audioData"].append(i)
-        return out
 
-
-# runtime
+# info at run
 if __name__ == "__main__":
-    print("language management v11.0")
+    print("lang handling\nmodule type: def")

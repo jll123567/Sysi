@@ -1,11 +1,13 @@
-# setup
-# queue
+
+# queuing for tasks in a general format
+# module type: def
 # format[task one,two,[sub one,sub two]]
 # instruction="i/e : task"
 # e is for exact code like tasks and i is for general strings
 
 
-#
+# thread module queue
+# tasks([])
 class que:
     def __init__(self, tasks=None):
         if tasks is None:
@@ -13,21 +15,27 @@ class que:
         else:
             self.tasks = tasks
 
+    # empty queue
+    # none
+    # none
     def close(self):
         self.tasks = []
 
-    def add(self, task):
-        self.tasks.append(task)
-
-    def interrupt(self, task, index):
+    # insert a task at an index
+    # task(task(str)*, index(int)
+    # none
+    def interrupt(self, task, index=0):
         self.tasks.insert(index, task)
 
-    def complete(self, i=None):
-        if i is None:
+    # complete a ask
+    # index(int)
+    # none
+    def complete(self, index=None):
+        if index is None:
             self.tasks.pop(0)
         else:
-            self.tasks.pop(i)
-
+            self.tasks.pop(index)
+# todo more docing
     def showTask(self):
         def recurse(thatThingThatsAListOfThings, indent):
             if isinstance(thatThingThatsAListOfThings, list):
@@ -44,7 +52,6 @@ class que:
             recurse(i, 0)
 
 
-# noinspection SpellCheckingInspection
 def makeValidTskProfile(queue):
     if isinstance(queue, que):
         tasks = queue.tasks

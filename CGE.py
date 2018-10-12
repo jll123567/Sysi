@@ -53,7 +53,7 @@ def getMethods(obj):
 
 
 # get the operations that CGE needs to perform this shift
-# No inputs
+# nones
 # operationList([operations])
 def getOperations():
     global objList
@@ -118,7 +118,7 @@ def areOperationsPossible(operationList):
 
 # apply the operation to the target object
 # object index(int)*, method to apply(str)*, references to sub objects(str), parameters for the method([any])
-# No output
+# none
 def performSelectedOperation(objIndex, method, subObjectReference=None, parameters=None):
     if parameters is None:
         parameters = []
@@ -198,8 +198,8 @@ def repackSubToFull(fullObj, subObj, subObjReference):
 
 
 # preps the objList for the next shift
-# No input
-# No output
+# none
+# none
 def moveThreadAlong():
     global objList
     objsEmpty = 0
@@ -218,7 +218,7 @@ def moveThreadAlong():
 
 # adds obj to the objList
 # obj(obj)*
-# No output
+# none
 def addObj(obj):
     global objList
     objList.append(obj)
@@ -226,7 +226,7 @@ def addObj(obj):
 
 # save the state of the objList as the initial state of a scene, with optional container setting
 # cont(container)
-# No output
+# none
 def saveSceneInit(cont=None):
     global scene, objList
     if cont is not None:
@@ -300,7 +300,7 @@ def update(saveToScene=False):
 
 # update the objList while a boolean expression is true
 # id of obj to check against(int)*, comparator(str)*, goal(any)*, saveToScene(bool), subObjReference(str)
-# No output/console output(str)
+# none/console output(str)
 def updateWithGoal(objId, comparator, goal, subObjReference=None, saveToScene=False):
     global objList
     if subObjReference is not None:

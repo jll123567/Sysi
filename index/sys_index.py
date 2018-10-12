@@ -61,7 +61,7 @@ def readPage(pageId):
 
 # change information of a page
 # head(str)*, body(str)*, terms(list)*, idToModify(int)*
-# No output
+# none
 def updatePage(head, body, terms, idToModify):
     global index
     for i in index.storage:
@@ -76,7 +76,7 @@ def updatePage(head, body, terms, idToModify):
 
 # remove the page
 # pageId(int)*
-# No output
+# none
 def deletePage(pageId):
     global index
     for i in index.storage:

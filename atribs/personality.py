@@ -38,43 +38,43 @@ class prs:
 
     # adds a new goal at goals[index]
     # goal(goal)*, index(int)*
-    # No output
+    # none
     def newGoal(self, goal, index):
         self.goals.insert(index, goal)
 
     # adds a new limit at limits[index]
     # limit(limit)*, index(int)*
-    # No output
+    # none
     def newLimit(self, limit, index):
         self.limits.insert(index, limit)
 
     # adds a new available function to functions
     # funct(available function)*
-    # No output
+    # none
     def newFunction(self, funct):
         self.functions.append(funct)
 
     # removes a goal at index
     # index(int)*
-    # No output
+    # none
     def removeGoal(self, index):
         self.goals.pop(index)
 
     # removes a limit at index
     # index(int)*
-    # No output
+    # none
     def removeLimit(self, index):
         self.limits.pop(index)
 
     # removes a available function at index
     # index(int)*
-    # No output
+    # none
     def removeFunction(self, index):
         self.functions.pop(index)
 
     # sets all prs attributes to None
-    # No input
-    # No output
+    # none
+    # none
     def clearPrs(self):
         self.limits = None
         self.goals = None

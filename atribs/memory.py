@@ -27,7 +27,7 @@ class mem:
 
     # Removes memories
     # block(int[0-2])*, index(int)*
-    # No output
+    # none
     def forget(self, block, index):
         if block == 0:
             print("no internal forgetting")
@@ -38,7 +38,7 @@ class mem:
 
     # adds a memory(obj)
     # block(in[0-2])*, obj(any)*
-    # No output
+    # none
     def store(self, block, obj):
         if block == 0:
             self.internal.append(obj)

@@ -36,13 +36,13 @@ class sysModel:
 
     # adds a new animation to the model
     # animation(sysModel animation)*
-    # No output
+    # none
     def addAnimation(self, animation):
         self.ani.update(animation)
 
     # changes the model's material to the listed one
     # texture(surface texture)*, physx(material physics)*
-    # No output
+    # none
     def changeMaterial(self, texture, physx):
         self.mat["texture"] = texture
         self.mat["physx"] = physx

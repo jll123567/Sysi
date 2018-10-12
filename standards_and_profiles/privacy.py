@@ -9,7 +9,7 @@ import re
 
 # make o1 private to o0
 # o0(obj)*, o1(obj)
-# No output
+# none
 def MakePrivate(o0, o1):
     for i in o0.tag["priv"][1]:
         if i == o1:
@@ -18,7 +18,7 @@ def MakePrivate(o0, o1):
 
 # make o0 and o1 public to each other
 # o0(obj)*, o1(obj)*
-# No output
+# none
 def makePublic(o0, o1):
     o0.tag["priv"][0].append(o1)
     o0.tag["priv"][1].append(o1)
@@ -28,7 +28,7 @@ def makePublic(o0, o1):
 
 # make o1 public to o0 without o1's knowledge
 # o0(obj)*, o1(obj)*
-# No output
+# none
 def intrude(o0, o1):
     o0.tag["priv"][1].append(o1)
 
