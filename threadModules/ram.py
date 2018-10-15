@@ -1,57 +1,57 @@
-# import
-import re
-
-
-# setup
 # random access memory
+# module type: def
 # [ w/e ,...]
 
+
+# ram for threads
+# sotrage([])
 class ram:
     def __init__(self, storage):
         self.storage = storage
 
     # loads <dta> into ram
-    # use: <obj> = Sysh.threadModules.ram.laod(<obj>, <any>)
-    # requires: obj
+    # dta(any)*
+    # none
     def load(self, dta):
         self.storage.append(dta)
 
     # reads <obj>'s ram
-    # use: Sysh.threadModules.ram.read(<obj>)
-    # requires: obj
+    # none
+    # none
     def read(self):
         for i in self.storage:
             print(i)
 
     # searches ram for <query> using re.search
-    # use: <obj> = Sysh.threadModules.ram.search(<obj>, <str or other re useable match>)
-    # requires: obj
+    # query(any)*
+    # console output(str)/queryIndex(int)
     def search(self, query):
         matched = True
         for i in self.storage:
-            if re.search(query, i):
-                print(i)
-                print(self.storage.index(i))
-                matched = True
+            if i == query:
+                return self.storage.index(i)
         if not matched:
             print("no results. try obj.sysh.thred.ram.read()")
 
     # removes the <index>th iem from ram
-    # use: <obj> = Sysh.threadModules.ram.free(<obj>, <int, None, or string "all">)
-    # requires: obj
     # Inputs
-    #   int is the int-th item in ram
-    #   None removes the last (or -1st) item in ram
-    #   "all" sets ram to []
+    #   index(int) is the int-th item in ram
+    #   index(None) removes the last (or -1st) item in ram
+    #   index([])=[] sets ram to []
+    #   index(else) error message
+    # Out
+    #   console output(str), none
     def free(self, index):
         if index is None:
             self.storage.pop(-1)
-        elif index == "all":
+        elif not index:
             self.storage = []
-        else:
+        elif isinstance(index, int):
             self.storage.pop(index)
+        else:
+            print("invalid request")
 
 
-# runtime
+# Info at run
 if __name__ == "__main__":
-    print("random access memory manager v11.0")
+    print("# random access memory\nmodule type: def\n[ w/e ,...]")

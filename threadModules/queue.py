@@ -1,4 +1,3 @@
-
 # queuing for tasks in a general format
 # module type: def
 # format[task one,two,[sub one,sub two]]
@@ -35,8 +34,14 @@ class que:
             self.tasks.pop(0)
         else:
             self.tasks.pop(index)
-# todo more docing
+
+    # show that tasks in the queue
+    # none
+    # console output(str)
     def showTask(self):
+        # iterates through that thatThingThatsAListOfThings and recurseively adds indents
+        # thatThingThatsAListOfThings([])*, indent(int)*
+        # console output(str)
         def recurse(thatThingThatsAListOfThings, indent):
             if isinstance(thatThingThatsAListOfThings, list):
                 recurse(thatThingThatsAListOfThings, indent + 1)
@@ -52,6 +57,9 @@ class que:
             recurse(i, 0)
 
 
+# make exact exact tasks into a valid tsk profile(broken at the moment) TODO fix makevalidtskprofile
+# queue(trd.queue)*
+# tsk profile(trd.tsk)
 def makeValidTskProfile(queue):
     if isinstance(queue, que):
         tasks = queue.tasks
@@ -69,6 +77,7 @@ def makeValidTskProfile(queue):
     return mainTask
 
 
-# runtime
+# info at run
 if __name__ == "__main__":
-    print("queue v11.0")
+    print("queuing for tasks in a general format\nmodule type: def\nformat[task one,two,[sub one,"
+          "sub two]]\ninstruction=\"i/e : task\"\ne is for exact code like tasks and i is for general strings")
