@@ -1,13 +1,13 @@
-# import
+# tasker
+# module type: def
 import time
 
-
-# setup
-# tasker
 # tsk=[profile,profile,profile,...]
 # profile=[f0,f1,f2,...]
 
 
+# tasking
+# current([]), profiles([])
 class tsk:
     def __init__(self, current=None, profiles=None):
         if current is None:
@@ -19,6 +19,7 @@ class tsk:
         else:
             self.profiles = profiles
 
+    # shifts from completed current to next profile todo finish
     def nextCurrent(self):
         if self.profiles:
             if isinstance(self.profiles[0], list):

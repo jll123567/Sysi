@@ -6,8 +6,8 @@
 
 # "sub": {"parent": [reference, offset], "children": [reference, ...]}
 
-# references can be to any obj
-# offset is the distance of the  parent's position to the object's position in the format [x,y,z]
+# reference:objId
+# offset: is the distance of the  parent's position to the object's position in the format [x,y,z]
 # if an object has one child put it in a list by its self
 # if a object has no children but a prent leave "children" set to an empty list ([])
 # if a object has no parent set "parent" to None
@@ -28,20 +28,31 @@ class sub:
         else:
             self.children = children
 
-# sets parent to todo finish this
+    # sets parent
+    # parent(obId(str)), offset([x,y,z])
+    # none
     def setParent(self, parent, offset):
         self.parent = [parent, offset]
 
+    # set children
+    # children([child(objId(str))])
+    # none
     def setChildren(self, children):
         self.children = children
 
+    # add a child to a parent
+    # child(objId(str))
+    # none
     def addChild(self, child):
         self.children.append(child)
 
+    # remove child rom parent
+    # index(int)
+    # none
     def removeChild(self, index):
         self.children.pop(index)
 
 
-# runtime
+# Info at run
 if __name__ == "__main__":
-    print("subObjects v11")
+    print("Sub object grouping type\nmodule type: def")
