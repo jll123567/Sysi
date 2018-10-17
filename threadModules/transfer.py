@@ -1,23 +1,25 @@
-# import
+# object data transfer
+# module type: def
 import socket
 
 
-# setup
 # transf
-# interface = container for received data
-
+# interface(dta/socket)
 class transf:
     def __init__(self, interface=None):
         self.interface = interface
 
-    # sends <data> form an object to another
-    # use <obj> = Sysh.threadModules.transfer.send(<obj>, <sender>, <dta>
-    # requires: 2 obj (sender and obj) and dta
+    # package dta for sending
+    # sender(objId)*, dta(dta)*
+    # none
     def send(self, sender, dta):
         pkg = dta
-        pkg.tag.update({"sender": sender.tag["id"]})
+        pkg.tag.update({"sender": sender})
         self.interface = pkg
 
+    # receive data from an obj
+    # sender(obj)*
+    # none/console output(str)
     def receive(self, sender):
         try:
             self.interface = sender.trd.transf.interface
@@ -26,28 +28,28 @@ class transf:
                                                                "trd.transf")
 
     # clears the interface
-    # use obj = clearInterface(<obj>)
-    # requires obj with transf interface
+    # none
+    # none
     def clearInterface(self):
         self.interface = None
 
     # socket code based off: https://docs.python.org/3/howto/sockets.html
 
     # sets <obj>'s transfer interface to a socket
-    # use <obj> = Sysh.threadModules.transfer.makeSocketInterface(<obj>)
-    # requires obj with a transfer interface (<obj>.trd["transf"])
+    # none
+    # none
     def makeSocketInterface(self):
         self.interface = socket.socket()
 
     # connects the socket to <host> at <port>
-    # use connectSocket(<interface>, <host>, <port>)
-    # requires socket at <interface>
+    # host(ip/hostname(str))*, port(int)*
+    #
     def connectSocket(self, host, port):
         self.interface.connect((host, port))
 
     # sends an ascii encoded message though the socket
-    # use sendSocket(<interface>, <message>)
-    # requires socket at <interface>
+    #
+    # todo continue
     def sendSocket(self, msg):
         msg = msg.encode("ascii")
         totalSent = 0
