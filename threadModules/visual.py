@@ -1,10 +1,10 @@
-# setup
-# visual
-# feed=[raw,pitch,yaw,roll,[obj]]
+# visual data and camera handleing
+# module type: def
+# feed=[raw,pitch,yaw,roll]
 
 
 class vis:
-    def __init__(self, rawImg=None, pitch=0, yaw=0, roll=0, idObj=None):
+    def __init__(self, rawImg=None, pitch=0, yaw=0, roll=0):
         if rawImg is None:
             self.rawImg = []
         else:
@@ -12,33 +12,30 @@ class vis:
         self.p = pitch
         self.y = yaw
         self.r = roll
-        if idObj is None:
-            self.idObj = []
-        else:
-            self.idObj = idObj
 
     # set camera rotation
-    # use: <obj> = rotate(<obj>, <int representing pitch>, <int representing yaw>, <int representing roll>)
-    # requires: obj
+    # p(float)*, y(float)*, r(float)*
+    # none
     def rotate(self, p, y, r):
         self.p = p
         self.y = y
         self.r = r
 
-    # obj ID at some point
-
+    # clear image from raw img
+    # none
+    # none
     def clearImg(self):
         self.rawImg = []
 
-    def clearId(self):
-        self.idObj = []
-
+    # reset postion of camera
+    # none
+    # none
     def resetPos(self):
         self.p = 0
         self.y = 0
         self.r = 0
 
 
-# runtime
+# info at run
 if __name__ == "__main__":
-    print("visuals v11.0")
+    print("# visual data and camera handleing\nmodule type: def")

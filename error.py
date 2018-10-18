@@ -1,12 +1,14 @@
-# setup
-# err({"code":"type severity:message", "resolutions":["opt0", ...], "selected": int})
+# obj error and warn handling
+# module type: def
+
+
+# err
+# errType(int[0,2]), severity(int[0,5]), message(str), resolutions([str]), selected(None/int), tag(tag)
 # type : 0 resolved 1 warning 2 error immediate action required
 # severity: 0 resolved 1 low 2 med 3 high 4 critical 5 fatal
 # message: string to describe the issue
 # resolutions: what can be done to fix the issue
 # selected: an integer that is the index of the resolution you want(None if no resolution selected)
-
-
 class err:
     def __init__(self, errType=None, severity=None, message=None, resolutions=None, selected=None, tag=None):
         if resolutions is None:
@@ -23,16 +25,25 @@ class err:
             self.tag = tag
         self.errCode = [errType, severity, message]
 
+    # set the error
+    # errType(int[0,2])*, severity(int[0,5])*, message(str)*, resolutions([str])*, selected(None/int)*
+    # none
     def setError(self, errType, severity, message, resolutions, selected):
         self.errCode = [errType, severity, message]
         self.resolutions = resolutions
         self.selected = selected
 
+    # clear the error
+    # none
+    # none
     def clearError(self):
         self.resolutions = None
         self.selected = None
         self.errCode = [None, None, None]
 
+    # attempt resolution
+    # none
+    # console output(str)
     def resolveError(self):
         resolving = True
         print(self.errCode[0] + ',' + self.errCode[1] + ':' + self.errCode[2])
@@ -50,6 +61,6 @@ class err:
                 resolving = False
 
 
-# Runtime
+# info at run
 if __name__ == "__main__":
-    print("err v11.0")
+    print("# obj error and warn handling\nmodule type: def")

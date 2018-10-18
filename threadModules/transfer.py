@@ -43,13 +43,13 @@ class transf:
 
     # connects the socket to <host> at <port>
     # host(ip/hostname(str))*, port(int)*
-    #
+    # none
     def connectSocket(self, host, port):
         self.interface.connect((host, port))
 
     # sends an ascii encoded message though the socket
-    #
-    # todo continue
+    # msg(str)*
+    # none
     def sendSocket(self, msg):
         msg = msg.encode("ascii")
         totalSent = 0
@@ -60,8 +60,8 @@ class transf:
             totalSent = totalSent + sent
 
     # receives 254 bytes from the socket
-    # use connectSocket(<interface>)
-    # requires socket at <interface>
+    # none
+    # receved data(bytes
     def receiveSocket(self):
         chunks = []
         bytes_recd = 0
@@ -74,12 +74,12 @@ class transf:
         return b''.join(chunks)
 
     # closes the socket
-    # use disconnectSocket(<interface>)
-    # requires socket at <interface>
+    # none
+    # none
     def disconnectSocket(self):
         self.interface.close()
 
 
-# runtime
+# info at run
 if __name__ == "__main__":
-    print("basic transfer protocol v11.0")
+    print("object data transfer\nmodule type: def")

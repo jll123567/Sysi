@@ -1,4 +1,4 @@
-# import
+# todo continue
 import object
 
 
