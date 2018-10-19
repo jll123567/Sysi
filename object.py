@@ -1,5 +1,6 @@
 # coding=utf-8
-# import
+# object type definitions
+# module type: def
 from random import randint
 import atribs.thread
 import atribs.model
@@ -10,7 +11,8 @@ import prog.idGen
 from math import sqrt
 
 
-# setup
+# sysh.object.object(oof better name pls)
+# model of object(any)*, relevant self viewable data(atribs.thread.trd), tags and data for system/admin({tag:(str),...})
 class object:
     def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(), tag=None):
         self.mod = mod
@@ -19,9 +21,10 @@ class object:
             self.tag = {"id": None, "name": None}
         else:
             self.tag = tag
-        # required tags
-        # id
 
+    # make an object's model dependant of subobjects
+    # none
+    # none todo dang it
     def makeModelAssembly(self):
         oldModel = self.mod
         # noinspection PyTypeChecker

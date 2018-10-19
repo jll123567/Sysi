@@ -1,19 +1,18 @@
-# todo continue
+# obj groups
+# module type: def/std
 import object
 
-
-# setup
 # group is a list of objects
 # groupType is a string desc by what objects are in the group (obj,usr,wepcont,scn,uni,dta) + multi for many types
-# groupCount is the number of object in the group
 # groupSort is a string desc of how the objects are sorted(optional)
 # groupRelevance is a string desc of why these objects are grouped(optional)
 
+
 class group(object.data):
-    def __init__(self, storage=None, tag=None):
-        super().__init__(storage, tag)
 
     # adds the groupSort and or groupRelevance tags (None for unused)
+    # groupSort(groupSort tag)*, groupRelevance(groupRelevance)*
+    # none
     def addOptionalTags(self, groupSort, groupRelevance):
         if groupSort is not None:
             self.tag.update({"groupSort": groupSort})
@@ -22,17 +21,21 @@ class group(object.data):
 
 
 # create group with list of elements
+# objList([obj])*, groupType(str)*, name(str)*
+# grp(group)
 def createGroup(objList, groupType, name):
-    grp = object.data(objList, {"name": name, "groupType": groupType, "groupCount": len(objList), "id": None})
+    grp = object.data(objList, {"name": name, "groupType": groupType, "id": None})
     return grp
 
 
 # takes data with a valid group in dta.storage and makes a group
+# dta(valid Grp Dta)*, groupType(str)*, name(str)*
+# grp(group
 def makeGroup(dta, groupType, name):
-    grp = object.data(dta.storage, {"name": name, "groupType": groupType, "groupCount": len(dta.storage), "id": None})
+    grp = object.data(dta.storage, {"name": name, "groupType": groupType, "id": None})
     return grp
 
 
 # runtime
 if __name__ == "__main__":
-    print("groups v11.0")
+    print("obj groups\nmodule type: def/std")
