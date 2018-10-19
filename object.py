@@ -12,7 +12,8 @@ from math import sqrt
 
 
 # sysh.object.object(oof better name pls)
-# model of object(any)*, relevant self viewable data(atribs.thread.trd), tags and data for system/admin({tag:(str),...})
+# model of object(any), relevant self viewable data(atribs.thread.trd), tags and data for system/admin({tag:(str),...})
+# noinspection PyShadowingBuiltins
 class object:
     def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(), tag=None):
         self.mod = mod
@@ -22,9 +23,9 @@ class object:
         else:
             self.tag = tag
 
-    # make an object's model dependant of subobjects
+    # make an object's model dependant of sub objects
     # none
-    # none todo dang it
+    # none
     def makeModelAssembly(self):
         oldModel = self.mod
         # noinspection PyTypeChecker
@@ -32,8 +33,8 @@ class object:
         self.mod = "assem"
 
     # damages the internal of obj (mem type only on usr)
-    # Use: usr.Sysh.object.internal(<wep>)
-    # Requires: usr|obj, wep
+    # wep(wep)*
+    # none/ Console Output(str)
     def internalDamage(self, wep):
         for i in wep.dmg.damages:
             if i[1] == "mem":
@@ -46,8 +47,8 @@ class object:
                 print("unsupported")
 
     # modifies the value of <stat>
-    # Use: obj.Sysh.threadModules.damage.stat(<wep>, <index of stat to modify>)
-    # Requires: obj, wep, matching stat in obj tags and dmg profile of wep
+    # wep(wep)*, dmgIndex(int)*
+    # none/ Console Output(str)
     def statDamage(self, wep, dmgIndex):
         for key in self.tag["stat"].keys():
             if key == wep.dmg.damages[dmgIndex][1]:
@@ -56,14 +57,16 @@ class object:
                 print("obj does not have the stat ", wep.dmg[dmgIndex][1], " \nDid you misspell it?")
 
     # remove health based on atk
-    # Use: obj.Sysh.threadModules.damage.attack(<wep>)
-    # Requires: obj wih health tag, wep with health in prof
+    # wep(wep)*
+    # none
     def attack(self, wep):
         for i in wep.dmg.damages:
             if i[1] == "health":
                 self.tag["health"] -= i[0]
 
-    # Recomended once a year
+    # asks some questions to check if obj is a usr
+    # console input
+    # console output/ obj/ usr
     def usershipQuery(self):
         print("can get info from and modify $HostUni")
         rww = input("y/n")
@@ -103,16 +106,12 @@ class object:
             else:
                 print(self.tag["name"], "is User")
 
-    def removeParent(self):
-
-        def getParentMov(obj):
-            par = obj.trd.sub.parent[0]
-            if par.trd.mov == "sub":
-                return getParentMov(par)
-            else:
-                return par.trd.mov
-
-        parentMov = getParentMov(self)
+    # remove a parent from a child obj
+    # parent(obj)*
+    # none
+    def removeParent(self, parent):
+        parentMov = [parent.trd.mov.x, parent.trd.mov.y, parent.trd.mov.z, parent.trd.mov.a, parent.trd.mov.b,
+                     parent.trd.mov.c]
         offset = self.trd.sub.parent[1]
         self.trd.mov.x = parentMov[0] + offset[0]
         self.trd.mov.y = parentMov[1] + offset[1]
@@ -123,9 +122,9 @@ class object:
         self.trd.sub.parent = None
 
 
-#
+# sysh.object.user
+# model(any), thread(thread.trd), prs(personality.prs), memory(memory.mem) tag({"id":(str), ...})
 class user(object):
-    # noinspection SpellCheckingInspection
     def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(), prs=atribs.personality.prs(),
                  mem=atribs.memory.mem(), tag=None):
         self.mod = mod
@@ -137,18 +136,19 @@ class user(object):
         self.prs = prs
         # working on it
         self.mem = mem
-        # [internal,real,storage]
-        # [obj,obj,...]timesort
 
     # saves a copy of ram ro memory
-    # use: <usr> = Sysh.threadModules.ram.store(<usr>, <string>, <int between 0 and 100>)
-    # requires: usr
+    # storedRamName(str)*, storedRamImportance(int[0-100])*
+    # none
     def storeToMemory(self, storedRamName, storedRamImportance):
         dta = data([self.trd.ram.storage],
                    {"id": None, "name": storedRamName, "relevancy": [0, 0, storedRamImportance]})
         dta.tag["id"] = prog.idGen.generateGenericId(self.mem.real, dta)
         self.mem.store(1, dta)
 
+    # load a mem obj to ram
+    # block(int[0-2])*, index(int)
+    # none
     def loadToRam(self, block, index):
         if block == 0:
             print("no internal access")
@@ -157,18 +157,30 @@ class user(object):
         else:
             self.trd.ram.load(self.mem.external[index])
 
-    def checkIteg(self, objPast, objCurrent):
+    # check the integrity of an object
+    # past of obj(obj)*, obj now(obj)*
+    # status(str)
+    @staticmethod
+    def checkIteg(objPast, objCurrent):
         if objPast.tag["health"] > objCurrent.tag["health"]:
             return "reduced"
         else:
             return "maintained"
 
-    def checkWill(self, objPast, objCurrent):
-        if objPast.tag["fucntlist"] > objCurrent.tag["functlist"]:
+    # check freedom of will(functions available)
+    # past of obj(obj)*, obj now(obj)*
+    # status(str)
+    @staticmethod
+    def checkWill(objPast, objCurrent):
+        if objPast.tag["functlist"].__len__() > objCurrent.tag["functlist"].__len__():
             return "reduced"
         else:
             return "maintained"
 
+    # get the relevancy of an object
+    # obj(obj)*
+    # relevancy(int)
+    @staticmethod
     def calculate_relevancy(obj):
         if obj.tag["relevancy"][1] == 0:
             return 100 + (sqrt(obj.tag["relevancy"][1]) * 10) + 25 + (obj.tag["relevancy"][2])
@@ -176,16 +188,23 @@ class user(object):
             return (100 * ((1 / 3) ** obj.tag["relevancy"][0])) + (sqrt(obj.tag["relevancy"][1]) * 10) + (
                 obj.tag["relevancy"][2])
 
+    # load a queue from real memory
+    # real index(int)*
+    # none
     def loadQueue(self, realIndex):
         self.trd.que = self.mem.real[realIndex].storage
 
+    # save a queue to real mem
+    # tags(tag)*
+    # none
     def saveQueue(self, tags):
         lastQueue = data(self.trd.que, tags)
         self.mem.store(1, lastQueue)
         print("queue saved to: ", lastQueue, "@", self.tag["id"], ".mem.real")
 
 
-#
+# weapons
+# mod(any), thread(thread.trd), damage profile(damage.dmg), tag({"id":(str), ...})
 class weapon(object):
     def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(),
                  dmg=atribs.damage.dmg(), tag=None):
@@ -196,10 +215,10 @@ class weapon(object):
             self.tag = tag
         self.trd = trd
         self.dmg = dmg
-        # damage profile
 
 
-#
+# packaged data
+# storage(any), tag({"id":(str), ...})
 class data:
     def __init__(self, storage=None, tag=None):
         if tag is None:
@@ -207,20 +226,18 @@ class data:
         else:
             self.tag = tag
         self.storage = storage
-        # anything you want to store
 
 
-#
+# spaces
+# origin in relation to supercont([supercont,x,y,z]), bounds[["h/s,x,y,z-x,y,z"], ...], tag({"id":(str), ...})
 class container:
     def __init__(self, org=None, bnd=None, tag=None):
         if org is None:
             self.org = [None, 0, 0, 0]
         else:
             self.org = org
-        # [supercont,x,y,z]
-        # if is largest cont do None
         if bnd is None:
-            self.bnd = ["h,0,0,0-0,0,0"]
+            self.bnd = [["h,0,0,0-0,0,0"]]
         else:
             self.bnd = bnd
         # [“(h/s,)x,y,z-x,y,z”,...]
@@ -230,7 +247,8 @@ class container:
             self.tag = tag
 
 
-# ,PyTypeChecker
+# object change oer time
+# scp([tlInfo, shft0, shft1, ...]), obj in scene([obj]), loc(container), tag({"id":(str), ...})
 class scene:
     def __init__(self, scp=None, obj=None,
                  loc=container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"id": None, "name": "defaultContainer"}), tag=None):
@@ -252,13 +270,17 @@ class scene:
         else:
             self.tag = tag
 
+    # unplot the scene from a uni time line
+    # none
+    # none
     def unplotTl(self):
         self.scp[0] = ["-", "-"]
 
 
-#
+# scene container timeline(time line info), scn([scn]), obj([obj]), cont([cont]), funct([functions]),
+# rule([operations to run on all obj each shift]), tag({"id":(str), ...})
 class universe:
-    def __init__(self, tl, scn=None, obj=None, cont=None, funct=None, rule=None, tag=None):
+    def __init__(self, tl=None, scn=None, obj=None, cont=None, funct=None, rule=None, tag=None):
         self.tl = tl
         # time line(wip)
         if scn is None:
@@ -298,6 +320,9 @@ class universe:
 
     # for scenes
     # scn.scp[0] = [id, start, shifts per second]
+    # creates a fork
+    # lineId(int)*, parent(int)*, offset(int)*, endpoint(int)*
+    # none/console output(str)
     def forkTl(self, lineId, parent, offset, endpoint):
         count = 0
         invalid = True
@@ -319,6 +344,9 @@ class universe:
         if not invalid:
             self.tl.append([lineId, parent, offset, endpoint])
 
+    # remove a tl
+    # lineId(int)*
+    # none
     def pruneTl(self, lineId):
         for i in self.tl:
             if i[0] == lineId:
@@ -327,6 +355,9 @@ class universe:
             if i.scp[0][1] == lineId:
                 i.unplotTl()
 
+    # plot a scn
+    # scn(scn)*, lineId(int)*, time to end of scene(int)*
+    # none/ console output(str)
     def plotTl(self, scn, lineId, t):
         inUni = False
         for i in self.tl:
@@ -342,11 +373,17 @@ class universe:
             else:
                 scn.scp[0] = [t, lineId]
 
+    # add time to the end of a tl
+    # lineId(int)*, time to add(int)*
+    # none
     def extendTl(self, lineId, timeToAdd):
         for i in self.tl:
             if i[0] == lineId:
                 i[3] += timeToAdd
 
+    # get the total offset of a tl
+    # lineId(int)*, off(int)
+    # offset(int)
     def getTotalOffsetTl(self, lineId, off=0):
         for i in self.tl:
             if i[0] == lineId:
@@ -356,9 +393,15 @@ class universe:
                 else:
                     self.getTotalOffsetTl(i[1], off)
 
+    # view the tl
+    # timePerSymb(str)*
     # timePerSymb is either "h","d"
+    # console output(str)
     def viewTl(self, timePerSymb):
-        def acuratePlot(uni, branchId, tps):
+        # plot the things accurately
+        # uni(uni), lineId(int), tps(int)
+        # text(str)
+        def accuratePlot(uni, branchId, tps):
             offset = 0
             text = "."
             for thisScene in uni.scn:
@@ -371,19 +414,19 @@ class universe:
             return text
 
         if timePerSymb == "h":
-            timePerSymb = 60 * 60
+            timePerSymb = 30 * 60 * 60
         elif timePerSymb == "d":
-            timePerSymb = 60 * 60 * 24
+            timePerSymb = 30 * 60 * 60 * 24
         else:
             timePerSymb = timePerSymb
 
         for i in self.tl:
             if i.len() == 1:
-                print(acuratePlot(self, 0, timePerSymb))
+                print(accuratePlot(self, 0, timePerSymb))
             else:
-                print((" " * (self.getTotalOffsetTl(i[1]))) + (acuratePlot(self, i[0], timePerSymb)))
+                print((" " * (self.getTotalOffsetTl(i[1]))) + (accuratePlot(self, i[0], timePerSymb)))
 
 
-# runtime
+# info at run
 if __name__ == "__main__":
-    print("object definitions v11.0")
+    print("object type definitions\nmodule type: def")
