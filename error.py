@@ -1,6 +1,8 @@
 # obj error and warn handling
 # module type: def
 
+import time
+
 
 # err
 # errType(int[0,2]), severity(int[0,5]), message(str), resolutions([str]), selected(None/int), tag(tag)
@@ -10,7 +12,8 @@
 # resolutions: what can be done to fix the issue
 # selected: an integer that is the index of the resolution you want(None if no resolution selected)
 class err:
-    def __init__(self, errType=None, severity=None, message=None, resolutions=None, selected=None, tag=None):
+    def __init__(self, errType=None, severity=None, message=None, resolutions=None, selected=None, obj=None, cont=None,
+                 tag=None):
         if resolutions is None:
             self.resolutions = []
         else:
@@ -23,13 +26,22 @@ class err:
             self.tag = {"name": None, "id": None}
         else:
             self.tag = tag
-        self.errCode = [errType, severity, message]
+        self.errType = errType
+        self.severity = severity
+        self.message = message
+        self.obj = obj
+        self.cont = cont
+        self.timeRaised = time.clock()
 
     # set the error
     # errType(int[0,2])*, severity(int[0,5])*, message(str)*, resolutions([str])*, selected(None/int)*
     # none
-    def setError(self, errType, severity, message, resolutions, selected):
-        self.errCode = [errType, severity, message]
+    def setError(self, errType, severity, message, resolutions, selected, obj, cont):
+        self.errType = errType
+        self.severity = severity
+        self.message = message
+        self.obj = obj
+        self.cont = cont
         self.resolutions = resolutions
         self.selected = selected
 
@@ -39,14 +51,18 @@ class err:
     def clearError(self):
         self.resolutions = None
         self.selected = None
-        self.errCode = [None, None, None]
+        self.errType = None
+        self.severity = None
+        self.message = None
+        self.obj = None
+        self.cont = None
 
     # attempt resolution
     # none
     # console output(str)
     def resolveError(self):
         resolving = True
-        print(self.errCode[0] + ',' + self.errCode[1] + ':' + self.errCode[2])
+        print(self.errType + ',' + self.severity + ':' + self.message)
         count = 0
         for resolution in self.resolutions:
             print(str(count) + ":" + resolution)

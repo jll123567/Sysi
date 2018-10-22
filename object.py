@@ -7,8 +7,9 @@ import atribs.model
 import atribs.damage
 import atribs.memory
 import atribs.personality
-import prog.idGen
 from math import sqrt
+import error
+import prog.idGen
 
 
 # sysh.object.object(oof better name pls)
@@ -275,6 +276,14 @@ class scene:
     # none
     def unplotTl(self):
         self.scp[0] = ["-", "-"]
+
+    # add an error to the scene
+    # objListIdx(int), type(int[0-2]), sev(int[0-]
+    #
+    def raiseError(self, objListIdx, type, sev, mes, res, sel):
+        e = error.err(type, sev, mes, res, sel, self.obj[objListIdx], self.loc, {"id": ""})
+        e.tag["id"] = prog.idGen.generateGenericId(self.obj, self.obj[objListIdx])
+        self.obj.append(e)
 
 
 # scene container timeline(time line info), scn([scn]), obj([obj]), cont([cont]), funct([functions]),
