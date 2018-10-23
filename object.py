@@ -278,10 +278,10 @@ class scene:
         self.scp[0] = ["-", "-"]
 
     # add an error to the scene
-    # objListIdx(int), type(int[0-2]), sev(int[0-]
-    #
-    def raiseError(self, objListIdx, type, sev, mes, res, sel):
-        e = error.err(type, sev, mes, res, sel, self.obj[objListIdx], self.loc, {"id": ""})
+    # objListIdx(int)*, type(int[0-2])*, sev(int[0-])*, mes(str)*, res([str])*, sel(int)
+    # none
+    def raiseError(self, objListIdx, errType, sev, mes, res, sel):
+        e = error.err(errType, sev, mes, res, sel, self.obj[objListIdx], self.loc, {"id": ""})
         e.tag["id"] = prog.idGen.generateGenericId(self.obj, self.obj[objListIdx])
         self.obj.append(e)
 
