@@ -55,8 +55,10 @@ def assignErrors(userId, idxList):
 #
 #
 #
-def caseFileCompiler(userId, userName, packages, desc):
+def caseFileCompiler(userId, userName, desc, packages=None):
     global cases
+    if packages is None:
+        packages = []
     tags = {"dataType": "caseFile", "caseInfo": {"id": prog.idGen.generateCaseId(cases),
                                                  "userInfo": [userId, userName], "description": desc}}
     dta = object.data()
@@ -67,4 +69,4 @@ def caseFileCompiler(userId, userName, packages, desc):
 
 # info at run
 if __name__ == "__main__":
-    print("a small bug tracker like thing\nmodule type: prog")
+    print("a small ibug tracker like thing\nmodule type: prog")
