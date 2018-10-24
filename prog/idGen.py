@@ -104,6 +104,38 @@ def generateGenericId(objList, obj):
     return genId
 
 
+#
+#
+#
+def generateCaseId(caseList):
+    genIdPreChk = 0
+    if caseList is None:
+        caseList = []
+    for listObj in caseList:
+        try:
+            _ = listObj.tag["caseInfo"]["id"]
+        except AttributeError:
+            warnings.warn(print(
+                "while assigning an ID, a case in the list given was found without an ID\n does it have a "
+                "tag?",
+                listObjDoesNotHaveAnId))
+        except KeyError:
+            warnings.warn(print(
+                "while assigning an ID, a case in the list given was found without an ID\n does it have a "
+                "tag?",
+                listObjDoesNotHaveAnId))
+        if listObj.tag["caseInfo"]["id"] is None:
+            pass
+        else:
+            idFromObj = str(listObj.tag["caseInfo"]["id"])
+            idFromObj = int(idFromObj[:-1])
+            if idFromObj >= genIdPreChk:
+                genIdPreChk = idFromObj + 1
+    chkSumRes = genIdPreChk % 10
+    genId = str(genIdPreChk) + str(chkSumRes)
+    return genId
+
+
 # a warning in case an object doesnt have an id
 # No attributes
 class listObjDoesNotHaveAnId(Warning):

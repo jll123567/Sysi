@@ -1,9 +1,11 @@
 # a small bug tracker like thing
 # module type: prog
 import error
+import object
+import prog.idGen
 
 # error queue(fill with err)
-queue = []
+errQueue = []
 inProgress = {}
 cases = []
 
@@ -11,37 +13,56 @@ cases = []
 # queues and resolves a list of errors
 # errs([err])*
 # Console output(str)
-def errorResolve(userId):
-    global inProgress
+def errorResolve(userId=None):
+    global inProgress, errQueue
     idx = 0
-    for errs in inProgress[userId]:
-        errs.resolveError()
-        inProgress[userId].pop(idx)
-        idx += 1
-    print("queue completed, closing")
+    if userId is None:
+        for errs in errQueue:
+            errs.resolveError()
+            errQueue = []
+        print("queue completed closing")
+    else:
+        for errs in inProgress[userId]:
+            errs.resolveError()
+            inProgress[userId].pop(idx)
+            idx += 1
+        print("queue completed, closing")
 
 
 # populate the queue
 # uni(uni)*
 # none
 def populateQueue(uni):
-    global queue
+    global errQueue
     for scn in uni.scn:
         for obj in scn:
             if isinstance(obj, error.err):
-                queue.append(obj)
+                errQueue.append(obj)
 
 
 #
 #
 #
 def assignErrors(userId, idxList):
-    global inProgress, queue
+    global inProgress, errQueue
     errList = []
     for idx in idxList:
-        errList.append(queue[idx])
-        queue.pop(idx)
+        errList.append(errQueue[idx])
+        errQueue.pop(idx)
     inProgress.update({userId: errList})
+
+
+#
+#
+#
+def caseFileCompiler(userId, userName, packages, desc):
+    global cases
+    tags = {"dataType": "caseFile", "caseInfo": {"id": prog.idGen.generateCaseId(cases),
+                                                 "userInfo": [userId, userName], "description": desc}}
+    dta = object.data()
+    dta.storage = packages
+    dta.tag.update(tags)
+    return dta
 
 
 # info at run
