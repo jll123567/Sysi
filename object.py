@@ -248,7 +248,7 @@ class container:
 # scp([tlInfo, shft0, shft1, ...]), obj in scene([obj]), loc(container), tag({"id":(str), ...})
 class scene:
     def __init__(self, scp=None, obj=None,
-                 loc=container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"id": None, "name": "defaultContainer"}), tag=None):
+                 cont=container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"id": None, "name": "defaultContainer"}), tag=None):
         if scp is None:
             self.scp = [[0, None, 30]]
         else:
@@ -259,7 +259,7 @@ class scene:
         else:
             self.obj = obj
         # objlist
-        self.loc = loc
+        self.cont = cont
         # cont
         # use a super cont that will contain all relevant containers
         if tag is None:
@@ -277,9 +277,17 @@ class scene:
     # objListIdx(int)*, type(int[0-2])*, sev(int[0-])*, mes(str)*, res([str])*, sel(int)
     # none
     def raiseError(self, objListIdx, errType, sev, mes, res, sel):
-        e = error.err(errType, sev, mes, res, sel, self.obj[objListIdx], self.loc, {"id": ""})
-        e.tag["id"] = prog.idGen.generateGenericId(self.obj, self.obj[objListIdx])
+        e = error.err(errType, sev, mes, res, sel, self.obj[objListIdx], self.cont, {"id": ""})
+        e.tag["id"] = prog.idGen.generateGenericId(self.obj, e)
         self.obj.append(e)
+
+    #
+    #
+    #
+    def raiseRequest(self, request, objListIdx):
+        d = data([request, self.cont, self.obj[objListIdx]], {"id": "", "dataType": "request"})
+        d.tag["id"] = prog.idGen.generateGenericId(self.obj, d)
+        self.obj.append(d)
 
 
 # scene container timeline(time line info), scn([scn]), obj([obj]), cont([cont]), funct([functions]),

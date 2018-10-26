@@ -6,6 +6,7 @@ import prog.idGen
 
 # error queue(fill with err)
 errQueue = []
+requestQueue = []
 inProgress = {}
 cases = []
 
@@ -30,25 +31,42 @@ def errorResolve(userId=None):
 
 
 # populate the queue
-# uni(uni)*
+# uni(uni)*, mode('e', 'r')
 # none
-def populateQueue(uni):
-    global errQueue
-    for scn in uni.scn:
-        for obj in scn:
-            if isinstance(obj, error.err):
-                errQueue.append(obj)
+def populateQueue(scn, mode='e'):
+    global errQueue, requestQueue
+    if mode == 'e':
+        for scn in scn.scn:
+            for obj in scn:
+                if isinstance(obj, error.err):
+                    errQueue.append(obj)
+    else:
+        for scn in scn.scn:
+            for obj in scn:
+                try:
+                    if obj.tag["dataType"] == "request":
+                        requestQueue.append(obj)
+                except AttributeError:
+                    noTagAtObject(obj)
+                except KeyError:
+                    pass
 
 
 #
 #
 #
-def assignErrors(userId, idxList):
-    global inProgress, errQueue
-    errList = []
-    for idx in idxList:
-        errList.append(errQueue[idx])
-        errQueue.pop(idx)
+def assign(userId, idxList, mode='e'):
+    global inProgress, errQueue, requestQueue
+    if mode == 'e':
+        errList = []
+        for idx in idxList:
+            errList.append(errQueue[idx])
+            errQueue.pop(idx)
+    else:
+        errList = []
+        for idx in idxList:
+            errList.append(requestQueue[idx])
+            requestQueue.pop(idx)
     inProgress.update({userId: errList})
 
 
@@ -65,6 +83,23 @@ def caseFileCompiler(userId, userName, desc, packages=None):
     dta.storage = packages
     dta.tag.update(tags)
     return dta
+
+
+#
+#
+#
+def closeIssue(userId, idx):
+    global inProgress
+    inProgress[userId].pop(idx)
+
+
+#
+#
+#
+class noTagAtObject(Exception):
+    def __init__(self, expression, message="the object does not have the required \"tag\" attribute"):
+        self.expression = expression
+        self.message = message
 
 
 # info at run
