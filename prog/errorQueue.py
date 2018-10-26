@@ -52,9 +52,9 @@ def populateQueue(scn, mode='e'):
                     pass
 
 
-#
-#
-#
+# assign an issue to a user
+# userId(id(str))*, idxList([int])*, mode('e', 'r')
+# none
 def assign(userId, idxList, mode='e'):
     global inProgress, errQueue, requestQueue
     if mode == 'e':
@@ -70,9 +70,9 @@ def assign(userId, idxList, mode='e'):
     inProgress.update({userId: errList})
 
 
-#
-#
-#
+# takes case file info and puts it together
+# userId(id(str))*, userName(str)*, desc(str)*, packages([any])
+# case file(dta)
 def caseFileCompiler(userId, userName, desc, packages=None):
     global cases
     if packages is None:
@@ -85,17 +85,16 @@ def caseFileCompiler(userId, userName, desc, packages=None):
     return dta
 
 
-#
-#
-#
+# close an issue on a per user basis
+# userId(id(str))*, inProgress index(int)*
+# none
 def closeIssue(userId, idx):
     global inProgress
     inProgress[userId].pop(idx)
 
 
-#
-#
-#
+# exception for an object without a tag attribute.
+# expression(any), message(str)
 class noTagAtObject(Exception):
     def __init__(self, expression, message="the object does not have the required \"tag\" attribute"):
         self.expression = expression

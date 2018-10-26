@@ -282,9 +282,9 @@ class scene:
         e.tag["id"] = prog.idGen.generateGenericId(self.obj, e)
         self.obj.append(e)
 
-    #
-    #
-    #
+    # add a request to the scene
+    # request(str)*, index for requester in scn.obj(int)*
+    # none
     def raiseRequest(self, request, objListIdx):
         d = data([request, self.cont, self.obj[objListIdx]], {"id": "", "dataType": "request"})
         d.tag["id"] = prog.idGen.generateGenericId(self.obj, d)

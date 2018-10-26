@@ -104,9 +104,9 @@ def generateGenericId(objList, obj):
     return genId
 
 
-#
-#
-#
+# get an id for cases(super generic)
+# caseList([dta])*
+# id(str)
 def generateCaseId(caseList):
     genIdPreChk = 0
     if caseList is None:
