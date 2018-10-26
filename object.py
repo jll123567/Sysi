@@ -248,7 +248,8 @@ class container:
 # scp([tlInfo, shft0, shft1, ...]), obj in scene([obj]), loc(container), tag({"id":(str), ...})
 class scene:
     def __init__(self, scp=None, obj=None,
-                 cont=container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"id": None, "name": "defaultContainer"}), tag=None):
+                 cont=container([None, 0, 0, 0], ["h,0,0,0-0,0,0"],
+                                {"id": None, "name": "defaultContainer"}), tag=None):
         if scp is None:
             self.scp = [[0, None, 30]]
         else:
