@@ -69,4 +69,4 @@ def caseFileCompiler(userId, userName, desc, packages=None):
 
 # info at run
 if __name__ == "__main__":
-    print("a small ibug tracker like thing\nmodule type: prog")
+    print("a small bug tracker like thing\nmodule type: prog")

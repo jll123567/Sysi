@@ -2,21 +2,18 @@
 # object type definitions
 # module type: def
 from random import randint
-import atribs.thread
-import atribs.model
-import atribs.damage
-import atribs.memory
-import atribs.personality
+# import atribs
+from atribs import *
 from math import sqrt
 import error
 import prog.idGen
 
 
 # sysh.object.object(oof better name pls)
-# model of object(any), relevant self viewable data(atribs.thread.trd), tags and data for system/admin({tag:(str),...})
+# model of object(any), relevant self viewable data(thread.trd), tags and data for system/admin({tag:(str),...})
 # noinspection PyShadowingBuiltins
 class object:
-    def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(), tag=None):
+    def __init__(self, mod=model.sysModel(), trd=thread.trd(), tag=None):
         self.mod = mod
         self.trd = trd
         if tag is None:
@@ -126,8 +123,8 @@ class object:
 # sysh.object.user
 # model(any), thread(thread.trd), prs(personality.prs), memory(memory.mem) tag({"id":(str), ...})
 class user(object):
-    def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(), prs=atribs.personality.prs(),
-                 mem=atribs.memory.mem(), tag=None):
+    def __init__(self, mod=model.sysModel(), trd=thread.trd(), prs=personality.prs(),
+                 mem=memory.mem(), tag=None):
         self.mod = mod
         if tag is None:
             self.tag = {"id": None, "name": None, "alias": []}
@@ -207,8 +204,8 @@ class user(object):
 # weapons
 # mod(any), thread(thread.trd), damage profile(damage.dmg), tag({"id":(str), ...})
 class weapon(object):
-    def __init__(self, mod=atribs.model.sysModel(), trd=atribs.thread.trd(),
-                 dmg=atribs.damage.dmg(), tag=None):
+    def __init__(self, mod=model.sysModel(), trd=thread.trd(),
+                 dmg=damage.dmg(), tag=None):
         self.mod = mod
         if tag is None:
             self.tag = {"id": None, "name": None}

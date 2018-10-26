@@ -1,8 +1,4 @@
 import object
-import prog.save as objSave
+import atribs
+
 f = object.user()
-
-def printTag(self):
-    print(self.tag)
-
-setattr(f, "printTag", MethodTest)
