@@ -331,6 +331,46 @@ def updateWithGoal(objId, comparator, goal, subObjReference=None, saveToScene=Fa
         print("the comparator inputted is not valid")
 
 
+#
+#
+#
+def replayScene(scn, lastShift=None):
+    global objList
+    objList = scn.obj
+    if lastShift is None:
+        script = scn.scp[1:]
+    else:
+        script = scn.scp[1:lastShift]
+    for shift in script:
+        if not objList:
+            return "No objects to process"
+        areOperationsPossible(shift)
+        for operation in shift:
+            objId = ""
+            ext = ""
+            mode = 'n'
+            if '.' in operation[0]:
+                for char in operation[0]:
+                    if char == '.' and mode == 'n':
+                        mode = '.'
+                    if char == '.' and mode == '.':
+                        mode = 'e'
+                    if mode == 'n':
+                        objId += char
+                    if mode == 'e':
+                        ext += char
+                if ext == "":
+                    ext = None
+                else:
+                    ext = ext[1:]
+                pass
+            if ext == "":
+                objId = operation[0]
+                performSelectedOperation(resolveIdToIndex(objId), operation[1], None, operation[2])
+            else:
+                performSelectedOperation(resolveIdToIndex(objId), operation[1], ext, operation[2])
+
+
 # warning if the an operation is not possible as listed
 # expression(warning.expression)*, message(str)
 class operationNotPossible(Exception):

@@ -5,7 +5,7 @@ import time
 
 # profile=[shift,shift,shift,...]
 # shift=[op0,op1,op2,...]
-# operation=[target, function, parameters]
+# operation=[target(str), function(str), [parameters]]
 
 
 # tasking
