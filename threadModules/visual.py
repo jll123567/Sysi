@@ -1,4 +1,4 @@
-# visual data and camera handleing
+# visual data and camera handling
 # module type: def
 # feed=[raw,pitch,yaw,roll]
 
@@ -27,7 +27,7 @@ class vis:
     def clearImg(self):
         self.rawImg = []
 
-    # reset postion of camera
+    # reset position of camera
     # none
     # none
     def resetPos(self):
@@ -38,4 +38,4 @@ class vis:
 
 # info at run
 if __name__ == "__main__":
-    print("# visual data and camera handleing\nmodule type: def")
+    print("# visual data and camera handling\nmodule type: def")

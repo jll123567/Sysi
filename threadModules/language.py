@@ -2,12 +2,12 @@
 # module type: def
 # feed=[in,out]
 # in=[[amplitude,amplitude,amplitude],[Right version of sound]] each index is one mS
-# out=[amplitude,amplitude,amplitude](monone)
+# out=[amplitude,amplitude,amplitude](mono)
 
 
 # stereo audio for lang
 # left input([int]), right input([int])
-class audiostereo:
+class audioStereo:
     def __init__(self, left=None, right=None):
         if left is None:
             self.left = []
@@ -30,9 +30,9 @@ class audioMono:
 
 
 # language thread module
-# heard audio(audiostereo), spoken(audioMono)
+# heard audio(audioStereo), spoken(audioMono)
 class lang:
-    def __init__(self, heard=audiostereo(), speakQue=audioMono()):
+    def __init__(self, heard=audioStereo(), speakQue=audioMono()):
         self.heard = heard
         self.speakQue = speakQue
 
@@ -40,14 +40,14 @@ class lang:
     # inputSource(audioStereo)*
     # none
     def listen(self, inputSource):
-        listining = 0
-        while listining < 1000:
+        listening = 0
+        while listening < 1000:
             self.heard.left.append(inputSource.l)
             self.heard.right.append(inputSource.r)
-            listining += 1
+            listening += 1
 
     # tunes based on direction and minimum volume as an int
-    # min Volume to reeve(int)*, minimum panning(int -100(l) to 100(r))*, maximim panning(int -100(l) to 100(r))*
+    # min Volume to reeve(int)*, minimum panning(int -100(l) to 100(r))*, maximum panning(int -100(l) to 100(r))*
     def tune(self, minVolume, minPan, maxPan):
         for i in self.heard.left:
             if abs(i) < minVolume:

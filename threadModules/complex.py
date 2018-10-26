@@ -1,4 +1,4 @@
-# realy basic area for problem solving
+# really basic area for problem solving
 # module type: def
 # [problem0, problem1], [solutions for 0,solutions for 1]
 
@@ -16,7 +16,7 @@ class cpx:
         else:
             self.solutions = solutions
 
-    # makes a new unsolved problem labled <problem> at <obj>.trd["cpx"] with the default solution None
+    # makes a new unsolved problem labeled <problem> at <obj>.trd["cpx"] with the default solution None
     # problem(any)*
     # none
     def newProblem(self, problem):
@@ -32,5 +32,5 @@ class cpx:
 
 # Info at run
 if __name__ == "__main__":
-    print("realy basic area for problem solving\nmodule type: def\n[problem0, problem1], [solutions for 0,"
+    print("really basic area for problem solving\nmodule type: def\n[problem0, problem1], [solutions for 0,"
           "solutions for 1]")

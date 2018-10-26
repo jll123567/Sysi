@@ -5,7 +5,7 @@ import time
 
 # profile=[shift,shift,shift,...]
 # shift=[op0,op1,op2,...]
-# operation=[target, function, paramaters]
+# operation=[target, function, parameters]
 
 
 # tasking
@@ -46,8 +46,8 @@ class tsk:
     # console output(str)
     # WARN:DTA LEAK
     def debugCurrent(self):
-        for oper in self.current:
-            print(oper)
+        for operation in self.current:
+            print(operation)
         self.nextCurrent()
 
     # sets the current shift
@@ -77,7 +77,8 @@ class tsk:
     # waits <t> seconds before continuing
     # time(float)*
     # none
-    def wait(self, t):
+    @staticmethod
+    def wait(t):
         time.sleep(t)
 
     # set the following shift to loop infinitely
@@ -141,7 +142,8 @@ class tsk:
     # print msg
     # msg(str)*
     # console output(str)
-    def debugPrint(self, msg):
+    @staticmethod
+    def debugPrint(msg):
         print(msg)
 
 

@@ -39,9 +39,10 @@ class que:
     # none
     # console output(str)
     def showTask(self):
-        # iterates through that thatThingThatsAListOfThings and recurseively adds indents
-        # thatThingThatsAListOfThings([])*, indent(int)*
+        # iterates through that thatThingThat'sAListOfThings and recursively adds indents
+        # thatThingThat'sAListOfThings([])*, indent(int)*
         # console output(str)
+        # noinspection SpellCheckingInspection
         def recurse(thatThingThatsAListOfThings, indent):
             if isinstance(thatThingThatsAListOfThings, list):
                 recurse(thatThingThatsAListOfThings, indent + 1)
@@ -57,9 +58,10 @@ class que:
             recurse(i, 0)
 
 
-# make exact exact tasks into a valid tsk profile(broken at the moment) TODO fix makevalidtskprofile
+# make exact exact tasks into a valid tsk profile(broken at the moment) TODO fix make valid tsk profile
 # queue(trd.queue)*
 # tsk profile(trd.tsk)
+# noinspection SpellCheckingInspection
 def makeValidTskProfile(queue):
     if isinstance(queue, que):
         tasks = queue.tasks

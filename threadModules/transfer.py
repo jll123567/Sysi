@@ -61,7 +61,7 @@ class transf:
 
     # receives 254 bytes from the socket
     # none
-    # receved data(bytes
+    # received data(bytes
     def receiveSocket(self):
         chunks = []
         bytes_recd = 0

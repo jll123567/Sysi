@@ -3,10 +3,10 @@ module
     module type(prog,standard,definition)
 Class
     what it is
-    atrib(s)
+    attrib(s)
 Method/Function
     what it is
     input(s)
     output(s)
 Global vars/hard bits of code/random junk
-    what is happening/what it is
+1    what is happening/what it is

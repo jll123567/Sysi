@@ -4,7 +4,7 @@
 
 
 # ram for threads
-# sotrage([])
+# storage([])
 class ram:
     def __init__(self, storage):
         self.storage = storage
@@ -31,7 +31,7 @@ class ram:
             if i == query:
                 return self.storage.index(i)
         if not matched:
-            print("no results. try obj.sysh.thred.ram.read()")
+            print("no results. try obj.sysh.thread.ram.read()")
 
     # removes the <index>th iem from ram
     # Inputs

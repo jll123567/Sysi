@@ -3,7 +3,7 @@
 import object
 
 # group is a list of objects
-# groupType is a string desc by what objects are in the group (obj,usr,wepcont,scn,uni,dta) + multi for many types
+# groupType is a string desc by what objects are in the group (obj,usr,wep,cont,scn,uni,dta) + multi for many types
 # groupSort is a string desc of how the objects are sorted(optional)
 # groupRelevance is a string desc of why these objects are grouped(optional)
 

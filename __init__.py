@@ -1,1 +1,0 @@
-import atribs.thread
