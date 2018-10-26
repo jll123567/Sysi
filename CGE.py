@@ -331,9 +331,10 @@ def updateWithGoal(objId, comparator, goal, subObjReference=None, saveToScene=Fa
         print("the comparator inputted is not valid")
 
 
-#
-#
-#
+# replay a scene from start shift to last shift
+# scn.scp[1:lastShift] none being [1:]
+# scene to replay(scn)*, last shift(none or int)
+# scene objs [obj]
 def replayScene(scn, lastShift=None):
     global objList
     objList = scn.obj
@@ -341,6 +342,7 @@ def replayScene(scn, lastShift=None):
         script = scn.scp[1:]
     else:
         script = scn.scp[1:lastShift]
+    print(script)
     for shift in script:
         if not objList:
             return "No objects to process"
@@ -369,6 +371,9 @@ def replayScene(scn, lastShift=None):
                 performSelectedOperation(resolveIdToIndex(objId), operation[1], None, operation[2])
             else:
                 performSelectedOperation(resolveIdToIndex(objId), operation[1], ext, operation[2])
+    scn.obj = objList
+    objList = []
+    return scn.obj
 
 
 # warning if the an operation is not possible as listed
