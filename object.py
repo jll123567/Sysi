@@ -251,10 +251,11 @@ class scene:
                  cont=container([None, 0, 0, 0], ["h,0,0,0-0,0,0"],
                                 {"id": None, "name": "defaultContainer"}), tag=None):
         if scp is None:
-            self.scp = [[0, None, 30]]
+            self.scp = [["master", None, 30]]
         else:
             self.scp = scp
-        # [time(time,tl branch, shift per sec),command0,command1,...]
+        # [time([tl branch, start point, shift per sec]),command0,command1,...]
+        # if timeline start point is none then is "unploted"
         if obj is None:
             self.obj = []
         else:
@@ -272,7 +273,7 @@ class scene:
     # none
     # none
     def unplotTl(self):
-        self.scp[0] = ["-", "-"]
+        self.scp[0] = ["master", None, 30]
 
     # add an error to the scene
     # objListIdx(int)*, type(int[0-2])*, sev(int[0-])*, mes(str)*, res([str])*, sel(int)
@@ -330,10 +331,8 @@ class universe:
         else:
             self.tag = tag
 
-    # [[master line end point],[id,parent id,start time,end time],...]
+    # [[master line end point(Id is "master")],[id,parent id,start time,end time],...]
 
-    # for scenes
-    # scn.scp[0] = [id, start, shifts per second]
     # creates a fork
     # lineId(int)*, parent(int)*, offset(int)*, endpoint(int)*
     # none/console output(str)
@@ -406,39 +405,6 @@ class universe:
                     return off
                 else:
                     self.getTotalOffsetTl(i[1], off)
-
-    # view the tl
-    # timePerSymb(str)*
-    # timePerSymb is either "h","d"
-    # console output(str)
-    def viewTl(self, timePerSymb):
-        # plot the things accurately
-        # uni(uni), lineId(int), tps(int)
-        # text(str)
-        def accuratePlot(uni, branchId, tps):
-            offset = 0
-            text = "."
-            for thisScene in uni.scn:
-                if thisScene.scp[0] == branchId:
-                    new = (("-" * ((thisScene.scp[0] - offset) / tps)) + "|")
-                    text += new
-                    offset = thisScene.scp[0]
-                if uni.scn[uni.scn.index(thisScene) + 1].scp[1] != branchId:
-                    text += "."
-            return text
-
-        if timePerSymb == "h":
-            timePerSymb = 30 * 60 * 60
-        elif timePerSymb == "d":
-            timePerSymb = 30 * 60 * 60 * 24
-        else:
-            timePerSymb = timePerSymb
-
-        for i in self.tl:
-            if i.len() == 1:
-                print(accuratePlot(self, 0, timePerSymb))
-            else:
-                print((" " * (self.getTotalOffsetTl(i[1]))) + (accuratePlot(self, i[0], timePerSymb)))
 
 
 # info at run
