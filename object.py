@@ -238,6 +238,7 @@ class container:
         else:
             self.bnd = bnd
         # [“(h/s,)x,y,z-x,y,z”,...]
+        # [None] means no bounds
         if tag is None:
             self.tag = {"id": None, "name": None}
         else:
@@ -296,8 +297,10 @@ class scene:
 # rule([operations to run on all obj each shift]), tag({"id":(str), ...})
 class universe:
     def __init__(self, tl=None, scn=None, obj=None, cont=None, funct=None, rule=None, tag=None):
-        self.tl = tl
-        # time line(wip)
+        if tl is None:
+            self.tl = [0]
+        else:
+            self.tl = tl
         if scn is None:
             self.scn = []
         else:
@@ -310,7 +313,6 @@ class universe:
             self.obj = obj
         # objlist
         # [usr, wep, obj, dta]
-        # ["obj0=object.w/e(s,t,u,f,f)", ...]
         if cont is None:
             self.cont = []
         else:
