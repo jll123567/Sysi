@@ -1,6 +1,5 @@
 import object
 import CGE
-# import prog.idGen as idGen
 
 a = object.object()
 b = object.object()

@@ -58,10 +58,9 @@ class que:
             recurse(i, 0)
 
 
-# make exact exact tasks into a valid tsk profile(broken at the moment) TODO fix make valid tsk profile
+# make exact exact tasks into a valid tsk profile(broken at the moment)
 # queue(trd.queue)*
 # tsk profile(trd.tsk)
-# noinspection SpellCheckingInspection
 def makeValidTskProfile(queue):
     if isinstance(queue, que):
         tasks = queue.tasks
