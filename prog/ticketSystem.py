@@ -93,6 +93,28 @@ def closeIssue(userId, idx):
     inProgress[userId].pop(idx)
 
 
+# export your cases a a object.dta
+# none
+# exported queues(dta)
+def exportQueue():
+    global inProgress, cases, errQueue
+    exp = object.data()
+    exp.storage = [errQueue, inProgress, cases]
+    return exp
+
+
+# import your queues
+# queue(dta)
+# none
+def importQueue(queue):
+    global errQueue, inProgress, cases
+    for err in queue.storage[0]:
+        errQueue.append(err)
+    inProgress = queue[1]
+    for case in queue.storage[2]:
+        cases.append(case)
+
+
 # exception for an object without a tag attribute.
 # expression(any), message(str)
 class noTagAtObject(Exception):
