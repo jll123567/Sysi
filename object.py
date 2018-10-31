@@ -295,6 +295,7 @@ class scene:
 
 # scene container timeline(time line info), scn([scn]), obj([obj]), cont([cont]), funct([functions]),
 # rule([operations to run on all obj each shift]), tag({"id":(str), ...})
+# todo rm functions
 class universe:
     def __init__(self, tl=None, scn=None, obj=None, cont=None, funct=None, rule=None, tag=None):
         if tl is None:
