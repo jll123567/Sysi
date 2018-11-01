@@ -5,7 +5,7 @@
 #
 class timeline:
     def __init__(self, masterLine=0):
-        self.masterLine = [masterLine]
+        self.master = [masterLine]
 
     # creates a fork
     # lineId(int)*, parent(int)*, offset(int)*, endpoint(int)*
@@ -17,35 +17,30 @@ class timeline:
     #
     #
     def removeLine(self, lineId):
-        delattr(self, lineId)
-
-    # remove a tl
-    # lineId(int)*
-    # none
-    def pruneTl(self, lineId):
-        for i in self.tl:
-            if i[0] == lineId:
-                self.tl.pop(i.index())
-        for i in self.scn:
-            if i.scp[0][1] == lineId:
-                i.unplotTl()
+        if lineId is not "master":
+            delattr(self, lineId)
+        else:
+            print("you cannot remove master")
 
     # add time to the end of a tl
     # lineId(int)*, time to add(int)*
     # none
     def extendTl(self, lineId, timeToAdd):
-        f = getattr(self, lineId)
-        f[-1] += timeToAdd
-        setattr(self, lineId, f)
+        newTime = getattr(self, lineId)
+        newTime[-1] += timeToAdd
+        setattr(self, lineId, newTime)
 
     # get the total offset of a tl
     # lineId(int)*, off(int)
     # offset(int)
-    # def getTotalOffsetTl(self, lineId, off=0):
-    #     for i in self.tl:
-    #         if i[0] == lineId:
-    #             off += i[3]
-    #             if i[1] == 0:
-    #                 return off
-    #             else:
-    #                 self.getTotalOffsetTl(i[1], off)
+    def getTotalOffsetTl(self, lineId, off=0):
+        for line in dir(self):
+            if line == lineId:
+                off += getattr(self, line)[1]
+                if getattr(self, line)[0] == "master":
+                    return off
+                else:
+                    self.getTotalOffsetTl(line[0], off)
+
+
+f = timeline(200)
