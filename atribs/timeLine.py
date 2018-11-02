@@ -1,8 +1,11 @@
-# todo: finish addapting functions
+# Timeline management
+# module type: attrib
 
 
-#
-#
+# defines a timeline
+# master([int]), line([str, int, int], ...)
+# input
+#   masterLine(int)
 class timeline:
     def __init__(self, masterLine=0):
         self.master = [masterLine]
@@ -13,9 +16,9 @@ class timeline:
     def forkLine(self, lineId, parent, offset, endpoint):
         setattr(self, lineId, [parent, offset, endpoint])
 
-    #
-    #
-    #
+    # remove a line
+    # lineId(str)
+    # none/ console output(str)
     def removeLine(self, lineId):
         if lineId is not "master":
             delattr(self, lineId)
@@ -36,11 +39,24 @@ class timeline:
     def getTotalOffsetTl(self, lineId, off=0):
         for line in dir(self):
             if line == lineId:
-                off += getattr(self, line)[1]
-                if getattr(self, line)[0] == "master":
+                if line == "master":
                     return off
                 else:
-                    self.getTotalOffsetTl(line[0], off)
+                    off += getattr(self, line)[1]
+                    return self.getTotalOffsetTl(getattr(self, line)[0], off)
 
 
-f = timeline(200)
+# remove all timeline data in a universe
+#   btw uni.tl will be set to None not timeline()
+# uni(uni)
+# formatted uni(uni)
+def fullTlRemoval(uni):
+    for idx in uni.scn.__len__():
+        uni.scn[idx].unPlotTl()
+    uni.tl = None
+    return uni
+
+
+# info at run
+if __name__ == "__main__":
+    print("Timeline management\nmodule type: attrib")
