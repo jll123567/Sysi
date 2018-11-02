@@ -19,7 +19,7 @@ scene = object.scene()
 # get the attributes of obj as a list
 # obj(obj)*
 # attributes([str])
-def getAtribs(obj):
+def getAttribList(obj):
     objDict = str(obj.__dict__.keys())
     stringList = str(re.search(r"'.*'", objDict).group())
     words = []
@@ -40,13 +40,13 @@ def getAtribs(obj):
 # obj(obj)*
 # methodList([str])
 def getMethods(obj):
-    atribsList = getAtribs(obj)
+    attribList = getAttribList(obj)
     methodList = dir(obj)
     finalList = []
     for method in methodList:
         if method[0] == '_':
             continue
-        if method in atribsList:
+        if method in attribList:
             continue
         finalList.append(method)
     return finalList

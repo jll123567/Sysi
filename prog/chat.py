@@ -4,7 +4,7 @@
 # server formatting:
 # server=dta
 # [[usrlist],     [channels]]
-# usrlist = [atribs,is_admin]
+# usrlist = [attribs,is_admin]
 # channels = [name,msg,stream,perms]
 # perm = ["name:text"][level,[users,...]][r,w,s,l]
 
@@ -70,7 +70,7 @@ def addMessage(server, channel, message, usr):
                     if f[3][count]:
                         f[1].append(usr.tag["name"] + ":" + message)
                     else:
-                        print("can not add message: atribs not permitted")
+                        print("can not add message: attribs not permitted")
         else:
             count += 1
 

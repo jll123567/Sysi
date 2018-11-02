@@ -13,7 +13,7 @@
 #     limited:has limiters
 #     simulated:object pers does not belong to a free user
 #    Note:
-#        pers only helps predict atribs behavior but does not code for behavior. Use trd.tsk for this.
+#        pers only helps predict attrib's behavior but does not code for behavior. Use trd.tsk for this.
 class prs:
     def __init__(self, goals=None, limits=None, functions=None):
         if goals is None:
