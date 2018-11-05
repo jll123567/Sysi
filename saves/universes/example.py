@@ -2,6 +2,8 @@
 import object
 import prog.idGen
 
+#todo pretty this up
+
 # user defined functions
 # def ab():
 #   print("ab" *10)
