@@ -1,6 +1,7 @@
 # The Content Generation engine
 # objects in objList are simulated and run based on the instructions in trd.tsk
 # Module type: prog
+# todo add multiple sessions and universe rule handling
 # task > CGE
 # ["target(obj name)", "operation", [parameters]]
 # CGE > sceneScript
