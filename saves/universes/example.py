@@ -2,31 +2,19 @@
 import object
 import prog.idGen
 
-#todo pretty this up
-
 # user defined functions
-# def ab():
-#   print("ab" *10)
+# just have to be functions, nothing special
 
 # objects
-a = object.object()
-a.mod = 'a'
-# setattr(a, "ab", ab)
-a.tag["name"] = "a"
+# need Ids
 
 # containers
-masterCont = object.container()
-masterCont.bnd = [None]
-masterCont.tag["name"] = "example/masterCont"
+# need Ids
 
 # scenes
-scene0 = object.scene()
-scene0.cont = masterCont
-scene0.obj.append(a)
-scene0.tag["name"] = "the beginning"
+# need Ids and Tl info
 
-# uni
-example = object.universe()
-example.obj.append(a)
-example.scn.append(scene0)
-example.cont.append(masterCont)
+# universe
+# don't forget the uni Id and the rules section
+
+# end of file(be kind to eachother)
