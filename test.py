@@ -1,4 +1,10 @@
-f = [1, 2, 3]
-for i in f:
-    i += 1
-print(f)
+import CGE
+import object
+
+f = object.object()
+g = object.universe()
+g.rule.append([".trd.tsk", "debugPrint", ["fff"]])
+f.tag["id"] = "o/00"
+g.tag["id"] = "un/untitled"
+CGE.objList = [f, g]
+print(CGE.getOperations())

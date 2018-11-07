@@ -326,7 +326,8 @@ class universe:
             self.rule = []
         else:
             self.rule = rule
-            # phisx and other functions to always run while in uni
+            # a rule is an operation run at each object
+            # [extension(optional. None for no ext), function, [parameters]]
         if tag is None:
             self.tag = {"id": None, "name": None}
         else:

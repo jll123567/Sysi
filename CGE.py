@@ -60,14 +60,22 @@ def getOperations():
     global objList
     operationList = []
     for obj in objList:
-        try:
-            for operation in obj.trd.tsk.current:
-                operationList.append(operation)
-        except AttributeError:
-            warnings.warn(
-                "the object " + obj.tag["name"] + "does not have a threadModules and/or tasker \n please add one "
-                                                  "if you want the object to do something",
-                objectDoesNotContainTsk)
+        if isinstance(obj, object.universe):
+            for rul in obj.rule:
+                for uniObj in objList:
+                    if rul[0] is None:
+                        operationList.append([uniObj.tag["id"], rul[1], rul[2]])
+                    else:
+                        operationList.append([uniObj.tag["id"] + rul[0], rul[1], rul[2]])
+        else:
+            try:
+                for operation in obj.trd.tsk.current:
+                    operationList.append(operation)
+            except AttributeError:
+                warnings.warn(
+                    "the object " + obj.tag["name"] + "does not have a threadModules and/or tasker \n please add one "
+                                                      "if you want the object to do something",
+                    objectDoesNotContainTsk)
     return operationList
 
 
@@ -109,6 +117,7 @@ def areOperationsPossible(operationList):
             ext = ext[1:]
             methods = getMethods(unpackSubObjFromExtension(objList[resolveIdToIndex(objId)], ext))
             if operation[1] not in methods:
+                # todo chage this raise to a warn
                 raise operationNotPossible(str(operation[1]) + " not in " + str(objId + '.' + ext) + " method list")
 
         else:
@@ -166,7 +175,10 @@ def unpackSubObjFromExtension(obj, subObjReference):
     subs.append(sub)
     extractedObj = obj
     for subObj in subs:
-        extractedObj = getattr(extractedObj, subObj)
+        try:
+            extractedObj = getattr(extractedObj, subObj)
+        except AttributeError:
+            pass
     return extractedObj
 
 
