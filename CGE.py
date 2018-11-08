@@ -15,6 +15,8 @@ import prog.idGen as idGen
 objList = []
 # scene to save changes to
 scene = object.scene()
+# list of uni rules
+uniRules = []
 
 
 # get the attributes of obj as a list
@@ -57,25 +59,22 @@ def getMethods(obj):
 # nones
 # operationList([operations])
 def getOperations():
-    global objList
+    global objList, uniRules
     operationList = []
     for obj in objList:
-        if isinstance(obj, object.universe):
-            for rul in obj.rule:
-                for uniObj in objList:
-                    if rul[0] is None:
-                        operationList.append([uniObj.tag["id"], rul[1], rul[2]])
-                    else:
-                        operationList.append([uniObj.tag["id"] + rul[0], rul[1], rul[2]])
-        else:
-            try:
-                for operation in obj.trd.tsk.current:
-                    operationList.append(operation)
-            except AttributeError:
-                warnings.warn(
-                    "the object " + obj.tag["name"] + "does not have a threadModules and/or tasker \n please add one "
-                                                      "if you want the object to do something",
-                    objectDoesNotContainTsk)
+        try:
+            for operation in obj.trd.tsk.current:
+                operationList.append(operation)
+        except AttributeError:
+            warnings.warn(
+                "the object " + obj.tag["name"] + "does not have a threadModules and/or tasker \n please add one "
+                                                  "if you want the object to do something",
+                objectDoesNotContainTsk)
+        for rul in uniRules:
+            if rul[0] is None:
+                operationList.append([obj.tag["id"], rul[1], rul[2]])
+            else:
+                operationList.append([obj.tag["id"]+rul[0], rul[1], rul[2]])
     return operationList
 
 
@@ -117,7 +116,6 @@ def areOperationsPossible(operationList):
             ext = ext[1:]
             methods = getMethods(unpackSubObjFromExtension(objList[resolveIdToIndex(objId)], ext))
             if operation[1] not in methods:
-                # todo chage this raise to a warn
                 raise operationNotPossible(str(operation[1]) + " not in " + str(objId + '.' + ext) + " method list")
 
         else:
@@ -175,10 +173,7 @@ def unpackSubObjFromExtension(obj, subObjReference):
     subs.append(sub)
     extractedObj = obj
     for subObj in subs:
-        try:
-            extractedObj = getattr(extractedObj, subObj)
-        except AttributeError:
-            pass
+        extractedObj = getattr(extractedObj, subObj)
     return extractedObj
 
 
