@@ -6,5 +6,6 @@ g = object.universe()
 g.rule.append([".trd.tsk", "debugPrint", ["fff"]])
 f.tag["id"] = "o/00"
 g.tag["id"] = "un/untitled"
-CGE.objList = [f, g]
-print(CGE.getOperations())
+CGE.objList = [f]
+CGE.addUniRules(g)
+CGE.update()

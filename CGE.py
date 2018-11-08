@@ -67,14 +67,14 @@ def getOperations():
                 operationList.append(operation)
         except AttributeError:
             warnings.warn(
-                "the object " + obj.tag["name"] + "does not have a threadModules and/or tasker \n please add one "
-                                                  "if you want the object to do something",
+                "the object " + str(obj.tag["name"]) + "does not have a threadModules and/or tasker \n please add one "
+                                                       "if you want the object to do something",
                 objectDoesNotContainTsk)
         for rul in uniRules:
             if rul[0] is None:
                 operationList.append([obj.tag["id"], rul[1], rul[2]])
             else:
-                operationList.append([obj.tag["id"]+rul[0], rul[1], rul[2]])
+                operationList.append([obj.tag["id"] + rul[0], rul[1], rul[2]])
     return operationList
 
 
@@ -212,7 +212,7 @@ def moveThreadAlong():
     global objList
     objsEmpty = 0
     for obj in objList:
-        if obj.trd.tsk.profiles.__len__() == 0:
+        if obj.trd.tsk.profile.__len__() == 0:
             objsEmpty = 0
         try:
             obj.trd.tsk.nextCurrent()
@@ -230,6 +230,15 @@ def moveThreadAlong():
 def addObj(obj):
     global objList
     objList.append(obj)
+
+
+# add universe rules
+# uni(uni)*
+# none
+def addUniRules(uni):
+    global uniRules
+    for rul in uni.rule:
+        uniRules.append(rul)
 
 
 # save the state of the objList as the initial state of a scene, with optional container setting
