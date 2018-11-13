@@ -6,8 +6,11 @@
 # ram for threads
 # storage([])
 class ram:
-    def __init__(self, storage):
-        self.storage = storage
+    def __init__(self, storage=None):
+        if storage is None:
+            self.storage = []
+        else:
+            self.storage = storage
 
     # loads <dta> into ram
     # dta(any)*
