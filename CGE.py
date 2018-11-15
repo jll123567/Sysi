@@ -13,8 +13,8 @@ import prog.idGen as idGen
 import threading
 
 
-#
-#
+# a instance of CGE
+# sessionId("str"), objList([obj]), saveScene(scn), uniRules([rule])
 class CGESession(threading.Thread):
     def __init__(self, sessionId, objList, saveScene=object.scene(), uniRules=None):
         super().__init__()
@@ -65,7 +65,6 @@ class CGESession(threading.Thread):
     # none
     # operationList([operations])
     def getOperations(self):
-        # global objList, uniRules
         operationList = []
         for obj in self.objList:
             try:
@@ -88,12 +87,11 @@ class CGESession(threading.Thread):
     # objectId(str)*
     # index(int)
     def resolveIdToIndex(self, objId):
-        # global objList
+        # todo: remove this after threading CGE works
         if self.objList.__len__() == 1:
             return 0
         ndx = 0
         for obj in self.objList:
-            # print(name == obj.tag["name"], name, obj.tag["name"])
             if objId == obj.tag["id"]:
                 break
             ndx += 1
@@ -301,13 +299,14 @@ class CGESession(threading.Thread):
             if "evLog" in self.objList[self.resolveIdToIndex(objId)].tag.keys():
                 self.objList[self.resolveIdToIndex(objId)].tag["evLog"].append(op[1])
             else:
-                self.objList[self.resolveIdToIndex(objId)].tag.self.update({"evLog": [op[1]]})
+                self.objList[self.resolveIdToIndex(objId)].tag.update({"evLog": [op[1]]})
 
         self.moveThreadAlong()
 
-    #
-    #
-    #
+    # threading.thread objects need a run
+    # todo make the run better
+    # iterations(int>0)
+    # none
     def run(self, iterations=1000):
         while iterations > 0:
             self.update()
