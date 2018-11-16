@@ -1,7 +1,6 @@
 # The Content Generation engine
 # objects in objList are simulated and run based on the instructions in trd.tsk
 # Module type: prog
-# todo add multiple
 # task > CGE
 # ["target(obj name)", "operation", [parameters]]
 # CGE > sceneScript
@@ -14,13 +13,15 @@ import threading
 
 
 # a instance of CGE
-# sessionId("str"), objList([obj]), saveScene(scn), uniRules([rule])
+# sessionId("str"), objList([obj]),runBehavior([mode('t', 'g', or 'i'),
+#  saveToScene(bool), ...]) , saveScene(scn), uniRules([rule])
 class CGESession(threading.Thread):
-    def __init__(self, sessionId, objList, saveScene=object.scene(), uniRules=None):
+    def __init__(self, sessionId, objList, runBehavior, savedScene=object.scene(), uniRules=None):
         super().__init__()
         self.sessionId = sessionId
         self.objList = objList
-        self.saveScene = saveScene
+        self.runBehavior = runBehavior
+        self.savedScene = savedScene
         if uniRules is None:
             self.uniRules = []
         else:
@@ -87,7 +88,6 @@ class CGESession(threading.Thread):
     # objectId(str)*
     # index(int)
     def resolveIdToIndex(self, objId):
-        # todo: remove this after threading CGE works
         if self.objList.__len__() == 1:
             return 0
         ndx = 0
@@ -217,7 +217,6 @@ class CGESession(threading.Thread):
                 obj.trd.tsk.nextCurrent()
             except AttributeError:
                 pass
-        print("shift completed")
         if objsEmpty == self.objList.__len__():
             print("all object's threads empty \ndumping objects from list")
             self.objList = []
@@ -240,17 +239,17 @@ class CGESession(threading.Thread):
     # none
     def saveSceneInit(self, cont=None):
         if cont is not None:
-            self.saveScene.loc = cont
-        self.saveScene.obj = self.objList
+            self.savedScene.loc = cont
+        self.savedScene.obj = self.objList
 
     # get the finished scene recording
     # timeLine information([str])*, scene name(str)*, universe to gen id(uni)*
     # scene(scene)
     def exportScene(self, tlInfo, name, universe):
-        self.saveScene.scp[0] = tlInfo
-        self.saveScene.tag["name"] = name
-        self.saveScene.tag["id"] = idGen.generateUniversalId(universe, self.saveScene)
-        return self.saveScene
+        self.savedScene.scp[0] = tlInfo
+        self.savedScene.tag["name"] = name
+        self.savedScene.tag["id"] = idGen.generateUniversalId(universe, self.savedScene)
+        return self.savedScene
 
     # update the objects in objList based on obj Thread
     # saveToScene(bool)
@@ -266,11 +265,11 @@ class CGESession(threading.Thread):
                 self.objList[objIdx].trd.tsk.current[0] = [self.objList[objIdx].trd.tsk.current[0]]
             objIdx += 1
         operationList = self.getOperations()
-        # if not
         self.areOperationsPossible(operationList)
-        # raise operationNotPossible(operationList)
         if saveToScene:
-            self.saveScene.scp.append(operationList)
+            self.savedScene.scp.append(operationList)
+        if not operationList:
+            return "No operations"
         for op in operationList:
             objId = ""
             ext = ""
@@ -302,15 +301,27 @@ class CGESession(threading.Thread):
                 self.objList[self.resolveIdToIndex(objId)].tag.update({"evLog": [op[1]]})
 
         self.moveThreadAlong()
+        return "Shift Complete"
 
     # threading.thread objects need a run
-    # todo make the run better
     # iterations(int>0)
     # none
-    def run(self, iterations=1000):
-        while iterations > 0:
-            self.update()
-            iterations -= 1
+    def run(self):
+        if self.runBehavior[0] == 't':
+            while self.update(self.runBehavior[1]) != "No operations":
+                pass
+            print("No operations left to preform\nstopping!")
+        elif self.runBehavior[0] == 'g':
+            self.updateWithGoal(self.runBehavior[2], self.runBehavior[3], self.runBehavior[4], self.runBehavior[1],
+                                self.runBehavior[5])
+        elif self.runBehavior[0] == 'i':
+            initalIterCount = self.runBehavior[2]
+            while self.runBehavior[2] > 0:
+                self.update(self.runBehavior[1])
+                print("iteration " + str(initalIterCount-self.runBehavior[2]) + " completed")
+                self.runBehavior[2] -= 1
+        else:
+            return "specify a mode"
 
     # update the objList while a boolean expression is true
     # id of obj to check against(int)*, comparator(str)*, goal(any)*, saveToScene(bool), subObjReference(str)
