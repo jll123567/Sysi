@@ -80,9 +80,6 @@ def saveObjHash(obj):
     return dta
 
 
-# TODO: add checksum bc its more accurate
-
-
 # info at run
 if __name__ == "__main__":
     print("Definition for user memory\nmodule type: def")

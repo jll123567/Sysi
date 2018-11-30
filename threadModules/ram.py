@@ -1,6 +1,7 @@
 # random access memory
 # module type: def
 # [ w/e ,...]
+import prog.idGen
 
 
 # ram for threads
@@ -17,6 +18,13 @@ class ram:
     # none
     def load(self, dta):
         self.storage.append(dta)
+
+    # loads dta and assigns it an id assuming it doesn't have one
+    # dta(dta)*
+    # none
+    def loadTrdDta(self, dta):
+        dta.tag["id"] = prog.idGen.generateGenericId(self.storage, dta)
+        self.load(dta)
 
     # reads <obj>'s ram
     # none
