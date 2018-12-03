@@ -80,7 +80,6 @@ def saveObjHash(obj):
     return dta
 
 
-3
 # info at run
 if __name__ == "__main__":
     print("Definition for user memory\nmodule type: def")
