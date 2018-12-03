@@ -48,6 +48,7 @@ class lang:
 
     # tunes based on direction and minimum volume as an int
     # min Volume to reeve(int)*, minimum panning(int -100(l) to 100(r))*, maximum panning(int -100(l) to 100(r))*
+    # todo make pan -1 to 1 float
     def tune(self, minVolume, minPan, maxPan):
         for i in self.heard.left:
             if abs(i) < minVolume:
