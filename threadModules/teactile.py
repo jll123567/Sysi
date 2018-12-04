@@ -9,6 +9,9 @@ class tact:
     def __init__(self, snsNds):
         self.snsNds = snsNds
 
+    #
+    #
+    #
     def package(self):
         nodeList = []
         for node in self.snsNds:
@@ -27,9 +30,15 @@ class snsNode:
         self.pressure = pressure
         self.relTemp = relTemp
 
+    #
+    #
+    #
     def package(self):
         return object.data(self.flatten(), {"name": "tread.tact.snsNode.package", "id": None,
                                             "dataType": "thread.tact.snsNode.package"})
 
+    #
+    #
+    #
     def flatten(self):
         return [self.position, self.pressure, self.relTemp]
