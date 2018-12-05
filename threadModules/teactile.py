@@ -9,9 +9,9 @@ class tact:
     def __init__(self, snsNds):
         self.snsNds = snsNds
 
-    #
-    #
-    #
+    # packs the tactile nodes into a dta
+    # none
+    # tact dta([snsNodes], tags)
     def package(self):
         nodeList = []
         for node in self.snsNds:
@@ -30,15 +30,15 @@ class snsNode:
         self.pressure = pressure
         self.relTemp = relTemp
 
-    #
-    #
-    #
+    # packs the node into a dta
+    # none
+    # snsNode dta([pos, pres, reTmp], tags)
     def package(self):
         return object.data(self.flatten(), {"name": "tread.tact.snsNode.package", "id": None,
                                             "dataType": "thread.tact.snsNode.package"})
 
-    #
-    #
-    #
+    # flattens the node to a list
+    # none
+    # [pos, pres, reTmp]
     def flatten(self):
         return [self.position, self.pressure, self.relTemp]
