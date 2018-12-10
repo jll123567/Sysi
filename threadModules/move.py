@@ -115,11 +115,13 @@ class mov:
             self.vz = 0
         self.move()
 
-    #
-    #
-    #
+    # pack data for ram
+    # none
+    # dta(mov attribs, tags)
     def package(self):
-        return object.data([], {"name": "tread.mov.package", "id": None, "dataType": "thread.mov.package"})
+        return object.data([self.x, self.y, self.z, self.vx, self.vy, self.vz, self.rx,
+                            self.ry, self.rz, self.rvx, self.rvy, self.rvz],
+                           {"name": "tread.mov.package", "id": None, "dataType": "thread.mov.package"})
 
 
 # Info at run
