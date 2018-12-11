@@ -1,5 +1,6 @@
 # Sub object grouping type
 # module type: def
+import object
 
 # objects can be like groups without being groups
 # parent and child objects have a "sub" section in their threadModules
@@ -51,6 +52,13 @@ class sub:
     # none
     def removeChild(self, index):
         self.children.pop(index)
+
+    # pack data for ram
+    # none
+    # dta(cpx attribs, tags)
+    def package(self):
+        return object.data([self.parent, self.children], {"name": "tread.cpx.package", "id": None,
+                                                          "dataType": "thread.cpx.package"})
 
 
 # Info at run

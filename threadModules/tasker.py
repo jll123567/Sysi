@@ -1,6 +1,7 @@
 # tasker
 # module type: def
 import time
+import object
 
 
 # profile=[shift,shift,shift,...]
@@ -145,6 +146,14 @@ class tsk:
     @staticmethod
     def debugPrint(msg):
         print(msg)
+
+    # pack data for ram
+    # none
+    # dta(cpx attribs, tags)
+    # todo chanage commments to reflect each module
+    def package(self):
+        return object.data([self.current, self.profile], {"name": "tread.cpx.package", "id": None,
+                                                          "dataType": "thread.cpx.package"})
 
 
 # info at run

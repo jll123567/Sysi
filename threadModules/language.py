@@ -3,6 +3,7 @@
 # feed=[in,out]
 # in=[[amplitude,amplitude,amplitude],[Right version of sound]] each index is one mS
 # out=[amplitude,amplitude,amplitude](mono)
+import object
 
 
 # stereo audio for lang
@@ -81,6 +82,13 @@ class lang:
     # none
     def queueSpeak(self, sounds):
         self.speakQue = sounds
+
+    # pack data for ram
+    # none
+    # dta(cpx attribs, tags)
+    def package(self):
+        return object.data([self.heard, self.speakQue], {"name": "tread.lang.package", "id": None,
+                                                                 "dataType": "thread.lang.package"})
 
 
 # info at run
