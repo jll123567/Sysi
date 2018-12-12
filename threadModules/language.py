@@ -85,7 +85,7 @@ class lang:
 
     # pack data for ram
     # none
-    # dta(cpx attribs, tags)
+    # dta(lang attribs, tags)
     def package(self):
         return object.data([self.heard, self.speakQue], {"name": "tread.lang.package", "id": None,
                                                                  "dataType": "thread.lang.package"})

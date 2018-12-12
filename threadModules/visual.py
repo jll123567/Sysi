@@ -1,5 +1,8 @@
 # visual data and camera handling
 # module type: def
+
+
+import object
 # feed=[raw,pitch,yaw,roll]
 
 
@@ -9,17 +12,17 @@ class vis:
             self.rawImg = []
         else:
             self.rawImg = rawImg
-        self.p = pitch
-        self.y = yaw
-        self.r = roll
+        self.rx = pitch
+        self.ry = yaw
+        self.rz = roll
 
     # set camera rotation
     # p(float)*, y(float)*, r(float)*
     # none
-    def rotate(self, p, y, r):
-        self.p = p
-        self.y = y
-        self.r = r
+    def rotate(self, rx, ry, rz):
+        self.rx = rx
+        self.ry = ry
+        self.rz = rz
 
     # clear image from raw img
     # none
@@ -31,9 +34,16 @@ class vis:
     # none
     # none
     def resetPos(self):
-        self.p = 0
-        self.y = 0
-        self.r = 0
+        self.rx = 0
+        self.ry = 0
+        self.rz = 0
+
+    # pack data for ram
+    # none
+    # dta(vis attribs, tags)
+    def package(self):
+        return object.data([self.rawImg, self.rx, self.ry, self.rz], {"name": "tread.vis.package", "id": None,
+                                                                      "dataType": "thread.vis.package"})
 
 
 # info at run

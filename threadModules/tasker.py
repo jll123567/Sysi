@@ -149,11 +149,10 @@ class tsk:
 
     # pack data for ram
     # none
-    # dta(cpx attribs, tags)
-    # todo chanage commments to reflect each module
+    # dta(tsk attribs, tags)
     def package(self):
-        return object.data([self.current, self.profile], {"name": "tread.cpx.package", "id": None,
-                                                          "dataType": "thread.cpx.package"})
+        return object.data([self.current, self.profile], {"name": "tread.tsk.package", "id": None,
+                                                          "dataType": "thread.tsk.package"})
 
 
 # info at run

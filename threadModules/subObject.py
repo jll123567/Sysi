@@ -55,10 +55,10 @@ class sub:
 
     # pack data for ram
     # none
-    # dta(cpx attribs, tags)
+    # dta(sub attribs, tags)
     def package(self):
-        return object.data([self.parent, self.children], {"name": "tread.cpx.package", "id": None,
-                                                          "dataType": "thread.cpx.package"})
+        return object.data([self.parent, self.children], {"name": "tread.sub.package", "id": None,
+                                                          "dataType": "thread.sub.package"})
 
 
 # Info at run
