@@ -5,7 +5,7 @@
 #   [[u0,u1,type],ship,ship]
 #       4 true love/Nemesis
 #       3 s##ual love/NOP
-#       2 crush/rival
+#       2 dating/rival
 #       1 friend/dbag
 #       0 neutral
 #       neg is - pos is +
