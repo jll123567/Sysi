@@ -3,10 +3,13 @@ import object
 
 
 class olf:
-    """Hold olfactory input for thread."""
+    """Hold olfactory input for thread.
+    descriptor is any tring
+    strength is a float between and including 0 and 1"""
     def __init__(self, descriptor="None", strength=0):
-        """descriptor holds string
-        strength holds float between 0 and 1"""
+        """Initalize attributes
+        descriptor:"None"
+        strength:0"""
         self.descriptor = descriptor
         self.strength = strength
 

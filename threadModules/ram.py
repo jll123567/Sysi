@@ -1,68 +1,57 @@
-# random access memory
-# module type: def
-# [ w/e ,...]
+"""random access memory"""
 import prog.idGen
 
 
-# ram for threads
-# storage([])
 class ram:
+    """holds random data the thread needs to store temporarily
+    storage is a list that holds any"""
     def __init__(self, storage=None):
+        """Initalize atributes
+        Storage:[]"""
         if storage is None:
             self.storage = []
         else:
             self.storage = storage
 
-    # loads <dta> into ram
-    # dta(any)*
-    # none
     def load(self, dta):
+        """put dta into self.storage"""
         self.storage.append(dta)
 
-    # loads dta and assigns it an id assuming it doesn't have one
-    # dta(dta)*
-    # none
     def loadTrdDta(self, dta):
+        """generate a generic id for dta and load() it"""
         dta.tag["id"] = prog.idGen.generateGenericId(self.storage, dta)
         self.load(dta)
 
-    # reads <obj>'s ram
-    # none
-    # none
     def read(self):
+        """print the contents of self.storage to the console"""
         for i in self.storage:
             print(i)
 
-    # searches ram for <query> using re.search
-    # query(any)*
-    # console output(str)/queryIndex(int)
     def search(self, query):
+        """searched self.storage for query
+        returns the index if the object in storage and query are equal
+        prints a message to the console if nothing was found"""
         matched = True
+        idx = 0
         for i in self.storage:
             if i == query:
-                return self.storage.index(i)
+                return idx
+            idx += 1
         if not matched:
             print("no results. try obj.sysh.thread.ram.read()")
 
-    # removes the <index>th iem from ram
-    # Inputs
-    #   index(int) is the int-th item in ram
-    #   index(None) removes the last (or -1st) item in ram
-    #   index([])=[] sets ram to []
-    #   index(else) error message
-    # Out
-    #   console output(str), none
     def free(self, index):
+        """removes an object from self.storage(with *style*)
+
+        index(int) is the int-th item in self.storage
+        index(None) removes the last (or -1st) item in ram
+        index("all") sets ram to []
+        index(else) print error to console"""
         if index is None:
             self.storage.pop(-1)
-        elif not index:
+        elif index == "all":
             self.storage = []
         elif isinstance(index, int):
             self.storage.pop(index)
         else:
             print("invalid request")
-
-
-# Info at run
-if __name__ == "__main__":
-    print("# random access memory\nmodule type: def\n[ w/e ,...]")
