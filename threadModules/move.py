@@ -1,16 +1,24 @@
-# movement and position tracking
-# module type: def
-# mov
-#    x pos,y pos,z pos,x accel,y accel, z accel
-#
-# if obj is a sub obj mov will equal "sub"
+"""movement and position tracking"""
 import object
 
 
-# thread module for position and movement
-# x pos(float)*, y pos(float)*, z pos(float)*, x accel(float)*, y accel(float)*, z accel(float)*
 class mov:
+    """holds object position, acceleration and rotation"""
     def __init__(self, x=0, y=0, z=0, vx=0, vy=0, vz=0, rx=0, ry=0, rz=0, rvx=0, rvy=0, rvz=0):
+        """initialize attributes
+
+        x: x position
+        y: y position
+        z: z position
+        vx: x velocity
+        vy: y velocity
+        vz: z velocity
+        rx: pitch
+        ry: yaw
+        rz: roll
+        rvx: pitch velocity
+        rvy: yaw velocity
+        rvz: roll velocity"""
         self.x = x
         self.y = y
         self.z = z
@@ -24,42 +32,32 @@ class mov:
         self.rvy = rvy
         self.rvz = rvz
 
-    # sets obj's position in the threadModules
-    # x(float)*, y(float)*, z(float)*
-    # none
     def warp(self, x, y, z):
+        """set position"""
         self.x = x
         self.y = y
         self.z = z
     
-    # set the rotation of the object in radians
-    # rx(float)*, ry(float)*, rz(float)*
-    # none
     def setRotation(self, rx, ry, rz):
+        """set rotation(degrees)"""
         self.rx = rx
         self.ry = ry
         self.rz = rz
 
-    # sets object acceleration in threadModules
-    # x accel(float)*, y accel(float)*, z accel(float)*
-    # none
     def accelerate(self, vx, vy, vz):
+        """set acceleration"""
         self.vx = vx
         self.vy = vy
         self.vz = vz
 
-    # set the rotational velocity of the object(radians per shift)
-    # rvx(float)*, rvy(float)*, rvz(float)*
-    # none
     def accelerateRotation(self, rvx, rvy, rvz):
+        """set rotation acceleration"""
         self.rvx = rvx
         self.rvy = rvy
         self.rvz = rvz
 
-    # moves obj based on acceleration
-    # none
-    # none
     def move(self):
+        """change position and rotation based on acceleration"""
         self.x += self.vx
         self.y += self.vy
         self.z += self.vz
@@ -67,10 +65,11 @@ class mov:
         self.ry += self.rvy
         self.rz += self.rvz
 
-    # accelerates this obj based on a force and an obj's mov
-    # o1(mov)*, force(float)*
-    # none
     def attract(self, o1, force):
+        """changes position based on another object's position and a force
+
+        o1 needs to be a trd.mov not an object.object
+        attract pusses together"""
         if self.x > o1.x:
             self.vx = (force * -1)
         elif self.x < o1.x:
@@ -91,10 +90,11 @@ class mov:
             self.vz = 0
         self.move()
 
-    # accelerates this obj based on a force and an obj's mov
-    # o1(mov)*, force(float)*
-    # none
     def repel(self, o1, force):
+        """changes position based on another object's position and a force
+
+        o1 needs to be a trd.mov not an object.object
+        repel pushes away"""
         if self.x > o1.x:
             self.vx = force
         elif self.x < o1.x:
@@ -115,15 +115,8 @@ class mov:
             self.vz = 0
         self.move()
 
-    # pack data for ram
-    # none
-    # dta(mov attribs, tags)
     def package(self):
+        """pack attributes into a data object and return it"""
         return object.data([self.x, self.y, self.z, self.vx, self.vy, self.vz, self.rx,
                             self.ry, self.rz, self.rvx, self.rvy, self.rvz],
                            {"name": "tread.mov.package", "id": None, "dataType": "thread.mov.package"})
-
-
-# Info at run
-if __name__ == "__main__":
-    print("movement and position tracking\nmodule type: def")

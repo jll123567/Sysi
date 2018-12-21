@@ -6,7 +6,7 @@ class ram:
     """holds random data the thread needs to store temporarily
     storage is a list that holds any"""
     def __init__(self, storage=None):
-        """Initalize atributes
+        """Initialize attributes
         Storage:[]"""
         if storage is None:
             self.storage = []
