@@ -21,7 +21,7 @@ def loadObj(fileName):
 
 
 # note: to save multiple objects into one file, save them as a list or a sysh.object.data
-#   loadObj() will load the entire list back, ready for parsing
+#   loadObj() will lo       ad the entire list back, ready for parsing
 
 # Info at run
 if __name__ == "__main__":
