@@ -12,9 +12,68 @@ import prog.idGen as idGen
 import threading
 
 
-# a instance of CGE
-# sessionId("str"), objList([obj]),runBehavior([mode('t', 'g', or 'i'),
-#  saveToScene(bool), ...]) , saveScene(scn), uniRules([rule])
+class CrossSessionHandler(threading.Thread):
+    """"""
+
+    def __init__(self, CSHId, sessionList=None):
+        super().__init__()
+        if sessionList is None:
+            self.sessionList = []
+        else:
+            self.sessionList = sessionList
+        self.CSHId = CSHId
+
+    def addSession(self, session):
+        self.sessionList.append(session)
+
+    def checkForPost(self):
+        for session in self.sessionList:
+            if session.crossPosts:
+                self.pendSessions()
+                self.resolvePosts()
+                self.unpendSessions()
+
+    def pendSessions(self):
+        for idx in range(0, self.sessionList.__len__()):
+            self.sessionList[idx].crossPosts.append("pend")
+
+    def unpendSessions(self):
+        for idx in range(0, self.sessionList.__len__()):
+            for idx1 in range(0,self.sessionList[idx].crossPosts.__len__()):
+                if self.sessionList[idx].crossPosts[idx1] == "pend":
+                    self.sessionList[idx].crossPosts.pop(idx1)
+
+    def resolvePosts(self):
+        objToRes = None
+        for idx in range(0, self.sessionList.__len__()):
+            for post in self.sessionList[idx].crossPosts:
+                if post == "pend":
+                    continue
+                else:
+                    for obj in self.sessionList[idx].objList:
+                        if obj.tag["id"] == post:
+                            objToRes = obj
+                    for operation in objToRes.trd.tsk.current:
+                        if operation[1] == "crossWarp":
+                            for idx1 in range(0, self.sessionList.__len__()):
+                                if self.sessionList[idx1] == operation[2][0]:
+                                    for idx2 in self.sessionList[idx].objList.__len__():
+                                        if self.sessionList[idx1].objList.objList[idx2].tag["id"] == objToRes.tag["id"]:
+                                            # if this sets objToRes to None then it found what it  was looking for
+                                            self.sessionList[idx1].load(objToRes.tag["id"], objToRes.mod, objToRes.trd,
+                                                                       None, objToRes.tag)
+                                            objToRes = None
+                                    if objToRes is not None:
+                                        self.sessionList[idx1].addObj(objToRes)
+                        else:
+                            print("operation not supported")
+                    self.sessionList[idx].crossPosts.pop(self.sessionList[idx].crossPosts.index(post))
+
+    def run(self):
+        while True:
+            self.checkForPost()
+
+
 class CGESession(threading.Thread):
     """an instance of CGE
     sessionID is a string
@@ -25,7 +84,8 @@ class CGESession(threading.Thread):
         till all 'i'terations completed([])
     saveScene is a scene to save to
     uniRules is a list of tsk operations to run each shift"""
-    def __init__(self, sessionId, objList, runBehavior, savedScene=object.scene(), uniRules=None):
+
+    def __init__(self, sessionId, objList, runBehavior, savedScene=object.scene(), crossPosts=None, uniRules=None):
         """initialize attributes
         superclass:threading.thread
         savedScene: an empty scene
@@ -39,6 +99,10 @@ class CGESession(threading.Thread):
             self.uniRules = []
         else:
             self.uniRules = uniRules
+        if crossPosts is None:
+            self.crossPosts = []
+        else:
+            self.crossPosts = crossPosts
 
     def unload(self, objId):
         """sets model and thread or storage of the object in objList with objId to None
@@ -205,6 +269,10 @@ class CGESession(threading.Thread):
             parameters = []
         if objIndex == "this":
             if method == "crossWarp":
+                # while True:
+                #     if self.objList[objIndex].tag["id"] not in self.crossPosts:
+                #         break
+                # self.unload(self, self.objList[objIndex].tag["id"])
                 return "not yet implemented"
         if subObjectReference is None:
             if parameters.__len__() == 0:
@@ -283,6 +351,9 @@ class CGESession(threading.Thread):
     # none
     # none
     def moveThreadAlong(self):
+        while True:
+            if not self.crossPosts:
+                break
         objsEmpty = 0
         for obj in self.objList:
             if obj.trd.tsk.profile.__len__() == 0:
