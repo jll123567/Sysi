@@ -39,7 +39,7 @@ class CrossSessionHandler(threading.Thread):
 
     def unpendSessions(self):
         for idx in range(0, self.sessionList.__len__()):
-            for idx1 in range(0,self.sessionList[idx].crossPosts.__len__()):
+            for idx1 in range(0, self.sessionList[idx].crossPosts.__len__()):
                 if self.sessionList[idx].crossPosts[idx1] == "pend":
                     self.sessionList[idx].crossPosts.pop(idx1)
 
@@ -55,18 +55,24 @@ class CrossSessionHandler(threading.Thread):
                             objToRes = obj
                     for operation in objToRes.trd.tsk.current:
                         if operation[1] == "crossWarp":
+                            # set True when the target session has and object with the same id as the objToRes
+                            testVar = False
                             for idx1 in range(0, self.sessionList.__len__()):
                                 if self.sessionList[idx1] == operation[2][0]:
-                                    for idx2 in self.sessionList[idx].objList.__len__():
+                                    for idx2 in range(0, self.sessionList[idx1].objList.__len__()):
                                         if self.sessionList[idx1].objList.objList[idx2].tag["id"] == objToRes.tag["id"]:
-                                            # if this sets objToRes to None then it found what it  was looking for
                                             self.sessionList[idx1].load(objToRes.tag["id"], objToRes.mod, objToRes.trd,
-                                                                       None, objToRes.tag)
-                                            objToRes = None
-                                    if objToRes is not None:
+                                                                        None, objToRes.tag)
+                                            self.sessionList[idx].unload(objToRes.tag["id"])
+                                            testVar = True
+                                            break
+                                    if not testVar:
                                         self.sessionList[idx1].addObj(objToRes)
+                                        self.sessionList[idx].unload(objToRes.tag["id"])
+                                    break
                         else:
                             print("operation not supported")
+                        break
                     self.sessionList[idx].crossPosts.pop(self.sessionList[idx].crossPosts.index(post))
 
     def run(self):
@@ -231,7 +237,7 @@ class CGESession(threading.Thread):
         returns True if all operations have usable methods
         raises operationNotPossible otherwise"""
         for operation in operationList:
-            if operation[0] == "this":
+            if operation[0] == "CSH":
                 if operation[1] == "crossWarp":
                     continue
                 else:
@@ -264,16 +270,11 @@ class CGESession(threading.Thread):
     # apply the operation to the target object
     # object index(int)*, method to apply(str)*, references to sub objects(str), parameters for the method([any])
     # none
-    def performSelectedOperation(self, objIndex, method, subObjectReference=None, parameters=None):
+    def performSelectedOperation(self, objIndex, method, sourceId, subObjectReference=None, parameters=None):
         if parameters is None:
             parameters = []
-        if objIndex == "this":
-            if method == "crossWarp":
-                # while True:
-                #     if self.objList[objIndex].tag["id"] not in self.crossPosts:
-                #         break
-                # self.unload(self, self.objList[objIndex].tag["id"])
-                return "not yet implemented"
+        if objIndex == "CSH":
+            self.crossPosts.append(sourceId)
         if subObjectReference is None:
             if parameters.__len__() == 0:
                 try:
@@ -439,9 +440,9 @@ class CGESession(threading.Thread):
             if ext == "":
                 objId = op[0]
                 # print("pso: ", name)
-                self.performSelectedOperation(self.resolveIdToIndex(objId), op[1], None, op[2])
+                self.performSelectedOperation(self.resolveIdToIndex(objId), op[1], op[3], None, op[2])
             else:
-                self.performSelectedOperation(self.resolveIdToIndex(objId), op[1], ext, op[2])
+                self.performSelectedOperation(self.resolveIdToIndex(objId), op[1], op[3], ext, op[2])
             if "evLog" in self.objList[self.resolveIdToIndex(objId)].tag.keys():
                 self.objList[self.resolveIdToIndex(objId)].tag["evLog"].append(op[1])
             else:
@@ -517,7 +518,7 @@ class CGESession(threading.Thread):
                 return "No objects to process"
             self.areOperationsPossible(shift)
             for operation in shift:
-                objId = ""
+                targetObjId = ""
                 ext = ""
                 mode = 'n'
                 if '.' in operation[0]:
@@ -527,7 +528,7 @@ class CGESession(threading.Thread):
                         if char == '.' and mode == '.':
                             mode = 'e'
                         if mode == 'n':
-                            objId += char
+                            targetObjId += char
                         if mode == 'e':
                             ext += char
                     if ext == "":
@@ -536,10 +537,12 @@ class CGESession(threading.Thread):
                         ext = ext[1:]
                     pass
                 if ext == "":
-                    objId = operation[0]
-                    self.performSelectedOperation(self.resolveIdToIndex(objId), operation[1], None, operation[2])
+                    targetObjId = operation[0]
+                    self.performSelectedOperation(self.resolveIdToIndex(targetObjId), operation[1], operation[3], None,
+                                                  operation[2])
                 else:
-                    self.performSelectedOperation(self.resolveIdToIndex(objId), operation[1], ext, operation[2])
+                    self.performSelectedOperation(self.resolveIdToIndex(targetObjId), operation[1], operation[3], ext,
+                                                  operation[2])
         scn.obj = self.objList
         self.objList = []
         return scn.obj

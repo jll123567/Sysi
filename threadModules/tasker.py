@@ -6,7 +6,7 @@ import object
 
 # profile=[shift,shift,shift,...]
 # shift=[op0,op1,op2,...]
-# operation=[target(str), function(str), [parameters]]
+# operation=[target(str), function(str), [parameters], source(str)]
 
 
 # tasking
@@ -66,7 +66,7 @@ class tsk:
     # adds a new shift to the end of the tasking queue
     # shift(tskShift)*
     # none
-    def addProfile(self, shift):
+    def addShift(self, shift):
         self.profile.append(shift)
 
     # removes a shift from the profile

@@ -4,3 +4,4 @@ import object
 a = object.object()
 g = "this.ggggggg"
 print(g[:5])
+t = []
