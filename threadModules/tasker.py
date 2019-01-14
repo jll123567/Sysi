@@ -93,7 +93,7 @@ class tsk:
             else:
                 objId += char
         objId += ".trd.tsk"
-        self.addProfile([shift, [objId, "loopInf", [shift]]])
+        self.addShift([shift, [objId, "loopInf", [shift]]])
 
     # determine the next shift based on the state of object0 and object1(they don't need to be sysh.object.object s)
     # comparator("==","!=",">","<","<=",">=")*, object0(any)*, object1(any)*, then(tskShift)*, els(tskShift)

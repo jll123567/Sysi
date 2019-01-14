@@ -10,6 +10,7 @@ import prog.idGen
 
 # sysh.object.object(oof better name pls) model of object(any), relevant self viewable data(attrib's.thread.trd),
 # tags and data for system/admin({tag:(str),...}) noinspection PyShadowingBuiltins
+# noinspection PyShadowingBuiltins
 class object:
     def __init__(self, mod=attribs.model.sysModel(), trd=attribs.thread.trd(), tag=None):
         self.mod = mod

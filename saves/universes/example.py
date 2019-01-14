@@ -1,6 +1,6 @@
 # imports
-import object
-import prog.idGen
+# import object
+# import prog.idGen
 
 # user defined functions
 # just have to be functions, nothing special
