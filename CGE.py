@@ -29,6 +29,7 @@ class CrossSessionHandler(threading.Thread):
     def checkForPost(self):
         for session in self.sessionList:
             if session.crossPosts:
+                print(session.sessionId + " posted to crossPosts!")
                 self.pendSessions()
                 self.resolvePosts()
                 self.unpendSessions()
@@ -50,23 +51,28 @@ class CrossSessionHandler(threading.Thread):
                 if post == "pend":
                     continue
                 else:
+                    print(self.sessionList[idx].sessionId + ":source found")
                     for obj in self.sessionList[idx].objList:
                         if obj.tag["id"] == post:
                             objToRes = obj
                     for operation in objToRes.trd.tsk.current:
                         if operation[1] == "crossWarp":
+                            print("request is crossWarp of " + objToRes.tag["id"])
                             # set True when the target session has and object with the same id as the objToRes
                             testVar = False
                             for idx1 in range(0, self.sessionList.__len__()):
                                 if self.sessionList[idx1] == operation[2][0]:
+                                    print("target is " + self.sessionList[idx1].sessionId)
                                     for idx2 in range(0, self.sessionList[idx1].objList.__len__()):
                                         if self.sessionList[idx1].objList.objList[idx2].tag["id"] == objToRes.tag["id"]:
+                                            print("obj may be Loaded")
                                             self.sessionList[idx1].load(objToRes.tag["id"], objToRes.mod, objToRes.trd,
                                                                         None, objToRes.tag)
                                             self.sessionList[idx].unload(objToRes.tag["id"])
                                             testVar = True
                                             break
                                     if not testVar:
+                                        print("could not load, adding instead")
                                         self.sessionList[idx1].addObj(objToRes)
                                         self.sessionList[idx].unload(objToRes.tag["id"])
                                     break
@@ -76,6 +82,9 @@ class CrossSessionHandler(threading.Thread):
                     self.sessionList[idx].crossPosts.pop(self.sessionList[idx].crossPosts.index(post))
 
     def run(self):
+        print("starting CSH")
+        for idx in range(0, self.sessionList.__len__()):
+            self.sessionList[idx].run()
         while True:
             self.checkForPost()
 
@@ -197,6 +206,7 @@ class CGESession(threading.Thread):
     # none
     # operationList([operations])
     def getOperations(self):
+        print("reached getOperations in session" + self.sessionId)
         operationList = []
         for obj in self.objList:
             try:
@@ -210,9 +220,10 @@ class CGESession(threading.Thread):
                     objectDoesNotContainTsk)
             for rul in self.uniRules:
                 if rul[0] is None:
-                    operationList.append([obj.tag["id"], rul[1], rul[2]])
+                    operationList.append([obj.tag["id"], rul[1], rul[2], rul[3]])
                 else:
-                    operationList.append([obj.tag["id"] + rul[0], rul[1], rul[2]])
+                    operationList.append([obj.tag["id"] + rul[0], rul[1], rul[2], rul[3]])
+        print(self.sessionId + ":getOperation return" + str(operationList))
         return operationList
 
     # resolve the object's id to its position in the objList
@@ -236,6 +247,7 @@ class CGESession(threading.Thread):
             requested object
         returns True if all operations have usable methods
         raises operationNotPossible otherwise"""
+        print("areOperationsPosible started at session " + self.sessionId)
         for operation in operationList:
             if operation[0] == "CSH":
                 if operation[1] == "crossWarp":
@@ -265,16 +277,20 @@ class CGESession(threading.Thread):
             else:
                 if operation[1] not in self.getMethods(self.objList[self.resolveIdToIndex(operation[0])]):
                     raise operationNotPossible(str(operation[1]) + "not in" + str(operation[0]) + "'s method list")
+        print(self.sessionId + " areOperationsPossible returned True!")
         return True
 
     # apply the operation to the target object
     # object index(int)*, method to apply(str)*, references to sub objects(str), parameters for the method([any])
     # none
     def performSelectedOperation(self, objIndex, method, sourceId, subObjectReference=None, parameters=None):
+        print("preformSelectedOperation started with object" + self.objList[objIndex].tag["id"] + " using method " +
+              method)
         if parameters is None:
             parameters = []
         if objIndex == "CSH":
             self.crossPosts.append(sourceId)
+            return "crossPost"
         if subObjectReference is None:
             if parameters.__len__() == 0:
                 try:
@@ -356,15 +372,15 @@ class CGESession(threading.Thread):
             if not self.crossPosts:
                 break
         objsEmpty = 0
-        for obj in self.objList:
-            if obj.trd.tsk.profile.__len__() == 0:
-                objsEmpty = 0
+        for idx in range(0, self.objList.__len__()):
+            if self.objList[idx].trd.tsk.profile.__len__() == 0:
+                objsEmpty += 1
+                continue
             try:
-                obj.trd.tsk.nextCurrent()
+                self.objList[idx].trd.tsk.nextCurrent()
             except AttributeError:
                 pass
         if objsEmpty == self.objList.__len__():
-            print("all object's threads empty \ndumping objects from list")
             self.objList = []
 
     # adds obj to the objList
@@ -401,6 +417,7 @@ class CGESession(threading.Thread):
     # saveToScene(bool)
     # no object message(str)/None
     def update(self, saveToScene=False):
+        print("shift started at session " + self.sessionId)
         if not self.objList:
             return "No objects to process"
         objIdx = 0
@@ -455,6 +472,7 @@ class CGESession(threading.Thread):
     # iterations(int>0)
     # none
     def run(self):
+        print("starting session " + self.sessionId)
         if self.runBehavior[0] == 't':
             while self.update(self.runBehavior[1]) != "No operations":
                 pass

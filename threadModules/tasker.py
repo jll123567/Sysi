@@ -54,6 +54,7 @@ class tsk:
     # sets the current shift
     # shift(tskShift)*
     # none
+    # TODO: broken?
     def setCurrent(self, shift):
         self.current = shift
 
@@ -85,15 +86,15 @@ class tsk:
     # set the following shift to loop infinitely
     # shift(tskShift)
     # requires self
-    def loopInf(self, shift):
+    def loopInf(self, operation):
         objId = ""
-        for char in shift[0]:
+        for char in operation[0]:
             if char == '.':
                 break
             else:
                 objId += char
         objId += ".trd.tsk"
-        self.addShift([shift, [objId, "loopInf", [shift]]])
+        self.addShift([operation, [objId, "loopInf", [operation], operation[3]]])
 
     # determine the next shift based on the state of object0 and object1(they don't need to be sysh.object.object s)
     # comparator("==","!=",">","<","<=",">=")*, object0(any)*, object1(any)*, then(tskShift)*, els(tskShift)
