@@ -1,4 +1,3 @@
-# todo add encryption
 # two functions for saving objects to file and getting them from a file
 # Module type: prog
 import pickle

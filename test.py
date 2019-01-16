@@ -1,3 +1,4 @@
+from threading import Thread
 import CGE
 import object
 import threadModules.ram
@@ -10,8 +11,13 @@ e.trd.ram = threadModules.ram.ram()
 e.trd.tsk.current = [["e.trd.tsk", "loopInf", [["e.trd.tsk", "wait", [0.01], e.tag["id"]]], e.tag["id"]]]
 c = CGE.CGESession("S0", [a], ["t", ""])
 d = CGE.CGESession("S1", [e], ["t", ""])
-# TODO: fix all default argument is function issues (ctrl shift f)
-# breakpoint()
+while True:
+    if not c.crossPosts:
+        print("startingThread")
+        Thread(target=c.update).start()
+    else:
+        break
+print("\nit worked" + str(c.crossPosts.__len__()) + " \n")
 # b = CGE.CrossSessionHandler("CSH", [c, d])
 # b.run()
 # while True:

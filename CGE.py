@@ -12,11 +12,10 @@ import prog.idGen as idGen
 import threading
 
 
-class CrossSessionHandler(threading.Thread):
+class CrossSessionHandler():
     """"""
 
     def __init__(self, CSHId, sessionList=None):
-        super().__init__()
         if sessionList is None:
             self.sessionList = []
         else:
@@ -84,12 +83,14 @@ class CrossSessionHandler(threading.Thread):
     def run(self):
         print("starting CSH")
         for idx in range(0, self.sessionList.__len__()):
+            print("started session " + str(self.sessionList[idx].sessionId))
             self.sessionList[idx].run()
         while True:
+            print("checking for posts...")
             self.checkForPost()
 
 
-class CGESession(threading.Thread):
+class CGESession():
     """an instance of CGE
     sessionID is a string
     objList is a list of objects
@@ -100,15 +101,13 @@ class CGESession(threading.Thread):
     saveScene is a scene to save to
     uniRules is a list of tsk operations to run each shift"""
 
-    def __init__(self, sessionId, objList, runBehavior, savedScene=None, crossPosts=None, uniRules=None):
+    def __init__(self, sessionId, objList, savedScene=None, crossPosts=None, uniRules=None):
         """initialize attributes
         superclass:threading.thread
         savedScene: an empty scene
         uniRules: None"""
-        super().__init__()
         self.sessionId = sessionId
         self.objList = objList
-        self.runBehavior = runBehavior
         if savedScene is None:
             self.savedScene = object.scene()
         else:
@@ -286,28 +285,29 @@ class CGESession(threading.Thread):
     # apply the operation to the target object
     # object index(int)*, method to apply(str)*, references to sub objects(str), parameters for the method([any])
     # none
-    def performSelectedOperation(self, objIndex, method, sourceId, subObjectReference=None, parameters=None):
-        print("preformSelectedOperation started with object" + self.objList[objIndex].tag["id"] + " using method " +
-              method)
+    def performSelectedOperation(self, targetId, method, sourceId, subObjectReference=None, parameters=None):
+        print("preformSelectedOperation started with " + str(self.objList[self.resolveIdToIndex(sourceId)].trd.tsk.current))
         if parameters is None:
             parameters = []
-        if objIndex == "CSH":
+        if targetId == "CSH":
+            print("post made by session")
             self.crossPosts.append(sourceId)
+            print(self.crossPosts)
             return "crossPost"
         if subObjectReference is None:
             if parameters.__len__() == 0:
                 try:
-                    getattr(self.objList[objIndex], method)()
+                    getattr(self.objList[self.resolveIdToIndex(targetId)], method)()
                 except:
                     raise operationNotPossible("getattr(self.objList[objIndex], operation)()")
             else:
                 try:
-                    getattr(self.objList[objIndex], method)(*parameters)
+                    getattr(self.objList[self.resolveIdToIndex(targetId)], method)(*parameters)
                 except:
                     raise operationNotPossible("getattr(self.objList[objIndex], operation)(*parameters)")
         else:
             # print(objIndex)
-            subObj = self.unpackSubObjFromExtension(self.objList[objIndex], subObjectReference)
+            subObj = self.unpackSubObjFromExtension(self.objList[self.resolveIdToIndex(targetId)], subObjectReference)
             if parameters.__len__() == 0:
                 try:
                     getattr(subObj, method)()
@@ -318,7 +318,7 @@ class CGESession(threading.Thread):
                     getattr(subObj, method)(*parameters)
                 except:
                     raise operationNotPossible("getattr(subObj, operation)(*parameters)")
-            self.objList[objIndex] = self.repackSubToFull(self.objList[objIndex], subObj, subObjectReference)
+            self.objList[self.resolveIdToIndex(targetId)] = self.repackSubToFull(self.objList[self.resolveIdToIndex(targetId)], subObj, subObjectReference)
 
     # get a sub object from its extension
     # obj(obj)*, subObjReference(str)*
@@ -371,6 +371,8 @@ class CGESession(threading.Thread):
     # none
     # none
     def moveThreadAlong(self):
+        for idx in range(0, self.objList.__len__()):
+            self.objList[idx].trd.tsk.current = []
         while True:
             if not self.crossPosts:
                 break
@@ -455,14 +457,15 @@ class CGESession(threading.Thread):
                 if ext == "":
                     ext = None
                 else:
+
                     ext = ext[1:]
                 pass
             if ext == "":
                 objId = op[0]
                 # print("pso: ", name)
-                self.performSelectedOperation(self.resolveIdToIndex(objId), op[1], op[3], None, op[2])
+                self.performSelectedOperation(op[0], op[1], op[3], None, op[2])
             else:
-                self.performSelectedOperation(self.resolveIdToIndex(objId), op[1], op[3], ext, op[2])
+                self.performSelectedOperation(op[0], op[1], op[3], ext, op[2])
             if "evLog" in self.objList[self.resolveIdToIndex(objId)].tag.keys():
                 self.objList[self.resolveIdToIndex(objId)].tag["evLog"].append(op[1])
             else:
@@ -470,27 +473,6 @@ class CGESession(threading.Thread):
 
         self.moveThreadAlong()
         return "Shift Complete"
-
-    # threading.thread objects need a run
-    # iterations(int>0)
-    # none
-    def run(self):
-        print("starting session " + self.sessionId)
-        if self.runBehavior[0] == 't':
-            while self.update(self.runBehavior[1]) != "No operations":
-                pass
-            print("No operations left to preform\nstopping!")
-        elif self.runBehavior[0] == 'g':
-            self.updateWithGoal(self.runBehavior[2], self.runBehavior[3], self.runBehavior[4], self.runBehavior[1],
-                                self.runBehavior[5])
-        elif self.runBehavior[0] == 'i':
-            initialIterCount = self.runBehavior[2]
-            while self.runBehavior[2] > 0:
-                self.update(self.runBehavior[1])
-                print("iteration " + str(initialIterCount - self.runBehavior[2]) + " completed")
-                self.runBehavior[2] -= 1
-        else:
-            return "specify a mode"
 
     # update the objList while a boolean expression is true
     # id of obj to check against(int)*, comparator(str)*, goal(any)*, saveToScene(bool), subObjReference(str)
@@ -522,6 +504,22 @@ class CGESession(threading.Thread):
                 self.update(saveToScene)
         else:
             print("the comparator inputted is not valid")
+
+    def updateIter(self, count, saveToScene=False):
+        """"""
+        for i in range(0, count):
+            self.update(saveToScene)
+
+    def updateTillEmpty(self, saveToScene=False):
+        """"""
+        while True:
+            res = self.update(saveToScene)
+            if res == "No objects to process":
+                break
+            elif res == "No objects to process":
+                break
+            else:
+                continue
 
     # replay a scene from start shift to last shift
     # scn.scp[1:lastShift] none being [1:]

@@ -33,9 +33,15 @@ class audioMono:
 # language thread module
 # heard audio(audioStereo), spoken(audioMono)
 class lang:
-    def __init__(self, heard=audioStereo(), speakQue=audioMono()):
-        self.heard = heard
-        self.speakQue = speakQue
+    def __init__(self, heard=None, speakQue=None):
+        if heard is None:
+            self.heard = audioStereo()
+        else:
+            self.heard = heard
+        if speakQue is None:
+            self.speakQue = audioMono()
+        else:
+            self.speakQue = speakQue
 
     # gets sound from input
     # inputSource(audioStereo)*
