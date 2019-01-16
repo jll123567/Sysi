@@ -12,9 +12,15 @@ import prog.idGen
 # tags and data for system/admin({tag:(str),...}) noinspection PyShadowingBuiltins
 # noinspection PyShadowingBuiltins
 class object:
-    def __init__(self, mod=attribs.model.sysModel(), trd=attribs.thread.trd(), tag=None):
-        self.mod = mod
-        self.trd = trd
+    def __init__(self, mod=None, trd=None, tag=None):
+        if mod is None:
+            self.mod = attribs.model.sysModel()
+        else:
+            self.mod = mod
+        if trd is None:
+            self.trd = attribs.thread.trd()
+        else:
+            self.trd = trd
         if tag is None:
             self.tag = {"id": None, "name": None}
         else:
@@ -122,17 +128,27 @@ class object:
 # sysh.object.user
 # model(any), thread(thread.trd), prs(personality.prs), memory(memory.mem) tag({"id":(str), ...})
 class user(object):
-    def __init__(self, mod=attribs.model.sysModel(), trd=attribs.thread.trd(), prs=attribs.personality.prs(),
-                 mem=attribs.memory.mem(), tag=None):
-        self.mod = mod
+    def __init__(self, mod=None, trd=None, prs=None, mem=None, tag=None):
+        if mod is None:
+            self.mod = attribs.model.sysModel()
+        else:
+            self.mod = mod
+        if trd is None:
+            self.trd = attribs.thread.trd()
+        else:
+            self.trd = trd
+        if prs is None:
+            self.prs = attribs.personality.prs()
+        else:
+            self.prs = prs
+        if mem is None:
+            self.mem = attribs.memory.mem()
+        else:
+            self.mem = mem
         if tag is None:
             self.tag = {"id": None, "name": None, "alias": []}
         else:
             self.tag = tag
-        self.trd = trd
-        self.prs = prs
-        # working on it
-        self.mem = mem
 
     # saves a copy of ram ro memory
     # storedRamName(str)*, storedRamImportance(int[0-100])*
@@ -203,15 +219,23 @@ class user(object):
 # weapons
 # mod(any), thread(thread.trd), damage profile(damage.dmg), tag({"id":(str), ...})
 class weapon(object):
-    def __init__(self, mod=attribs.model.sysModel(), trd=attribs.thread.trd(),
-                 dmg=attribs.damage.dmg(), tag=None):
-        self.mod = mod
+    def __init__(self, mod=None, trd=None, dmg=None, tag=None):
+        if mod is None:
+            self.mod = attribs.model.sysModel()
+        else:
+            self.mod = mod
+        if trd is None:
+            self.trd = attribs.thread.trd()
+        else:
+            self.trd = trd
+        if dmg is None:
+            self.dmg = attribs.damage.dmg()
+        else:
+            self.dmg = dmg
         if tag is None:
             self.tag = {"id": None, "name": None}
         else:
             self.tag = tag
-        self.trd = trd
-        self.dmg = dmg
 
 
 # packaged data
@@ -248,9 +272,7 @@ class container:
 # object change oer time
 # scp([tlInfo, shft0, shft1, ...]), obj in scene([obj]), loc(container), tag({"id":(str), ...})
 class scene:
-    def __init__(self, scp=None, obj=None,
-                 cont=container([None, 0, 0, 0], ["h,0,0,0-0,0,0"],
-                                {"id": None, "name": "defaultContainer"}), tag=None):
+    def __init__(self, scp=None, obj=None, cont=None, tag=None):
         if scp is None:
             self.scp = [["master", None, 30]]
         else:
@@ -262,7 +284,10 @@ class scene:
         else:
             self.obj = obj
         # objlist
-        self.cont = cont
+        if cont is None:
+            self.cont = container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"id": None, "name": "defaultContainer"})
+        else:
+            self.cont = cont
         # cont
         # use a super cont that will contain all relevant containers
         if tag is None:

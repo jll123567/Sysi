@@ -100,7 +100,7 @@ class CGESession(threading.Thread):
     saveScene is a scene to save to
     uniRules is a list of tsk operations to run each shift"""
 
-    def __init__(self, sessionId, objList, runBehavior, savedScene=object.scene(), crossPosts=None, uniRules=None):
+    def __init__(self, sessionId, objList, runBehavior, savedScene=None, crossPosts=None, uniRules=None):
         """initialize attributes
         superclass:threading.thread
         savedScene: an empty scene
@@ -109,7 +109,10 @@ class CGESession(threading.Thread):
         self.sessionId = sessionId
         self.objList = objList
         self.runBehavior = runBehavior
-        self.savedScene = savedScene
+        if savedScene is None:
+            self.savedScene = object.scene()
+        else:
+            self.savedScene = savedScene
         if uniRules is None:
             self.uniRules = []
         else:
@@ -247,7 +250,7 @@ class CGESession(threading.Thread):
             requested object
         returns True if all operations have usable methods
         raises operationNotPossible otherwise"""
-        print("areOperationsPosible started at session " + self.sessionId)
+        print("areOperationsPossible started at session " + self.sessionId)
         for operation in operationList:
             if operation[0] == "CSH":
                 if operation[1] == "crossWarp":
