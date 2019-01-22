@@ -81,10 +81,11 @@ class CrossSessionHandler(threading.Thread):
                         break
                     self.sessionList[idx].crossPosts.pop(self.sessionList[idx].crossPosts.index(post))
 
+    # use .start() NOT .run()
     def run(self):
         print("starting CSH")
         for idx in range(0, self.sessionList.__len__()):
-            self.sessionList[idx].run()
+            self.sessionList[idx].start()
         while True:
             self.checkForPost()
 
@@ -474,6 +475,8 @@ class CGESession(threading.Thread):
     # threading.thread objects need a run
     # iterations(int>0)
     # none
+
+    # use .start() NOT .run()
     def run(self):
         print("starting session " + self.sessionId)
         if self.runBehavior[0] == 't':
