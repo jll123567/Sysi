@@ -54,6 +54,7 @@ class tsk:
     # sets the current shift
     # shift(tskShift)*
     # none
+    # TODO: broken?
     def setCurrent(self, shift):
         self.current = shift
 
