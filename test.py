@@ -10,11 +10,11 @@ e.trd.ram = threadModules.ram.ram()
 e.trd.tsk.current = [["e.trd.tsk", "loopInf", [["e.trd.tsk", "wait", [0.01], e.tag["id"]]], e.tag["id"]]]
 c = CGE.CGESession("S0", [a], ["t", ""])
 d = CGE.CGESession("S1", [e], ["t", ""])
-# breakpoint()
-# b = CGE.CrossSessionHandler("CSH", [c, d])
-# b.start()
-# while True:
-#     try:
-#         print(b.sessionList[1].objList[1])
-#     except IndexError:
-#         pass
+b = CGE.CrossSessionHandler("CSH", [c, d])
+b.start()
+while True:
+    try:
+        print(b.sessionList[1].objList[1])
+        break
+    except IndexError:
+        pass
