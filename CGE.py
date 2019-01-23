@@ -11,7 +11,7 @@ import warnings
 import prog.idGen as idGen
 import threading
 
-# todo change unload and load to just add or remove the object and to log the addition/removal to saveScene.scp
+# todo add "this" as a refrence to tell the session/scene to do something
 # todo doc it
 
 
@@ -58,21 +58,10 @@ class CrossSessionHandler(threading.Thread):
                             objToRes = obj
                     for operation in objToRes.trd.tsk.current:
                         if operation[1] == "crossWarp":
-                            # set True when the target session has and object with the same id as the objToRes
-                            testVar = False
                             for idx1 in range(0, self.sessionList.__len__()):
                                 if self.sessionList[idx1].sessionId == operation[2][0]:
-                                    for idx2 in range(0, self.sessionList[idx1].objList.__len__()):
-                                        if self.sessionList[idx1].objList[idx2].tag["id"] == objToRes.tag["id"]:
-                                            self.sessionList[idx1].load(objToRes.tag["id"], objToRes.mod, objToRes.trd,
-                                                                        None, objToRes.tag)
-                                            self.sessionList[idx].unload(objToRes.tag["id"])
-                                            testVar = True
-                                            break
-                                    if not testVar:
-                                        self.sessionList[idx1].addObj(objToRes)
-                                        self.sessionList[idx].unload(objToRes.tag["id"])
-                                    break
+                                        self.sessionList[idx1].addObj(self.sessionList[idx].objList[self.sessionList[idx].resolveIdToIndex(operation[3])])
+                                        self.sessionList[idx].removeObj(operation[3])
                         else:
                             print("operation not supported")
                         break
@@ -119,53 +108,24 @@ class CGESession(threading.Thread):
         else:
             self.crossPosts = crossPosts
 
-    def unload(self, objId):
-        """sets model and thread or storage of the object in objList with objId to None
-        only use after object has been copied to another session to avoid data loss"""
-        unload = self.objList[self.resolveIdToIndex(objId)]
+    def removeObj(self, objId):
+        """removes the object with objId from self.objList
+        only use after object has been copied to another session to avoid data loss
+        this operation is saved """
         try:
-            # noinspection PyUnusedLocal
-            test = unload.mod
-            test = unload.trd
-            del test
-        except AttributeError:
-            try:
-                test = unload.storage
-                del test
-            except AttributeError:
-                print("Cannot unload. Object does not have a trd, storage or mod")
+            self.objList.pop(self.resolveIdToIndex(objId))
+            if self.savedScene is not None:
+                self.savedScene.scp.append(["this", "removeObj", [objId], "this"])
+        except objectNotInObjList:
+            pass
 
-            else:
-                unload.storage = None
-        else:
-            unload.mod = None
-            unload.trd = None
-        self.objList[self.resolveIdToIndex(objId)] = unload
-
-    def load(self, objId, modNew=None, trdNew=None, storageNew=None, tagNew=None):
-        """loads a mod and trd or storage into the object at objList with objId
-        should be called before the object in its origin session is unloaded
-        if the object is not in the target session's object list use addObj() instead"""
-        loading = self.objList[self.resolveIdToIndex(objId)]
-        try:
-            # noinspection PyUnusedLocal
-            test = loading.mod
-            test = loading.trd
-            del test
-        except AttributeError:
-            try:
-                test = loading.storage
-                del test
-            except AttributeError:
-                print("Cannot loading. Object does not have a trd, storage or mod")
-
-            else:
-                loading.storage = storageNew
-        else:
-            loading.mod = modNew
-            loading.trd = trdNew
-        loading.tag = tagNew
-        self.objList[self.resolveIdToIndex(objId)] = loading
+    # adds obj to the objList
+    # obj(obj)*
+    # none
+    def addObj(self, obj):
+        self.objList.append(obj)
+        if self.savedScene is not None:
+            self.savedScene.scp.append(["this", "addObj", [obj], "this"])
 
     # get the attributes of obj as a list
     # obj(obj)*
@@ -233,9 +193,9 @@ class CGESession(threading.Thread):
         ndx = 0
         for obj in self.objList:
             if objId == obj.tag["id"]:
-                break
+                return ndx
             ndx += 1
-        return ndx
+        raise objectNotInObjList(objId)
 
     # returns true if all methods in the operation list are usable on the target object
     # operationList([operation])*
@@ -308,7 +268,8 @@ class CGESession(threading.Thread):
                     getattr(subObj, method)(*parameters)
                 except:
                     raise operationNotPossible("getattr(subObj, operation)(*parameters)")
-            self.objList[self.resolveIdToIndex(objId)] = self.repackSubToFull(self.objList[self.resolveIdToIndex(objId)], subObj, subObjectReference)
+            self.objList[self.resolveIdToIndex(objId)] = self.repackSubToFull(
+                self.objList[self.resolveIdToIndex(objId)], subObj, subObjectReference)
 
     # get a sub object from its extension
     # obj(obj)*, subObjReference(str)*
@@ -375,12 +336,6 @@ class CGESession(threading.Thread):
                 pass
         if objsEmpty == self.objList.__len__():
             self.objList = []
-
-    # adds obj to the objList
-    # obj(obj)*
-    # none
-    def addObj(self, obj):
-        self.objList.append(obj)
 
     # add universe rules
     # uni(uni)*
@@ -560,6 +515,12 @@ class operationNotPossible(Exception):
     def __init__(self, expression, message="one or more operations are not available as writen"):
         self.expression = expression
         self.message = message
+
+
+class objectNotInObjList(Exception):
+    def __init__(self, objId):
+        self.objId = objId
+        self.message = "the object:" + str(self.objId) + "is not in the objList"
 
 
 # warning if an object doesn't have a trd.tsk
