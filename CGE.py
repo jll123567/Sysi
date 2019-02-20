@@ -11,12 +11,14 @@ import warnings
 import prog.idGen as idGen
 import threading
 
-# todo add "this" as a refrence to tell the session/scene to do something
+
+# todo add "this" as a reference to tell the session/scene to do something
 # todo doc it
 
 
 class CrossSessionHandler(threading.Thread):
-    """"""
+    """holds all relevant sessions and allows for data and objects to travel across sessions
+    may be refereed to as a "session directory" """
 
     def __init__(self, CSHId, sessionList=None):
         super().__init__()
@@ -60,8 +62,10 @@ class CrossSessionHandler(threading.Thread):
                         if operation[1] == "crossWarp":
                             for idx1 in range(0, self.sessionList.__len__()):
                                 if self.sessionList[idx1].sessionId == operation[2][0]:
-                                        self.sessionList[idx1].addObj(self.sessionList[idx].objList[self.sessionList[idx].resolveIdToIndex(operation[3])])
-                                        self.sessionList[idx].removeObj(operation[3])
+                                    self.sessionList[idx1].addObj(self.sessionList[idx].objList[
+                                                                      self.sessionList[idx].resolveIdToIndex(
+                                                                          operation[3])])
+                                    self.sessionList[idx].removeObj(operation[3])
                         else:
                             print("operation not supported")
                         break
@@ -401,15 +405,24 @@ class CGESession(threading.Thread):
                 else:
                     ext = ext[1:]
                 pass
-            if ext == "":
-                objId = op[0]
-                self.performSelectedOperation(objId, op[1], op[3], None, op[2])
+
+            reservedIds = ["CSH", "this"]
+            if op[0] not in reservedIds:
+                if ext == "":
+                    objId = op[0]
+                    self.performSelectedOperation(objId, op[1], op[3], None, op[2])
+                else:
+                    self.performSelectedOperation(objId, op[1], op[3], ext, op[2])
+                if "evLog" in self.objList[self.resolveIdToIndex(objId)].tag.keys():
+                    self.objList[self.resolveIdToIndex(objId)].tag["evLog"].append(op[1])
+                else:
+                    self.objList[self.resolveIdToIndex(objId)].tag.update({"evLog": [op[1]]})
             else:
-                self.performSelectedOperation(objId, op[1], op[3], ext, op[2])
-            if "evLog" in self.objList[self.resolveIdToIndex(objId)].tag.keys():
-                self.objList[self.resolveIdToIndex(objId)].tag["evLog"].append(op[1])
-            else:
-                self.objList[self.resolveIdToIndex(objId)].tag.update({"evLog": [op[1]]})
+                if ext == "":
+                    objId = op[0]
+                    self.performSelectedOperation(objId, op[1], op[3], None, op[2])
+                else:
+                    self.performSelectedOperation(objId, op[1], op[3], ext, op[2])
 
         self.moveThreadAlong()
         return "Shift Complete"
@@ -422,7 +435,9 @@ class CGESession(threading.Thread):
     def run(self):
         if self.runBehavior[0] == 't':
             while self.update(self.runBehavior[1]) != "No operations":
-                print("No operations left to preform\nstopping!")
+                continue
+                # put this line back if you want to be annoyed
+                # print("No operations left to preform\n stopping!")
         elif self.runBehavior[0] == 'g':
             self.updateWithGoal(self.runBehavior[2], self.runBehavior[3], self.runBehavior[4], self.runBehavior[1],
                                 self.runBehavior[5])

@@ -12,9 +12,12 @@ c = CGE.CGESession("S0", [a], ["t", ""])
 d = CGE.CGESession("S1", [e], ["t", ""])
 b = CGE.CrossSessionHandler("CSH", [c, d])
 b.start()
+noReprint = True
 while True:
     try:
-        print(b.sessionList[1].objList[1])
-        quit()
+        if noReprint:
+            print(b.sessionList[1].objList[1])
+            noReprint = False
+
     except IndexError:
         pass
