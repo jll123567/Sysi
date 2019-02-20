@@ -15,6 +15,6 @@ b.start()
 while True:
     try:
         print(b.sessionList[1].objList[1])
-        break
+        quit()
     except IndexError:
         pass

@@ -11,8 +11,7 @@ import warnings
 import prog.idGen as idGen
 import threading
 
-# todo remove debug prints
-# todo change unload and load to just add or remove the object and to log the addition/removal to saveScene.scp
+# todo add "this" as a refrence to tell the session/scene to do something
 # todo doc it
 
 
@@ -33,7 +32,6 @@ class CrossSessionHandler(threading.Thread):
     def checkForPost(self):
         for session in self.sessionList:
             if session.crossPosts:
-                print(session.sessionId + " posted to crossPosts!. ~CSH")
                 self.pendSessions()
                 self.resolvePosts()
                 self.unpendSessions()
@@ -55,32 +53,15 @@ class CrossSessionHandler(threading.Thread):
                 if post == "pend":
                     continue
                 else:
-                    print(self.sessionList[idx].sessionId + ":source found")
                     for obj in self.sessionList[idx].objList:
                         if obj.tag["id"] == post:
                             objToRes = obj
                     for operation in objToRes.trd.tsk.current:
                         if operation[1] == "crossWarp":
-                            print("request is crossWarp of " + objToRes.tag["id"])
-                            # set True when the target session has and object with the same id as the objToRes
-                            testVar = False
                             for idx1 in range(0, self.sessionList.__len__()):
-                                print(str(self.sessionList[idx1].sessionId) + "=?" + str(operation[2][0]))
                                 if self.sessionList[idx1].sessionId == operation[2][0]:
-                                    print("target is " + self.sessionList[idx1].sessionId)
-                                    for idx2 in range(0, self.sessionList[idx1].objList.__len__()):
-                                        if self.sessionList[idx1].objList[idx2].tag["id"] == objToRes.tag["id"]:
-                                            print("obj may be Loaded")
-                                            self.sessionList[idx1].load(objToRes.tag["id"], objToRes.mod, objToRes.trd,
-                                                                        None, objToRes.tag)
-                                            self.sessionList[idx].unload(objToRes.tag["id"])
-                                            testVar = True
-                                            break
-                                    if not testVar:
-                                        print("could not load, adding instead")
-                                        self.sessionList[idx1].addObj(objToRes)
-                                        self.sessionList[idx].unload(objToRes.tag["id"])
-                                    break
+                                        self.sessionList[idx1].addObj(self.sessionList[idx].objList[self.sessionList[idx].resolveIdToIndex(operation[3])])
+                                        self.sessionList[idx].removeObj(operation[3])
                         else:
                             print("operation not supported")
                         break
@@ -88,7 +69,6 @@ class CrossSessionHandler(threading.Thread):
 
     # use .start() NOT .run()
     def run(self):
-        # print("starting CSH")
         for idx in range(0, self.sessionList.__len__()):
             self.sessionList[idx].start()
         while True:
@@ -128,55 +108,24 @@ class CGESession(threading.Thread):
         else:
             self.crossPosts = crossPosts
 
-    def unload(self, objId):
-        """sets model and thread or storage of the object in objList with objId to None
-        only use after object has been copied to another session to avoid data loss"""
-        unload = self.objList[self.resolveIdToIndex(objId)]
+    def removeObj(self, objId):
+        """removes the object with objId from self.objList
+        only use after object has been copied to another session to avoid data loss
+        this operation is saved """
         try:
-            # noinspection PyUnusedLocal
-            test = unload.mod
-            test = unload.trd
-            del test
-        except AttributeError:
-            try:
-                test = unload.storage
-                del test
-            except AttributeError:
-                pass
-                # print("Cannot unload. Object does not have a trd, storage or mod")
+            self.objList.pop(self.resolveIdToIndex(objId))
+            if self.savedScene is not None:
+                self.savedScene.scp.append(["this", "removeObj", [objId], "this"])
+        except objectNotInObjList:
+            pass
 
-            else:
-                unload.storage = None
-        else:
-            unload.mod = None
-            unload.trd = None
-        self.objList[self.resolveIdToIndex(objId)] = unload
-
-    def load(self, objId, modNew=None, trdNew=None, storageNew=None, tagNew=None):
-        """loads a mod and trd or storage into the object at objList with objId
-        should be called before the object in its origin session is unloaded
-        if the object is not in the target session's object list use addObj() instead"""
-        loading = self.objList[self.resolveIdToIndex(objId)]
-        try:
-            # noinspection PyUnusedLocal
-            test = loading.mod
-            test = loading.trd
-            del test
-        except AttributeError:
-            try:
-                test = loading.storage
-                del test
-            except AttributeError:
-                pass
-                # print("Cannot loading. Object does not have a trd, storage or mod")
-
-            else:
-                loading.storage = storageNew
-        else:
-            loading.mod = modNew
-            loading.trd = trdNew
-        loading.tag = tagNew
-        self.objList[self.resolveIdToIndex(objId)] = loading
+    # adds obj to the objList
+    # obj(obj)*
+    # none
+    def addObj(self, obj):
+        self.objList.append(obj)
+        if self.savedScene is not None:
+            self.savedScene.scp.append(["this", "addObj", [obj], "this"])
 
     # get the attributes of obj as a list
     # obj(obj)*
@@ -217,7 +166,6 @@ class CGESession(threading.Thread):
     # none
     # operationList([operations])
     def getOperations(self):
-        # print("reached getOperations in session" + self.sessionId)
         operationList = []
         for obj in self.objList:
             try:
@@ -234,7 +182,6 @@ class CGESession(threading.Thread):
                     operationList.append([obj.tag["id"], rul[1], rul[2], rul[3]])
                 else:
                     operationList.append([obj.tag["id"] + rul[0], rul[1], rul[2], rul[3]])
-        # print(self.sessionId + ":getOperation return" + str(operationList))
         return operationList
 
     # resolve the object's id to its position in the objList
@@ -246,9 +193,9 @@ class CGESession(threading.Thread):
         ndx = 0
         for obj in self.objList:
             if objId == obj.tag["id"]:
-                break
+                return ndx
             ndx += 1
-        return ndx
+        raise objectNotInObjList(objId)
 
     # returns true if all methods in the operation list are usable on the target object
     # operationList([operation])*
@@ -258,7 +205,6 @@ class CGESession(threading.Thread):
             requested object
         returns True if all operations have usable methods
         raises operationNotPossible otherwise"""
-        # print("areOperationsPossible started at session " + self.sessionId)
         for operation in operationList:
             if operation[0] == "CSH":
                 if operation[1] == "crossWarp":
@@ -288,20 +234,15 @@ class CGESession(threading.Thread):
             else:
                 if operation[1] not in self.getMethods(self.objList[self.resolveIdToIndex(operation[0])]):
                     raise operationNotPossible(str(operation[1]) + "not in" + str(operation[0]) + "'s method list")
-        # print(self.sessionId + " areOperationsPossible returned True!")
         return True
 
     # apply the operation to the target object
     # object index(int)*, method to apply(str)*, references to sub objects(str), parameters for the method([any])
     # none
     def performSelectedOperation(self, objId, method, sourceId, subObjectReference=None, parameters=None):
-        # print("preformSelectedOperation started with object" + self.objList[self.resolveIdToIndex(objId)].tag["id"] + " using method " +
-        #      method)
         if parameters is None:
             parameters = []
         if objId == "CSH":
-            print("crossPosts appended with: " + str(sourceId) + "\nresolves to obj" +
-                  str(self.objList[self.resolveIdToIndex(sourceId)]))
             self.crossPosts.append(sourceId)
             return "crossPost"
         if subObjectReference is None:
@@ -316,7 +257,6 @@ class CGESession(threading.Thread):
                 except:
                     raise operationNotPossible("getattr(self.objList[objIndex], operation)(*parameters)")
         else:
-            # print(objIndex)
             subObj = self.unpackSubObjFromExtension(self.objList[self.resolveIdToIndex(objId)], subObjectReference)
             if parameters.__len__() == 0:
                 try:
@@ -328,7 +268,8 @@ class CGESession(threading.Thread):
                     getattr(subObj, method)(*parameters)
                 except:
                     raise operationNotPossible("getattr(subObj, operation)(*parameters)")
-            self.objList[self.resolveIdToIndex(objId)] = self.repackSubToFull(self.objList[self.resolveIdToIndex(objId)], subObj, subObjectReference)
+            self.objList[self.resolveIdToIndex(objId)] = self.repackSubToFull(
+                self.objList[self.resolveIdToIndex(objId)], subObj, subObjectReference)
 
     # get a sub object from its extension
     # obj(obj)*, subObjReference(str)*
@@ -396,12 +337,6 @@ class CGESession(threading.Thread):
         if objsEmpty == self.objList.__len__():
             self.objList = []
 
-    # adds obj to the objList
-    # obj(obj)*
-    # none
-    def addObj(self, obj):
-        self.objList.append(obj)
-
     # add universe rules
     # uni(uni)*
     # none
@@ -430,7 +365,6 @@ class CGESession(threading.Thread):
     # saveToScene(bool)
     # no object message(str)/None
     def update(self, saveToScene=False):
-        # print("shift started at session " + self.sessionId)
         if not self.objList:
             return "No objects to process"
         objIdx = 0
@@ -469,7 +403,6 @@ class CGESession(threading.Thread):
                 pass
             if ext == "":
                 objId = op[0]
-                # print("pso: ", name)
                 self.performSelectedOperation(objId, op[1], op[3], None, op[2])
             else:
                 self.performSelectedOperation(objId, op[1], op[3], ext, op[2])
@@ -487,19 +420,15 @@ class CGESession(threading.Thread):
 
     # use .start() NOT .run()
     def run(self):
-        # print("starting session " + self.sessionId)
         if self.runBehavior[0] == 't':
             while self.update(self.runBehavior[1]) != "No operations":
-                pass
-            # print("No operations left to preform\nstopping!")
+                print("No operations left to preform\nstopping!")
         elif self.runBehavior[0] == 'g':
             self.updateWithGoal(self.runBehavior[2], self.runBehavior[3], self.runBehavior[4], self.runBehavior[1],
                                 self.runBehavior[5])
         elif self.runBehavior[0] == 'i':
-            # initialIterCount = self.runBehavior[2]
             while self.runBehavior[2] > 0:
                 self.update(self.runBehavior[1])
-                # print("iteration " + str(initialIterCount - self.runBehavior[2]) + " completed")
                 self.runBehavior[2] -= 1
         else:
             return "specify a mode"
@@ -533,8 +462,7 @@ class CGESession(threading.Thread):
             while goal != self.unpackSubObjFromExtension(self.resolveIdToIndex(objId), subObjReference):
                 self.update(saveToScene)
         else:
-            pass
-            # print("the comparator inputted is not valid")
+            print("the comparator inputted is not valid")
 
     # replay a scene from start shift to last shift
     # scn.scp[1:lastShift] none being [1:]
@@ -546,7 +474,6 @@ class CGESession(threading.Thread):
             script = scn.scp[1:]
         else:
             script = scn.scp[1:lastShift]
-        # print(script)
         for shift in script:
             if not self.objList:
                 return "No objects to process"
@@ -588,6 +515,12 @@ class operationNotPossible(Exception):
     def __init__(self, expression, message="one or more operations are not available as writen"):
         self.expression = expression
         self.message = message
+
+
+class objectNotInObjList(Exception):
+    def __init__(self, objId):
+        self.objId = objId
+        self.message = "the object:" + str(self.objId) + "is not in the objList"
 
 
 # warning if an object doesn't have a trd.tsk
