@@ -1,10 +1,10 @@
-# The Content Generation engine
-# objects in objList are simulated and run based on the instructions in trd.tsk
-# Module type: prog
-# task > CGE
-# ["target(obj name)", "operation", [parameters]]
-# CGE > sceneScript
-# ["sender","target","operation",[parameters]]
+"""The Content Generation engine
+objects in objList are simulated and run based on the instructions in trd.tsk
+Module type: prog
+task > CGE
+["target(obj name)", "operation", [parameters]]
+CGE > sceneScript
+["sender","target","operation",[parameters]]"""
 import re
 import object
 import warnings
@@ -18,9 +18,11 @@ import threading
 
 class CrossSessionHandler(threading.Thread):
     """holds all relevant sessions and allows for data and objects to travel across sessions
-    may be refereed to as a "session directory" """
+    may be refereed to as a "session directory"
+    sessionList is a list of CGESessions"""
 
     def __init__(self, CSHId, sessionList=None):
+        """sessionList: []"""
         super().__init__()
         if sessionList is None:
             self.sessionList = []
@@ -29,9 +31,11 @@ class CrossSessionHandler(threading.Thread):
         self.CSHId = CSHId
 
     def addSession(self, session):
+        """add session to self.sessionList"""
         self.sessionList.append(session)
 
     def checkForPost(self):
+        """look for cross session posts(cross post) in each session"""
         for session in self.sessionList:
             if session.crossPosts:
                 self.pendSessions()
@@ -39,16 +43,20 @@ class CrossSessionHandler(threading.Thread):
                 self.unpendSessions()
 
     def pendSessions(self):
+        """put a cross post telling CSH to not process any more cross posts"""
         for idx in range(0, self.sessionList.__len__()):
             self.sessionList[idx].crossPosts.append("pend")
 
     def unpendSessions(self):
+        """remove the pending cross post"""
         for idx in range(0, self.sessionList.__len__()):
             for idx1 in range(0, self.sessionList[idx].crossPosts.__len__()):
                 if self.sessionList[idx].crossPosts[idx1] == "pend":
                     self.sessionList[idx].crossPosts.pop(idx1)
 
     def resolvePosts(self):
+        """parse posts for things for CSH to do, then do those things"""
+        # TODO: extract the cross warp stuff and make it a function
         objToRes = None
         for idx in range(0, self.sessionList.__len__()):
             for post in self.sessionList[idx].crossPosts:
@@ -73,6 +81,8 @@ class CrossSessionHandler(threading.Thread):
 
     # use .start() NOT .run()
     def run(self):
+        """obligatory Thread.run
+        starts all session threads and  indefinitely, continually, calls checkForPost()"""
         for idx in range(0, self.sessionList.__len__()):
             self.sessionList[idx].start()
         while True:
@@ -88,13 +98,13 @@ class CGESession(threading.Thread):
         till 'g'oal met([])
         till all 'i'terations completed([])
     saveScene is a scene to save to
+    crossPosts is a list holding each cross post
     uniRules is a list of tsk operations to run each shift"""
 
     def __init__(self, sessionId, objList, runBehavior, savedScene=None, crossPosts=None, uniRules=None):
-        """initialize attributes
-        superclass:threading.thread
-        savedScene: an empty scene
-        uniRules: None"""
+        """savedScene: an empty scene
+        uniRules: []
+        crossPosts: []"""
         super().__init__()
         self.sessionId = sessionId
         self.objList = objList
@@ -123,19 +133,15 @@ class CGESession(threading.Thread):
         except objectNotInObjList:
             pass
 
-    # adds obj to the objList
-    # obj(obj)*
-    # none
     def addObj(self, obj):
+        """add obj to self.objList"""
         self.objList.append(obj)
         if self.savedScene is not None:
             self.savedScene.scp.append(["this", "addObj", [obj], "this"])
 
-    # get the attributes of obj as a list
-    # obj(obj)*
-    # attributes([str])
     @staticmethod
     def getAttribList(obj):
+        """get a list of the attributes of obj"""
         objDict = str(obj.__dict__.keys())
         stringList = str(re.search(r"'.*'", objDict).group())
         words = []
@@ -151,10 +157,8 @@ class CGESession(threading.Thread):
         words.append(word)
         return words
 
-    # get the methods of an object
-    # obj(obj)*
-    # methodList([str])
     def getMethods(self, obj):
+        """get a list of all methods of obj"""
         attribList = self.getAttribList(obj)
         methodList = dir(obj)
         finalList = []
@@ -166,10 +170,8 @@ class CGESession(threading.Thread):
             finalList.append(method)
         return finalList
 
-    # get the operations that CGE needs to perform this shift
-    # none
-    # operationList([operations])
     def getOperations(self):
+        """get all operations from trd.tsk of all objects in self.objectList"""
         operationList = []
         for obj in self.objList:
             try:
@@ -188,10 +190,8 @@ class CGESession(threading.Thread):
                     operationList.append([obj.tag["id"] + rul[0], rul[1], rul[2], rul[3]])
         return operationList
 
-    # resolve the object's id to its position in the objList
-    # objectId(str)*
-    # index(int)
     def resolveIdToIndex(self, objId):
+        """get the index in self.objectList of the object with the id, objId"""
         if self.objList.__len__() == 1:
             return 0
         ndx = 0
@@ -201,9 +201,6 @@ class CGESession(threading.Thread):
             ndx += 1
         raise objectNotInObjList(objId)
 
-    # returns true if all methods in the operation list are usable on the target object
-    # operationList([operation])*
-    # operationsPossible(bool)
     def areOperationsPossible(self, operationList):
         """checks if operations in operationList are possible by seeing if there is the requested method at the
             requested object
@@ -240,10 +237,10 @@ class CGESession(threading.Thread):
                     raise operationNotPossible(str(operation[1]) + "not in" + str(operation[0]) + "'s method list")
         return True
 
-    # apply the operation to the target object
-    # object index(int)*, method to apply(str)*, references to sub objects(str), parameters for the method([any])
-    # none
     def performSelectedOperation(self, objId, method, sourceId, subObjectReference=None, parameters=None):
+        """checks if the object with an id of sourceId can request method
+        if yes, method(parameters), is call to the object in the objList with the id of objId or it's sub object
+        otherwise raise operationNotPossible"""
         if parameters is None:
             parameters = []
         if objId == "CSH":
@@ -275,11 +272,9 @@ class CGESession(threading.Thread):
             self.objList[self.resolveIdToIndex(objId)] = self.repackSubToFull(
                 self.objList[self.resolveIdToIndex(objId)], subObj, subObjectReference)
 
-    # get a sub object from its extension
-    # obj(obj)*, subObjReference(str)*
-    # subObj(obj)
     @staticmethod
     def unpackSubObjFromExtension(obj, subObjReference):
+        """get the sub object, referenced by subObReference, of obj"""
         subs = []
         sub = ""
         for char in subObjReference:
@@ -294,11 +289,9 @@ class CGESession(threading.Thread):
             extractedObj = getattr(extractedObj, subObj)
         return extractedObj
 
-    # take an updated subObj and put it into the original obj
-    # fullObj(obj)*, subObj(obj)*, subObjReference(str)*
-    # fullObj(obj)
     @staticmethod
     def repackSubToFull(fullObj, subObj, subObjReference):
+        """return fullObj with its sub object, referenced by subObjReference, equal to subObj"""
         subs = []
         sub = ""
         for char in subObjReference:
@@ -322,10 +315,8 @@ class CGESession(threading.Thread):
         setattr(fullObj, currentSub, subObj)
         return fullObj
 
-    # preps the objList for the next shift
-    # none
-    # none
     def moveThreadAlong(self):
+        """move trd all objects in self.objList to next shift"""
         while True:
             if not self.crossPosts:
                 break
@@ -433,6 +424,9 @@ class CGESession(threading.Thread):
 
     # use .start() NOT .run()
     def run(self):
+        """obligatory Thread.run
+    runs update dependant on self.runBehavior"""
+    # TODO: pretty this bit up
         if self.runBehavior[0] == 't':
             while self.update(self.runBehavior[1]) != "No operations":
                 continue
