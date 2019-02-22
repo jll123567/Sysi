@@ -1,4 +1,4 @@
-"""dont mind me, just being dumb"""
+"""don't mind me, just being dumb"""
 import CGE
 import object
 import threadModules.ram

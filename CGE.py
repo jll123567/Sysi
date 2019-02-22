@@ -316,7 +316,7 @@ class CGESession(threading.Thread):
         return fullObj
 
     def moveThreadAlong(self):
-        """move trd all objects in self.objList to next shift"""
+        """move trd of all objects in self.objList to next shift"""
         while True:
             if not self.crossPosts:
                 break
@@ -332,34 +332,29 @@ class CGESession(threading.Thread):
         if objsEmpty == self.objList.__len__():
             self.objList = []
 
-    # add universe rules
-    # uni(uni)*
-    # none
     def addUniRules(self, uni):
+        """add a rule to  self.uniRules"""
         for rul in uni.rule:
             self.uniRules.append(rul)
 
-    # save the state of the objList as the initial state of a scene, with optional container setting
-    # cont(container)
-    # none
     def saveSceneInit(self, cont=None):
+        """save the current state of the session as the initial state of self.saveScene"""
         if cont is not None:
             self.savedScene.loc = cont
         self.savedScene.obj = self.objList
 
-    # get the finished scene recording
-    # timeLine information([str])*, scene name(str)*, universe to gen id(uni)*
-    # scene(scene)
     def exportScene(self, tlInfo, name, universe):
+        """export self.savedScene with timeline info from tlInfo, the scene name from name,
+         and an Id generated with universe"""
         self.savedScene.scp[0] = tlInfo
         self.savedScene.tag["name"] = name
         self.savedScene.tag["id"] = idGen.generateUniversalId(universe, self.savedScene)
         return self.savedScene
 
-    # update the objects in objList based on obj Thread
-    # saveToScene(bool)
-    # no object message(str)/None
     def update(self, saveToScene=False):
+        """extract and operate on objects in self.objectList using the operations from the threads of said objects
+        may return a string if an issue occurred or something unexpected happened"""
+        # Todo: extract id and subObjExtender, among other things
         if not self.objList:
             return "No objects to process"
         objIdx = 0
@@ -418,10 +413,6 @@ class CGESession(threading.Thread):
         self.moveThreadAlong()
         return "Shift Complete"
 
-    # threading.thread objects need a run
-    # iterations(int>0)
-    # none
-
     # use .start() NOT .run()
     def run(self):
         """obligatory Thread.run
@@ -442,10 +433,10 @@ class CGESession(threading.Thread):
         else:
             return "specify a mode"
 
-    # update the objList while a boolean expression is true
-    # id of obj to check against(int)*, comparator(str)*, goal(any)*, saveToScene(bool), subObjReference(str)
-    # none/console output(str)
     def updateWithGoal(self, objId, comparator, goal, subObjReference=None, saveToScene=False):
+        """update but check if a value at an object in self.objectList is equal, more than, less than, etc... of a goal
+        value. When that goal is met stop updating."""
+        # Todo:explain WTH is going on in here. Jesus.
         if subObjReference is not None:
             test = self.unpackSubObjFromExtension(self.resolveIdToIndex(objId), subObjReference)
             del test
@@ -473,11 +464,10 @@ class CGESession(threading.Thread):
         else:
             print("the comparator inputted is not valid")
 
-    # replay a scene from start shift to last shift
-    # scn.scp[1:lastShift] none being [1:]
-    # scene to replay(scn)*, last shift(none or int)
-    # scene objs [obj]
     def replayScene(self, scn, lastShift=None):
+        """use a scene's script rather than an object's tasker to update the object
+        acts to playback a scene
+        may return a string if something goes wrong"""
         self.objList = scn.obj
         if lastShift is None:
             script = scn.scp[1:]
@@ -518,27 +508,21 @@ class CGESession(threading.Thread):
         return scn.obj
 
 
-# warning if the an operation is not possible as listed
-# expression(warning.expression)*, message(str)
 class operationNotPossible(Exception):
+    """exception to handle operations where the method listed is invalid for the target object"""
     def __init__(self, expression, message="one or more operations are not available as writen"):
         self.expression = expression
         self.message = message
 
 
 class objectNotInObjList(Exception):
+    """exception to handle targets in operations that don't refer to an object in CGESession.objList"""
     def __init__(self, objId):
         self.objId = objId
         self.message = "the object:" + str(self.objId) + "is not in the objList"
 
 
-# warning if an object doesn't have a trd.tsk
-# None
 class objectDoesNotContainTsk(Warning):
+    """warning for if an object does not have a thread or a tasker
+    its a warning as the session will just skip over the object"""
     pass
-
-
-# Info at run
-if __name__ == "__main__":
-    print("The Content Generation engine\nobjects in objList are simulated and run based on the instructions in "
-          "trd.tsk\nModule type: prog")
