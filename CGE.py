@@ -12,8 +12,7 @@ import prog.idGen as idGen
 import threading
 
 
-# todo add "this" as a reference to tell the session/scene to do something
-# todo doc it
+# TODO: add "this" as a reference to tell the session/scene to do something
 
 
 class CrossSessionHandler(threading.Thread):
@@ -290,6 +289,29 @@ class CGESession(threading.Thread):
         return extractedObj
 
     @staticmethod
+    def extractId(operation):
+        """takes an operation and gives back a list with the target object id and the sub-object reference if any"""
+        objId = ""
+        ext = ""
+        mode = 'n'
+        if '.' in operation[0]:
+            for char in operation[0]:
+                if char == '.' and mode == 'n':
+                    mode = '.'
+                if char == '.' and mode == '.':
+                    mode = 'e'
+                if mode == 'n':
+                    objId += char
+                if mode == 'e':
+                    ext += char
+            if ext == "":
+                ext = None
+            else:
+                ext = ext[1:]
+            pass
+        return [objId, ext]
+
+    @staticmethod
     def repackSubToFull(fullObj, subObj, subObjReference):
         """return fullObj with its sub object, referenced by subObjReference, equal to subObj"""
         subs = []
@@ -354,16 +376,19 @@ class CGESession(threading.Thread):
     def update(self, saveToScene=False):
         """extract and operate on objects in self.objectList using the operations from the threads of said objects
         may return a string if an issue occurred or something unexpected happened"""
-        # Todo: extract id and subObjExtender, among other things
         if not self.objList:
             return "No objects to process"
         objIdx = 0
+        # check if object has a thread and a tasker and the trd.tsk.current[0] is a list
         for _ in self.objList:
             if self.objList[objIdx].trd is None:
+                # replace me to debug
                 continue
             if not self.objList[objIdx].trd.tsk.current:
+                # replace me to debug
                 continue
             if not isinstance(self.objList[objIdx].trd.tsk.current[0], list):
+                # I just fix crappy tsk code
                 self.objList[objIdx].trd.tsk.current[0] = [self.objList[objIdx].trd.tsk.current[0]]
             objIdx += 1
         operationList = self.getOperations()
@@ -372,43 +397,28 @@ class CGESession(threading.Thread):
             self.savedScene.scp.append(operationList)
         if not operationList:
             return "No operations"
-        for op in operationList:
-            objId = ""
-            ext = ""
-            mode = 'n'
-            if '.' in op[0]:
-                for char in op[0]:
-                    if char == '.' and mode == 'n':
-                        mode = '.'
-                    if char == '.' and mode == '.':
-                        mode = 'e'
-                    if mode == 'n':
-                        objId += char
-                    if mode == 'e':
-                        ext += char
-                if ext == "":
-                    ext = None
-                else:
-                    ext = ext[1:]
-                pass
 
+        for op in operationList:
+            idHold = self.extractId(op)
             reservedIds = ["CSH", "this"]
             if op[0] not in reservedIds:
-                if ext == "":
-                    objId = op[0]
-                    self.performSelectedOperation(objId, op[1], op[3], None, op[2])
+                if idHold[1] == "":
+                    idHold[0] = op[0]
+                    self.performSelectedOperation(idHold[0], op[1], op[3], None, op[2])
                 else:
-                    self.performSelectedOperation(objId, op[1], op[3], ext, op[2])
-                if "evLog" in self.objList[self.resolveIdToIndex(objId)].tag.keys():
-                    self.objList[self.resolveIdToIndex(objId)].tag["evLog"].append(op[1])
+                    self.performSelectedOperation(idHold[0], op[1], op[3], idHold[1], op[2])
+
+                if "evLog" in self.objList[self.resolveIdToIndex(idHold[0])].tag.keys():
+                    self.objList[self.resolveIdToIndex(idHold[0])].tag["evLog"].append(op[1])
                 else:
-                    self.objList[self.resolveIdToIndex(objId)].tag.update({"evLog": [op[1]]})
+                    self.objList[self.resolveIdToIndex(idHold[0])].tag.update({"evLog": [op[1]]})
+
             else:
-                if ext == "":
-                    objId = op[0]
-                    self.performSelectedOperation(objId, op[1], op[3], None, op[2])
+                if idHold[1] == "":
+                    idHold[0] = op[0]
+                    self.performSelectedOperation(idHold[0], op[1], op[3], None, op[2])
                 else:
-                    self.performSelectedOperation(objId, op[1], op[3], ext, op[2])
+                    self.performSelectedOperation(idHold[0], op[1], op[3], idHold[1], op[2])
 
         self.moveThreadAlong()
         return "Shift Complete"
@@ -417,12 +427,12 @@ class CGESession(threading.Thread):
     def run(self):
         """obligatory Thread.run
     runs update dependant on self.runBehavior"""
-    # TODO: pretty this bit up
+        # TODO: pretty this bit up
         if self.runBehavior[0] == 't':
             while self.update(self.runBehavior[1]) != "No operations":
                 continue
                 # put this line back if you want to be annoyed
-                # print("No operations left to preform\n stopping!")
+                # print("1No operations left to preform\n stopping!")
         elif self.runBehavior[0] == 'g':
             self.updateWithGoal(self.runBehavior[2], self.runBehavior[3], self.runBehavior[4], self.runBehavior[1],
                                 self.runBehavior[5])
@@ -478,30 +488,14 @@ class CGESession(threading.Thread):
                 return "No objects to process"
             self.areOperationsPossible(shift)
             for operation in shift:
-                targetObjId = ""
-                ext = ""
-                mode = 'n'
-                if '.' in operation[0]:
-                    for char in operation[0]:
-                        if char == '.' and mode == 'n':
-                            mode = '.'
-                        if char == '.' and mode == '.':
-                            mode = 'e'
-                        if mode == 'n':
-                            targetObjId += char
-                        if mode == 'e':
-                            ext += char
-                    if ext == "":
-                        ext = None
-                    else:
-                        ext = ext[1:]
-                    pass
-                if ext == "":
-                    targetObjId = operation[0]
-                    self.performSelectedOperation(self.resolveIdToIndex(targetObjId), operation[1], operation[3], None,
+                idHold = self.extractId(operation)
+                if idHold[1] == "":
+                    idHold[0] = operation[0]
+                    self.performSelectedOperation(self.resolveIdToIndex(idHold[0]), operation[1], operation[3], None,
                                                   operation[2])
                 else:
-                    self.performSelectedOperation(self.resolveIdToIndex(targetObjId), operation[1], operation[3], ext,
+                    self.performSelectedOperation(self.resolveIdToIndex(idHold[0]), operation[1], operation[3],
+                                                  idHold[1],
                                                   operation[2])
         scn.obj = self.objList
         self.objList = []
@@ -510,6 +504,7 @@ class CGESession(threading.Thread):
 
 class operationNotPossible(Exception):
     """exception to handle operations where the method listed is invalid for the target object"""
+
     def __init__(self, expression, message="one or more operations are not available as writen"):
         self.expression = expression
         self.message = message
@@ -517,6 +512,7 @@ class operationNotPossible(Exception):
 
 class objectNotInObjList(Exception):
     """exception to handle targets in operations that don't refer to an object in CGESession.objList"""
+
     def __init__(self, objId):
         self.objId = objId
         self.message = "the object:" + str(self.objId) + "is not in the objList"
