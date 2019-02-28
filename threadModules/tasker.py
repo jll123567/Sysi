@@ -6,7 +6,7 @@ import object
 
 # profile=[shift,shift,shift,...]
 # shift=[op0,op1,op2,...]
-# operation=[target(str), function(str), [parameters]]
+# operation=[target(str), function(str), [parameters], source(str)]
 
 
 # tasking
@@ -66,7 +66,7 @@ class tsk:
     # adds a new shift to the end of the tasking queue
     # shift(tskShift)*
     # none
-    def addProfile(self, shift):
+    def addShift(self, shift):
         self.profile.append(shift)
 
     # removes a shift from the profile
@@ -85,15 +85,15 @@ class tsk:
     # set the following shift to loop infinitely
     # shift(tskShift)
     # requires self
-    def loopInf(self, shift):
+    def loopInf(self, operation):
         objId = ""
-        for char in shift[0]:
+        for char in operation[0]:
             if char == '.':
                 break
             else:
                 objId += char
         objId += ".trd.tsk"
-        self.addProfile([shift, [objId, "loopInf", [shift]]])
+        self.addShift([operation, [objId, "loopInf", [operation], operation[3]]])
 
     # determine the next shift based on the state of object0 and object1(they don't need to be sysh.object.object s)
     # comparator("==","!=",">","<","<=",">=")*, object0(any)*, object1(any)*, then(tskShift)*, els(tskShift)

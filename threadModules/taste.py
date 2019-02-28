@@ -5,10 +5,10 @@ import object
 class taste:
     """hold taste
 
-    bit:float between and incuding 0 and 1
+    bit:float between and including 0 and 1
     the rest: the same as bit"""
     def __init__(self, bit=0.0, swt=0.0, slt=0.0, sor=0.0, pln=0.0):
-        """initalizes claas atributes(to 0 by default)"""
+        """initializes class attributes(to 0 by default)"""
         self.bit = bit
         self.swt = swt
         self.slt = slt
