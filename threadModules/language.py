@@ -1,10 +1,11 @@
-"""lang handling"""
+"""Handle sounds."""
 import object
 
 
 # left input([int]), right input([int])
 class audioStereo:
-    """stereo audio"""
+    """Hold stereo audio."""
+
     def __init__(self, left=None, right=None):
         if left is None:
             self.left = []
@@ -18,7 +19,8 @@ class audioStereo:
 
 # sound input([int])
 class audioMono:
-    """mono audio"""
+    """Hold mono audio."""
+
     def __init__(self, sound=None):
         if sound is None:
             self.sound = []
@@ -28,7 +30,8 @@ class audioMono:
 
 # heard audio(audioStereo), spoken(audioMono)
 class lang:
-    """language thread module class"""
+    """Hold and manipulate audio."""
+
     def __init__(self, heard=audioStereo(), speakQue=audioMono()):
         self.heard = heard
         self.speakQue = speakQue
@@ -37,16 +40,19 @@ class lang:
     # inputSource(audioStereo)*
     # none
     def listen(self, inputSource):
-        """gets sound from input and appends it to heard"""
+        """Get sound from input and append it to heard."""
         self.heard.left.append(inputSource.l)
         self.heard.right.append(inputSource.r)
 
     def tune(self, minVolume, minPan, maxPan):
-        """check if audio is above a minimum volume or withing a pan range and if its not cut it
-        min volume is in Db
-        pan is a float range
-        minPan is the smallest pan value(up to -1.0)
-        maxPan is the largest pan value(up to 1.0)"""
+        """Check if audio is above a minimum volume or within a pan range and if its not cut it.
+
+        Min volume is in Db
+        pan is a float range from -1.0 to 1.0
+        minPan is the smallest pan value
+        maxPan is the largest pan value
+        """
+
         for i in self.heard.left:
             if abs(i) < minVolume:
                 self.heard.left[self.heard.left.index(i)] = 0
@@ -68,14 +74,14 @@ class lang:
                 continue
 
     def silence(self):
-        """clear spoken audio"""
+        """Clear spoken audio."""
         self.speakQue = []
 
     def queueSpeak(self, sounds):
-        """add sounds to the speaking queue"""
+        """Add sounds to the speaking queue"""
         self.speakQue = sounds
 
     def package(self):
-        """pack audio data into a data obj to send to ram and return it"""
+        """Pack audio data into a data obj and return it."""
         return object.data([self.heard, self.speakQue], {"name": "tread.lang.package", "id": None,
                                                                  "dataType": "thread.lang.package"})
