@@ -1,4 +1,9 @@
-"""Handle sounds."""
+"""Handle sounds.
+
+audioStereo: stereo audio hold
+audioMono: mono audio hold
+lang: audio threadModule
+"""
 import object
 
 
