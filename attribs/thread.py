@@ -1,18 +1,18 @@
 # definition for trd attributes in obj
 # module type: def
 import object
-import threadModules.tasker
+import thread_modules.tasker
 
 
-# def for thread obj ram(threadModules.ram), tsk(threadModules.tasker), que(threadModules.queue),
-# mov(threadModules.move), lang(threadModules.language), cpx(threadModules.complex), vis(threadModules.visual),
-# transf(threadModules.transfer), sub(threadModules.subObject)
+# def for thread obj ram(thread_modules.ram), tsk(thread_modules.tasker), que(thread_modules.queue),
+# mov(thread_modules.move), lang(thread_modules.language), cpx(thread_modules.complex), vis(thread_modules.visual),
+# transf(thread_modules.transfer), sub(thread_modules.subObject)
 class trd:
     def __init__(self, ram=None, tsk=None, que=None, mov=None, lang=None, cpx=None, vis=None,
                  transf=None, sub=None):
         self.ram = ram
         if tsk is None:
-            self.tsk = threadModules.tasker.tsk()
+            self.tsk = thread_modules.tasker.tsk()
         else:
             self.tsk = tsk
         self.que = que

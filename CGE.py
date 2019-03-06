@@ -178,7 +178,7 @@ class CGESession(threading.Thread):
             except AttributeError:
                 warnings.warn(
                     "the object " + str(
-                        obj.tag["name"]) + "does not have a threadModules and/or tasker \n please add one "
+                        obj.tag["name"]) + "does not have a thread_modules and/or tasker \n please add one "
                                            "if you want the object to do something",
                     objectDoesNotContainTsk)
             for rul in self.uniRules:

@@ -3,7 +3,7 @@
 import object
 
 # objects can be like groups without being groups
-# parent and child objects have a "sub" section in their threadModules
+# parent and child objects have a "sub" section in their thread_modules
 
 # "sub": {"parent": [reference, offset], "children": [reference, ...]}
 
