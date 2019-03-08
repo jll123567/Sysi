@@ -30,13 +30,34 @@ class SOMManger:
             self.currentStateName = currentStateName
 
     def addState(self, state):
-        """"""
+        """Add state to self.states."""
+        self.states.append(state)
 
-    def removeState(self, name):
-        """"""
+    def removeState(self, stateName):
+        """Remove state named stateName from self.states."""
+        self.states.pop(self.resolveStateNameToIndex(stateName))
+
+    def renameState(self, currentName, newName):
+        """Change SOMName of state with currentName to newName."""
+        self.states[self.resolveStateNameToIndex(currentName)].tag["SOMName"] = newName
+
+    def makeDefault(self, stateName, renameForCurrentDefault):
+        """Rename the state with the name "Default" to renameForCurrentDefault and state with stateName to "Default" """
+        self.renameState("Default", renameForCurrentDefault)
+        self.renameState(stateName, "Default")
+
+    def resolveStateNameToIndex(self, stateName):
+        """find and return the index of the state with the SOMName stateName"""
+        idx = 0
+        for state in self.states:
+            if state.tag["SOMName"] == stateName:
+                break
+            idx += 1
+        return idx
 
 
-
+# ADD THESE FUNCTIONS TO YOUR OBJECT
+# THEY MUST BE BOUND METHODS
 
 def changeSOMState(self, stateName):
     """"""
