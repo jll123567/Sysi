@@ -8,7 +8,7 @@ import thread_modules.tasker
 # mov(thread_modules.move), lang(thread_modules.language), cpx(thread_modules.complex), vis(thread_modules.visual),
 # transf(thread_modules.transfer), sub(thread_modules.subObject)
 class trd:
-    def __init__(self, ram=None, tsk=None, que=None, mov=None, lang=None, cpx=None, vis=None,
+    def __init__(self, ram=None, tsk=None, que=None, somm=None, mov=None, lang=None, cpx=None, vis=None,
                  transf=None, sub=None):
         self.ram = ram
         if tsk is None:
@@ -16,6 +16,7 @@ class trd:
         else:
             self.tsk = tsk
         self.que = que
+        self.somm = somm
         self.mov = mov
         self.lang = lang
         self.cpx = cpx
