@@ -89,3 +89,7 @@ def saveCurrentSOMState(self):
 
 def revertSOMStateToDefault(self):
     """"""
+
+
+def revertSOMStateToPreviious(self):
+    """"""
