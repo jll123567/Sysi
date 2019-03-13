@@ -9,7 +9,7 @@ class vis:
     rx is float representing degrees
     so are ry and rz"""
     def __init__(self, rawImg=None, pitch=0, yaw=0, roll=0):
-        """initialize object attributes
+        """initialize sysObject attributes
         rawImg is an empty list
         pitch is 0
         yaw is 0
@@ -48,7 +48,7 @@ class vis:
     # none
     # dta(vis attribs, tags)
     def package(self):
-        """pack attributes into a data object and return it"""
+        """pack attributes into a data sysObject and return it"""
         return object.data([self.rawImg, self.rx, self.ry, self.rz], {"name": "tread.vis.package", "id": None,
                                                                       "dataType": "thread.vis.package"})
 

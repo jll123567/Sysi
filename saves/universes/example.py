@@ -1,5 +1,5 @@
 # imports
-# import object
+# import sysObject
 # import prog.idGen
 
 # user defined functions

@@ -93,7 +93,7 @@ def closeIssue(userId, idx):
     inProgress[userId].pop(idx)
 
 
-# export your cases a a object.dta
+# export your cases a a sysObject.dta
 # none
 # exported queues(dta)
 def exportQueue():
@@ -115,10 +115,10 @@ def importQueue(queue):
         cases.append(case)
 
 
-# exception for an object without a tag attribute.
+# exception for an sysObject without a tag attribute.
 # expression(any), message(str)
 class noTagAtObject(Exception):
-    def __init__(self, expression, message="the object does not have the required \"tag\" attribute"):
+    def __init__(self, expression, message="the sysObject does not have the required \"tag\" attribute"):
         self.expression = expression
         self.message = message
 

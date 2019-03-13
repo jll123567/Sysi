@@ -2,10 +2,10 @@
 import CGE
 import object
 import thread_modules.ram
-a = object.object()
+a = object.sysObject()
 a.tag["id"] = "a"
 a.trd.tsk.current = [["CSH", "crossWarp", ["S1"], a.tag["id"]]]
-e = object.object()
+e = object.sysObject()
 e.tag["id"] = "e"
 e.trd.ram = thread_modules.ram.ram()
 e.trd.tsk.current = [["e.trd.tsk", "loopInf", [["e.trd.tsk", "wait", [0.01], e.tag["id"]]], e.tag["id"]]]

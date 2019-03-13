@@ -1,4 +1,4 @@
-# object data transfer
+# sysObject data transfer
 # module type: def
 import socket
 
@@ -82,4 +82,4 @@ class transf:
 
 # info at run
 if __name__ == "__main__":
-    print("object data transfer\nmodule type: def")
+    print("sysObject data transfer\nmodule type: def")

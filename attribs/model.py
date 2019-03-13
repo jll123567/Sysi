@@ -1,6 +1,6 @@
 # Definition for obj.mod
 # module type:def
-# model stores what an object looks like
+# model stores what an sysObject looks like
 # accepts png, stl, and the method below
 #
 # Model format:

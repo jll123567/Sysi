@@ -29,7 +29,7 @@ class ram:
 
     def search(self, query):
         """searched self.storage for query
-        returns the index if the object in storage and query are equal
+        returns the index if the sysObject in storage and query are equal
         prints a message to the console if nothing was found"""
         matched = True
         idx = 0
@@ -41,7 +41,7 @@ class ram:
             print("no results. try obj.sysh.thread.ram.read()")
 
     def free(self, index):
-        """removes an object from self.storage(with *style*)
+        """removes an sysObject from self.storage(with *style*)
 
         index(int) is the int-th item in self.storage
         index(None) removes the last (or -1st) item in ram

@@ -3,7 +3,7 @@ import object
 
 
 class mov:
-    """holds object position, acceleration and rotation"""
+    """holds sysObject position, acceleration and rotation"""
     def __init__(self, x=0, y=0, z=0, vx=0, vy=0, vz=0, rx=0, ry=0, rz=0, rvx=0, rvy=0, rvz=0):
         """initialize attributes
 
@@ -66,9 +66,9 @@ class mov:
         self.rz += self.rvz
 
     def attract(self, o1, force):
-        """changes position based on another object's position and a force
+        """changes position based on another sysObject's position and a force
 
-        o1 needs to be a trd.mov not an object.object
+        o1 needs to be a trd.mov not an sysObject.sysObject
         attract pusses together"""
         if self.x > o1.x:
             self.vx = (force * -1)
@@ -91,9 +91,9 @@ class mov:
         self.move()
 
     def repel(self, o1, force):
-        """changes position based on another object's position and a force
+        """changes position based on another sysObject's position and a force
 
-        o1 needs to be a trd.mov not an object.object
+        o1 needs to be a trd.mov not an sysObject.sysObject
         repel pushes away"""
         if self.x > o1.x:
             self.vx = force
@@ -116,7 +116,7 @@ class mov:
         self.move()
 
     def package(self):
-        """pack attributes into a data object and return it"""
+        """pack attributes into a data sysObject and return it"""
         return object.data([self.x, self.y, self.z, self.vx, self.vy, self.vz, self.rx,
                             self.ry, self.rz, self.rvx, self.rvy, self.rvz],
                            {"name": "tread.mov.package", "id": None, "dataType": "thread.mov.package"})

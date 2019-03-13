@@ -3,7 +3,7 @@
 # module type: prog
 
 
-# dumps the stuff in an object
+# dumps the stuff in an sysObject
 # obj(any)*
 # console output(str)
 def dumpObject(obj):

@@ -14,6 +14,6 @@ class olf:
         self.strength = strength
 
     def package(self):
-        """Pack olf data into a data object(it needs an id) and return it."""
+        """Pack olf data into a data sysObject(it needs an id) and return it."""
         return object.data([self.descriptor, self.strength], {"name": "tread.olf.package", "id": None,
                                                               "dataType": "thread.olf.package"})

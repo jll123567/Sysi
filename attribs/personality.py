@@ -11,7 +11,7 @@
 #     satisfied:has met all goals
 #     unlimited:has no limiters
 #     limited:has limiters
-#     simulated:object pers does not belong to a free user
+#     simulated:sysObject pers does not belong to a free user
 #    Note:
 #        pers only helps predict attrib's behavior but does not code for behavior. Use trd.tsk for this.
 class prs:

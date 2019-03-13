@@ -95,7 +95,7 @@ class tsk:
         objId += ".trd.tsk"
         self.addShift([operation, [objId, "loopInf", [operation], operation[3]]])
 
-    # determine the next shift based on the state of object0 and object1(they don't need to be sysh.object.object s)
+    # determine the next shift based on the state of object0 and object1(they don't need to be sysh.sysObject.sysObject s)
     # comparator("==","!=",">","<","<=",">=")*, object0(any)*, object1(any)*, then(tskShift)*, els(tskShift)
     # none/console output(str)
     def ifStatement(self, comparator, object0, object1, then, els=None):

@@ -121,8 +121,8 @@ class CGESession(threading.Thread):
             self.crossPosts = crossPosts
 
     def removeObj(self, objId):
-        """removes the object with objId from self.objList
-        only use after object has been copied to another session to avoid data loss
+        """removes the sysObject with objId from self.objList
+        only use after sysObject has been copied to another session to avoid data loss
         this operation is saved """
         try:
             self.objList.pop(self.resolveIdToIndex(objId))
@@ -177,9 +177,9 @@ class CGESession(threading.Thread):
                     operationList.append(operation)
             except AttributeError:
                 warnings.warn(
-                    "the object " + str(
+                    "the sysObject " + str(
                         obj.tag["name"]) + "does not have a thread_modules and/or tasker \n please add one "
-                                           "if you want the object to do something",
+                                           "if you want the sysObject to do something",
                     objectDoesNotContainTsk)
             for rul in self.uniRules:
                 if rul[0] is None:
@@ -189,7 +189,7 @@ class CGESession(threading.Thread):
         return operationList
 
     def resolveIdToIndex(self, objId):
-        """get the index in self.objectList of the object with the id, objId"""
+        """get the index in self.objectList of the sysObject with the id, objId"""
         if self.objList.__len__() == 1:
             return 0
         ndx = 0
@@ -201,7 +201,7 @@ class CGESession(threading.Thread):
 
     def areOperationsPossible(self, operationList):
         """checks if operations in operationList are possible by seeing if there is the requested method at the
-            requested object
+            requested sysObject
         returns True if all operations have usable methods
         raises operationNotPossible otherwise"""
         for operation in operationList:
@@ -236,8 +236,8 @@ class CGESession(threading.Thread):
         return True
 
     def performSelectedOperation(self, objId, method, sourceId, subObjectReference=None, parameters=None):
-        """checks if the object with an id of sourceId can request method
-        if yes, method(parameters), is call to the object in the objList with the id of objId or it's sub object
+        """checks if the sysObject with an id of sourceId can request method
+        if yes, method(parameters), is call to the sysObject in the objList with the id of objId or it's sub sysObject
         otherwise raise operationNotPossible"""
         if parameters is None:
             parameters = []
@@ -284,7 +284,7 @@ class CGESession(threading.Thread):
 
     @staticmethod
     def unpackSubObjFromExtension(obj, subObjReference):
-        """get the sub object, referenced by subObReference, of obj"""
+        """get the sub sysObject, referenced by subObReference, of obj"""
         subs = []
         sub = ""
         for char in subObjReference:
@@ -301,7 +301,7 @@ class CGESession(threading.Thread):
 
     @staticmethod
     def extractId(operation):
-        """takes an operation and gives back a list with the target object id and the sub-object reference if any"""
+        """takes an operation and gives back a list with the target sysObject id and the sub-sysObject reference if any"""
         objId = ""
         ext = ""
         mode = 'n'
@@ -324,7 +324,7 @@ class CGESession(threading.Thread):
 
     @staticmethod
     def repackSubToFull(fullObj, subObj, subObjReference):
-        """return fullObj with its sub object, referenced by subObjReference, equal to subObj"""
+        """return fullObj with its sub sysObject, referenced by subObjReference, equal to subObj"""
         subs = []
         sub = ""
         for char in subObjReference:
@@ -390,7 +390,7 @@ class CGESession(threading.Thread):
         if not self.objList:
             return "No objects to process"
         objIdx = 0
-        # check if object has a thread and a tasker and the trd.tsk.current[0] is a list
+        # check if sysObject has a thread and a tasker and the trd.tsk.current[0] is a list
         for _ in self.objList:
             if self.objList[objIdx].trd is None:
                 # replace me to debug
@@ -457,7 +457,7 @@ class CGESession(threading.Thread):
             return "specify a mode"
 
     def updateWithGoal(self, objId, comparator, goal, subObjReference=None, saveToScene=False):
-        """update but check if a value at an object in self.objectList is equal, more than, less than, etc... of a goal
+        """update but check if a value at an sysObject in self.objectList is equal, more than, less than, etc... of a goal
         value. When that goal is met stop updating."""
         if comparator == '==':
             if subObjReference is None:
@@ -506,7 +506,7 @@ class CGESession(threading.Thread):
             print("the comparator inputted is not valid")
 
     def replayScene(self, scn, lastShift=None):
-        """use a scene's script rather than an object's tasker to update the object
+        """use a scene's script rather than an sysObject's tasker to update the sysObject
         acts to playback a scene
         may return a string if something goes wrong"""
         self.objList = scn.obj
@@ -534,7 +534,7 @@ class CGESession(threading.Thread):
 
 
 class operationNotPossible(Exception):
-    """exception to handle operations where the method listed is invalid for the target object"""
+    """exception to handle operations where the method listed is invalid for the target sysObject"""
 
     def __init__(self, expression, message="one or more operations are not available as writen"):
         self.expression = expression
@@ -542,14 +542,14 @@ class operationNotPossible(Exception):
 
 
 class objectNotInObjList(Exception):
-    """exception to handle targets in operations that don't refer to an object in CGESession.objList"""
+    """exception to handle targets in operations that don't refer to an sysObject in CGESession.objList"""
 
     def __init__(self, objId):
         self.objId = objId
-        self.message = "the object:" + str(self.objId) + "is not in the objList"
+        self.message = "the sysObject:" + str(self.objId) + "is not in the objList"
 
 
 class objectDoesNotContainTsk(Warning):
-    """warning for if an object does not have a thread or a tasker
-    its a warning as the session will just skip over the object"""
+    """warning for if an sysObject does not have a thread or a tasker
+    its a warning as the session will just skip over the sysObject"""
     pass

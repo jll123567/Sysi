@@ -7,7 +7,7 @@ import object
 # dta([head,body,id],tags)
 
 
-# storage object for pages
+# storage sysObject for pages
 index = object.data([object.data(["Hello, world!", "sysh V11.0 is here. :D", 0],
                                  {'name': 'Hello, world!', 'terms': ['sys', 'Hello,world!', 'v11.0'], "id": None})],
                     {"name": "index"})
@@ -26,7 +26,7 @@ def newPage(head, body, terms):
     page = object.data([head, body, pageId], None)
     page.tag.update({"id": ("idx" + str(pageId)), "terms": terms, "name": head})
     index.storage.append(page)
-    print("added:\nobject.data([\"" + head + "\",\"" + body + "\"," + str(pageId) + "]," + str(page.tag) + ")")
+    print("added:\nsysObject.data([\"" + head + "\",\"" + body + "\"," + str(pageId) + "]," + str(page.tag) + ")")
 
 
 # prints the page with pageId to the console

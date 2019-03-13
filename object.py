@@ -1,5 +1,5 @@
 # coding=utf-8
-# object type definitions
+# sysObject type definitions
 # module type: def
 from random import randint
 import attribs
@@ -8,10 +8,10 @@ import error
 import prog.idGen
 
 
-# sysh.object.object(oof better name pls) model of object(any), relevant self viewable data(attrib's.thread.trd),
+# sysh.sysObject.sysObject(oof better name pls) model of sysObject(any), relevant self viewable data(attrib's.thread.trd),
 # tags and data for system/admin({tag:(str),...}) noinspection PyShadowingBuiltins
 # noinspection PyShadowingBuiltins
-class object:
+class sysObject:
     def __init__(self, mod=None, trd=None, tag=None):
         if mod is None:
             self.mod = attribs.model.sysModel()
@@ -26,7 +26,7 @@ class object:
         else:
             self.tag = tag
 
-    # make an object's model dependant of sub objects
+    # make an sysObject's model dependant of sub objects
     # none
     # none
     def makeModelAssembly(self):
@@ -94,7 +94,7 @@ class object:
                 fail = True
                 if isinstance(self, user):
                     oldUsrDta = [self.prs, self.mem]
-                    objActual = object(self.mod, self.trd, self.tag)
+                    objActual = sysObject(self.mod, self.trd, self.tag)
                     # noinspection PyTypeChecker
                     self.tag.update({"oldUsrDta": oldUsrDta})
                     print(self.tag["name"], "is Now Object")
@@ -102,7 +102,7 @@ class object:
                 else:
                     print(self.tag["name"], "is Object")
         if not fail:
-            if isinstance(self, object):
+            if isinstance(self, sysObject):
                 usr = user(self.mod, self.trd, self.tag["notes"][0], self.tag["notes"][1], self.tag)
                 print(self.tag["name"], "is Now User")
                 return usr
@@ -125,10 +125,11 @@ class object:
         self.trd.sub.parent = None
 
 
-# sysh.object.user
+# sysh.sysObject.user
 # model(any), thread(thread.trd), prs(personality.prs), memory(memory.mem) tag({"id":(str), ...})
-class user(object):
+class user(sysObject):
     def __init__(self, mod=None, trd=None, prs=None, mem=None, tag=None):
+        super().__init__(mod, trd, tag)
         if mod is None:
             self.mod = attribs.model.sysModel()
         else:
@@ -170,7 +171,7 @@ class user(object):
         else:
             self.trd.ram.load(self.mem.external[index])
 
-    # check the integrity of an object
+    # check the integrity of an sysObject
     # past of obj(obj)*, obj now(obj)*
     # status(str)
     @staticmethod
@@ -190,7 +191,7 @@ class user(object):
         else:
             return "maintained"
 
-    # get the relevancy of an object
+    # get the relevancy of an sysObject
     # obj(obj)*
     # relevancy(int)
     @staticmethod
@@ -218,8 +219,9 @@ class user(object):
 
 # weapons
 # mod(any), thread(thread.trd), damage profile(damage.dmg), tag({"id":(str), ...})
-class weapon(object):
+class weapon(sysObject):
     def __init__(self, mod=None, trd=None, dmg=None, tag=None):
+        super().__init__(mod, trd, tag)
         if mod is None:
             self.mod = attribs.model.sysModel()
         else:
@@ -272,7 +274,7 @@ class container:
             self.tag = tag
 
 
-# object change oer time
+# sysObject change oer time
 # scp([tlInfo, shft0, shft1, ...]), obj in scene([obj]), loc(container), tag({"id":(str), ...})
 class scene:
     def __init__(self, scp=None, obj=None, cont=None, tag=None):
@@ -355,7 +357,7 @@ class universe:
             self.rule = []
         else:
             self.rule = rule
-            # a rule is an operation run at each object
+            # a rule is an operation run at each sysObject
             # [extension(optional. None for no ext), function, [parameters]]
         if tag is None:
             self.tag = {"id": None, "name": None}
@@ -365,4 +367,4 @@ class universe:
 
 # info at run
 if __name__ == "__main__":
-    print("object type definitions\nmodule type: def")
+    print("sysObject type definitions\nmodule type: def")

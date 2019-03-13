@@ -4,7 +4,7 @@ import object
 import warnings
 
 
-# generate an object id with its uni as a base
+# generate an sysObject id with its uni as a base
 # uni(uni)*, obj(obj)*
 # objId(str)
 def generateUniversalId(uni, obj):
@@ -29,7 +29,7 @@ def generateUniversalId(uni, obj):
             if idFromObjProcessed >= genIdPreChk:
                 genIdPreChk = idFromObjProcessed + 1
     chkSumRes = genIdPreChk % 10
-    if isinstance(obj, object.object):
+    if isinstance(obj, object.sysObject):
         objTypeLetter = 'o'
     elif isinstance(obj, object.user):
         objTypeLetter = 'u'
@@ -61,12 +61,12 @@ def generateGenericId(objList, obj):
             _ = listObj.tag["id"]
         except AttributeError:
             warnings.warn(print(
-                "while assigning a generic ID, an object in the list given was found without an ID\n does it have a "
+                "while assigning a generic ID, an sysObject in the list given was found without an ID\n does it have a "
                 "tag?",
                 listObjDoesNotHaveAnId))
         except KeyError:
             warnings.warn(print(
-                "while assigning a generic ID, an object in the list given was found without an ID\n does it have a "
+                "while assigning a generic ID, an sysObject in the list given was found without an ID\n does it have a "
                 "tag?",
                 listObjDoesNotHaveAnId))
         if listObj.tag["id"] is None:
@@ -84,7 +84,7 @@ def generateGenericId(objList, obj):
             if idFromObjProcessed >= genIdPreChk:
                 genIdPreChk = idFromObjProcessed + 1
     chkSumRes = genIdPreChk % 10
-    if isinstance(obj, object.object):
+    if isinstance(obj, object.sysObject):
         objTypeLetter = 'o'
     elif isinstance(obj, object.user):
         objTypeLetter = 'u'
@@ -136,7 +136,7 @@ def generateCaseId(caseList):
     return genId
 
 
-# a warning in case an object doesnt have an id
+# a warning in case an sysObject doesnt have an id
 # No attributes
 class listObjDoesNotHaveAnId(Warning):
     pass

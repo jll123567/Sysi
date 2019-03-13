@@ -1,4 +1,4 @@
-# Sub object grouping type
+# Sub sysObject grouping type
 # module type: def
 import object
 
@@ -8,18 +8,18 @@ import object
 # "sub": {"parent": [reference, offset], "children": [reference, ...]}
 
 # reference:objId
-# offset: is the distance of the  parent's position to the object's position in the format [x,y,z]
-# if an object has one child put it in a list by its self
-# if a object has no children but a prent leave "children" set to an empty list ([])
-# if a object has no parent set "parent" to None
-# if an object has neither children or a parent remove the "sub" entry or set it to None
+# offset: is the distance of the  parent's position to the sysObject's position in the format [x,y,z]
+# if an sysObject has one child put it in a list by its self
+# if a sysObject has no children but a prent leave "children" set to an empty list ([])
+# if a sysObject has no parent set "parent" to None
+# if an sysObject has neither children or a parent remove the "sub" entry or set it to None
 # children's move becomes child.mov = "sub"
 
 # ex parent: "sub": {"parent": None, "children": [child0]}
 # ex child: "sub": {"parent": [parent0, [1,1,1]], "children":[child1]}
 
 
-# Sub object
+# Sub sysObject
 # parent([objId(str), [x,y,z]]/None), children([obj]/[])
 class sub:
     def __init__(self, parent=None, children=None):
@@ -63,4 +63,4 @@ class sub:
 
 # Info at run
 if __name__ == "__main__":
-    print("Sub object grouping type\nmodule type: def")
+    print("Sub sysObject grouping type\nmodule type: def")

@@ -31,8 +31,8 @@ class trd:
         dta = object.data(self.lang.heard, {})
         self.ram.storage.append(dta)
 
-    # makes an object a child object of parent
-    # parent(object.object)*, offset([float, float, float])*
+    # makes an sysObject a child sysObject of parent
+    # parent(sysObject.sysObject)*, offset([float, float, float])*
     # none
     def makeChild(self, parent, offset):
         self.sub.parent = [parent, offset],
