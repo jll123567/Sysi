@@ -248,6 +248,9 @@ class data:
             self.tag = tag
         self.storage = storage
 
+    def update(self, storage):
+        self.storage = storage
+
 
 # spaces
 # origin in relation to supercont([supercont,x,y,z]), bounds[["h/s,x,y,z-x,y,z"], ...], tag({"id":(str), ...})
