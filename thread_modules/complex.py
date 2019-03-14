@@ -1,7 +1,7 @@
 # really basic area for problem solving
 # module type: def
 # [problem0, problem1], [solutions for 0,solutions for 1]
-import object
+import sys_objects
 
 
 # complex Thread module
@@ -34,7 +34,7 @@ class cpx:
     # none
     # dta(cpx attribs, tags)
     def package(self):
-        return object.data([self.problems, self.solutions], {"name": "tread.cpx.package", "id": None,
+        return sys_objects.data([self.problems, self.solutions], {"name": "tread.cpx.package", "id": None,
                                                              "dataType": "thread.cpx.package"})
 
 

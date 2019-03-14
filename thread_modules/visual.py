@@ -1,5 +1,5 @@
 """visual data and camera handling"""
-import object
+import sys_objects
 
 
 class vis:
@@ -49,7 +49,7 @@ class vis:
     # dta(vis attribs, tags)
     def package(self):
         """pack attributes into a data sysObject and return it"""
-        return object.data([self.rawImg, self.rx, self.ry, self.rz], {"name": "tread.vis.package", "id": None,
+        return sys_objects.data([self.rawImg, self.rx, self.ry, self.rz], {"name": "tread.vis.package", "id": None,
                                                                       "dataType": "thread.vis.package"})
 
 

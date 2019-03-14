@@ -4,7 +4,7 @@ audioStereo: stereo audio hold
 audioMono: mono audio hold
 lang: audio threadModule
 """
-import object
+import sys_objects
 
 
 # left input([int]), right input([int])
@@ -88,5 +88,5 @@ class lang:
 
     def package(self):
         """Pack audio data into a data obj and return it."""
-        return object.data([self.heard, self.speakQue], {"name": "tread.lang.package", "id": None,
+        return sys_objects.data([self.heard, self.speakQue], {"name": "tread.lang.package", "id": None,
                                                                  "dataType": "thread.lang.package"})

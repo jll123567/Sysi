@@ -1,16 +1,16 @@
 """don't mind me, just being dumb"""
 import CGE
-import object
+import sys_objects
 import thread_modules.ram
-a = object.sysObject()
+a = sys_objects.sysObject()
 a.tag["id"] = "a"
 a.trd.tsk.current = [["CSH", "crossWarp", ["S1"], a.tag["id"]]]
-e = object.sysObject()
+e = sys_objects.sysObject()
 e.tag["id"] = "e"
 e.trd.ram = thread_modules.ram.ram()
 e.trd.tsk.current = [["e.trd.tsk", "loopInf", [["e.trd.tsk", "wait", [0.01], e.tag["id"]]], e.tag["id"]]]
-c = CGE.CGESession("S0", [a], ["t", ""])
-d = CGE.CGESession("S1", [e], ["t", ""])
+c = CGE.CGESession("S0", [a], ["c", ""])
+d = CGE.CGESession("S1", [e], ["c", ""])
 b = CGE.CrossSessionHandler("CSH", [c, d])
 b.start()
 f = None

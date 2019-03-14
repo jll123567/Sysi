@@ -2,7 +2,7 @@
 # module type: def
 import re
 import hashlib
-import object
+import sys_objects
 
 
 # User memory
@@ -76,7 +76,7 @@ class mem:
 # dta(str[md5 Hash of obj])
 def saveObjHash(obj):
     info = obj
-    dta = object.data((hashlib.md5(info.encode('utf-8')).hexdigest()), obj.tag)
+    dta = sys_objects.data((hashlib.md5(info.encode('utf-8')).hexdigest()), obj.tag)
     return dta
 
 

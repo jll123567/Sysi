@@ -1,6 +1,6 @@
 # handles touch with two different classes. one for each point of contact and one to hold each point(node)
 # Module type: def
-import object
+import sys_objects
 
 
 # handles touch and feel
@@ -16,7 +16,7 @@ class tact:
         nodeList = []
         for node in self.snsNds:
             nodeList.append(node.flatten())
-        return object.data(nodeList, {"name": "tread.tact.package", "id": None, "dataType": "thread.tact.package"})
+        return sys_objects.data(nodeList, {"name": "tread.tact.package", "id": None, "dataType": "thread.tact.package"})
 
 
 # sensory nodes
@@ -34,7 +34,7 @@ class snsNode:
     # none
     # snsNode dta([pos, pres, reTmp], tags)
     def package(self):
-        return object.data(self.flatten(), {"name": "tread.tact.snsNode.package", "id": None,
+        return sys_objects.data(self.flatten(), {"name": "tread.tact.snsNode.package", "id": None,
                                             "dataType": "thread.tact.snsNode.package"})
 
     # flattens the node to a list

@@ -1,16 +1,16 @@
 # a set of pages for what sys is and how to use it, along with functions for adding more pages
 # module type: prog
 # from time import sleep
-import object
+import sys_objects
 
 # index page format:
 # dta([head,body,id],tags)
 
 
 # storage sysObject for pages
-index = object.data([object.data(["Hello, world!", "sysh V11.0 is here. :D", 0],
-                                 {'name': 'Hello, world!', 'terms': ['sys', 'Hello,world!', 'v11.0'], "id": None})],
-                    {"name": "index"})
+index = sys_objects.data([sys_objects.data(["Hello, world!", "sysh V11.0 is here. :D", 0],
+                                           {'name': 'Hello, world!', 'terms': ['sys', 'Hello,world!', 'v11.0'], "id": None})],
+                         {"name": "index"})
 
 
 # create a new page
@@ -23,7 +23,7 @@ def newPage(head, body, terms):
         if page.storage[2] > pageId:
             pageId = page.storage[2]
     pageId += 1
-    page = object.data([head, body, pageId], None)
+    page = sys_objects.data([head, body, pageId], None)
     page.tag.update({"id": ("idx" + str(pageId)), "terms": terms, "name": head})
     index.storage.append(page)
     print("added:\nsysObject.data([\"" + head + "\",\"" + body + "\"," + str(pageId) + "]," + str(page.tag) + ")")

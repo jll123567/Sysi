@@ -6,7 +6,7 @@ task > CGE
 CGE > sceneScript
 ["sender","target","operation",[parameters]]"""
 import re
-import object
+import sys_objects
 import warnings
 import prog.idGen as idGen
 import threading
@@ -108,7 +108,7 @@ class CGESession(threading.Thread):
         self.objList = objList
         self.runBehavior = runBehavior
         if savedScene is None:
-            self.savedScene = object.scene()
+            self.savedScene = sys_objects.scene()
         else:
             self.savedScene = savedScene
         if uniRules is None:

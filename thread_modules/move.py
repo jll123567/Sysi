@@ -1,5 +1,5 @@
 """movement and position tracking"""
-import object
+import sys_objects
 
 
 class mov:
@@ -117,6 +117,6 @@ class mov:
 
     def package(self):
         """pack attributes into a data sysObject and return it"""
-        return object.data([self.x, self.y, self.z, self.vx, self.vy, self.vz, self.rx,
-                            self.ry, self.rz, self.rvx, self.rvy, self.rvz],
-                           {"name": "tread.mov.package", "id": None, "dataType": "thread.mov.package"})
+        return sys_objects.data([self.x, self.y, self.z, self.vx, self.vy, self.vz, self.rx,
+                                 self.ry, self.rz, self.rvx, self.rvy, self.rvz],
+                                {"name": "tread.mov.package", "id": None, "dataType": "thread.mov.package"})

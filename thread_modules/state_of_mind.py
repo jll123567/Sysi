@@ -1,8 +1,8 @@
 """Classes for the stateOfMind system"""
-import object
+import sys_objects
 
 
-class state(object.data):
+class state(sys_objects.data):
     """an individual state,
     acts as a prs with a name encoded as a data
     """

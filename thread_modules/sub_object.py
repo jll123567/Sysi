@@ -1,6 +1,6 @@
 # Sub sysObject grouping type
 # module type: def
-import object
+import sys_objects
 
 # objects can be like groups without being groups
 # parent and child objects have a "sub" section in their thread_modules
@@ -57,7 +57,7 @@ class sub:
     # none
     # dta(sub attribs, tags)
     def package(self):
-        return object.data([self.parent, self.children], {"name": "tread.sub.package", "id": None,
+        return sys_objects.data([self.parent, self.children], {"name": "tread.sub.package", "id": None,
                                                           "dataType": "thread.sub.package"})
 
 

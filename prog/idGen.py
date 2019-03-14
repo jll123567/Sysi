@@ -1,6 +1,6 @@
 # id generation for objects
 # module type: prog
-import object
+import sys_objects
 import warnings
 
 
@@ -29,19 +29,19 @@ def generateUniversalId(uni, obj):
             if idFromObjProcessed >= genIdPreChk:
                 genIdPreChk = idFromObjProcessed + 1
     chkSumRes = genIdPreChk % 10
-    if isinstance(obj, object.sysObject):
+    if isinstance(obj, sys_objects.sysObject):
         objTypeLetter = 'o'
-    elif isinstance(obj, object.user):
+    elif isinstance(obj, sys_objects.user):
         objTypeLetter = 'u'
-    elif isinstance(obj, object.weapon):
+    elif isinstance(obj, sys_objects.weapon):
         objTypeLetter = 'w'
-    elif isinstance(obj, object.data):
+    elif isinstance(obj, sys_objects.data):
         objTypeLetter = 'd'
-    elif isinstance(obj, object.container):
+    elif isinstance(obj, sys_objects.container):
         objTypeLetter = 'c'
-    elif isinstance(obj, object.scene):
+    elif isinstance(obj, sys_objects.scene):
         objTypeLetter = 's'
-    elif isinstance(obj, object.universe):
+    elif isinstance(obj, sys_objects.universe):
         objTypeLetter = 'un'
     else:
         objTypeLetter = 'ol'
@@ -84,19 +84,19 @@ def generateGenericId(objList, obj):
             if idFromObjProcessed >= genIdPreChk:
                 genIdPreChk = idFromObjProcessed + 1
     chkSumRes = genIdPreChk % 10
-    if isinstance(obj, object.sysObject):
+    if isinstance(obj, sys_objects.sysObject):
         objTypeLetter = 'o'
-    elif isinstance(obj, object.user):
+    elif isinstance(obj, sys_objects.user):
         objTypeLetter = 'u'
-    elif isinstance(obj, object.weapon):
+    elif isinstance(obj, sys_objects.weapon):
         objTypeLetter = 'w'
-    elif isinstance(obj, object.data):
+    elif isinstance(obj, sys_objects.data):
         objTypeLetter = 'd'
-    elif isinstance(obj, object.container):
+    elif isinstance(obj, sys_objects.container):
         objTypeLetter = 'c'
-    elif isinstance(obj, object.scene):
+    elif isinstance(obj, sys_objects.scene):
         objTypeLetter = 's'
-    elif isinstance(obj, object.universe):
+    elif isinstance(obj, sys_objects.universe):
         objTypeLetter = 'un'
     else:
         objTypeLetter = 'o'

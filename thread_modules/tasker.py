@@ -1,7 +1,7 @@
 # tasker
 # module type: def
 import time
-import object
+import sys_objects
 
 
 # profile=[shift,shift,shift,...]
@@ -151,7 +151,7 @@ class tsk:
     # none
     # dta(tsk attribs, tags)
     def package(self):
-        return object.data([self.current, self.profile], {"name": "tread.tsk.package", "id": None,
+        return sys_objects.data([self.current, self.profile], {"name": "tread.tsk.package", "id": None,
                                                           "dataType": "thread.tsk.package"})
 
 

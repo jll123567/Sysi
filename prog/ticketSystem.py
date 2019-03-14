@@ -1,7 +1,7 @@
 # a small bug tracker like thing
 # module type: prog
 import error
-import object
+import sys_objects
 import prog.idGen
 
 # error queue(fill with err)
@@ -79,7 +79,7 @@ def caseFileCompiler(userId, userName, desc, packages=None):
         packages = []
     tags = {"dataType": "caseFile", "caseInfo": {"id": prog.idGen.generateCaseId(cases),
                                                  "userInfo": [userId, userName], "description": desc}}
-    dta = object.data()
+    dta = sys_objects.data()
     dta.storage = packages
     dta.tag.update(tags)
     return dta
@@ -98,7 +98,7 @@ def closeIssue(userId, idx):
 # exported queues(dta)
 def exportQueue():
     global inProgress, cases, errQueue
-    exp = object.data()
+    exp = sys_objects.data()
     exp.storage = [errQueue, inProgress, cases]
     return exp
 

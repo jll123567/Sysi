@@ -1,5 +1,5 @@
 """Define olf class."""
-import object
+import sys_objects
 
 
 class olf:
@@ -15,5 +15,5 @@ class olf:
 
     def package(self):
         """Pack olf data into a data sysObject(it needs an id) and return it."""
-        return object.data([self.descriptor, self.strength], {"name": "tread.olf.package", "id": None,
+        return sys_objects.data([self.descriptor, self.strength], {"name": "tread.olf.package", "id": None,
                                                               "dataType": "thread.olf.package"})

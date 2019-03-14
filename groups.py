@@ -1,6 +1,6 @@
 # obj groups
 # module type: def/std
-import object
+import sys_objects
 
 # group is a list of objects
 # groupType is a string desc by what objects are in the group (obj,usr,wep,cont,scn,uni,dta) + multi for many types
@@ -8,7 +8,7 @@ import object
 # groupRelevance is a string desc of why these objects are grouped(optional)
 
 
-class group(object.data):
+class group(sys_objects.data):
 
     # adds the groupSort and or groupRelevance tags (None for unused)
     # groupSort(groupSort tag)*, groupRelevance(groupRelevance)*
@@ -24,7 +24,7 @@ class group(object.data):
 # objList([obj])*, groupType(str)*, name(str)*
 # grp(group)
 def createGroup(objList, groupType, name):
-    grp = object.data(objList, {"name": name, "groupType": groupType, "id": None})
+    grp = sys_objects.data(objList, {"name": name, "groupType": groupType, "id": None})
     return grp
 
 
@@ -32,7 +32,7 @@ def createGroup(objList, groupType, name):
 # dta(valid Grp Dta)*, groupType(str)*, name(str)*
 # grp(group
 def makeGroup(dta, groupType, name):
-    grp = object.data(dta.storage, {"name": name, "groupType": groupType, "id": None})
+    grp = sys_objects.data(dta.storage, {"name": name, "groupType": groupType, "id": None})
     return grp
 
 

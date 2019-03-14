@@ -1,5 +1,5 @@
 """taste input for thread"""
-import object
+import sys_objects
 
 
 class taste:
@@ -17,5 +17,5 @@ class taste:
 
     def package(self):
         """pack taste into a data and return it"""
-        return object.data([self.bit, self.swt, self.slt, self.pln], {"name": "tread.olf.package",
+        return sys_objects.data([self.bit, self.swt, self.slt, self.pln], {"name": "tread.olf.package",
                                                                       "id": None, "dataType": "thread.olf.package"})

@@ -1,6 +1,6 @@
 # definition for trd attributes in obj
 # module type: def
-import object
+import sys_objects
 import thread_modules.tasker
 
 
@@ -28,7 +28,7 @@ class trd:
     # none
     # none
     def storeHeard(self):
-        dta = object.data(self.lang.heard, {})
+        dta = sys_objects.data(self.lang.heard, {})
         self.ram.storage.append(dta)
 
     # makes an sysObject a child sysObject of parent
