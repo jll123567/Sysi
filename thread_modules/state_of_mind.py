@@ -71,49 +71,50 @@ class SOMManger:
 # THEY MUST BE BOUND METHODS
 # Todo: explain type binding
 
-def changeSOMState(self, stateName, makePreviousDefault=True):
-    """change the current state of the StateOfMindManager and update the prs"""
-    SOMMangerInstance = self.trd.somm
-    SOMMangerInstance.currentStateName = stateName
-    if not matchName("Previous", SOMMangerInstance):
-        SOMMangerInstance.addState(SOMMangerInstance.newState("Previous", self.prs))
-    else:
-        SOMMangerInstance.states[SOMMangerInstance.resolveStateNameToIndex("Previous")].update(self.prs)
-    if makePreviousDefault:
-        SOMMangerInstance.makeDefault("Previous", "previousDefault")
-    self.prs = SOMMangerInstance.states[SOMMangerInstance.resolveStateNameToIndex("stateName")]
-    if not matchName("Current", SOMMangerInstance):
-        SOMMangerInstance.addState(SOMMangerInstance.newState("Current", self.prs))
-    else:
-        SOMMangerInstance.states[SOMMangerInstance.resolveStateNameToIndex("Current")].update(self.prs)
-    self.trd.somm = SOMMangerInstance
+class SOMObject(sys_objects.user):
 
+    def __init__(self):
+        super().__init__()
 
-def saveCurrentSOMState(self):
-    """save the current prs in the "Current" state """
-    if matchName("Current", self.trd.somm):
-        self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("previous")].update(self.prs)
-    else:
-        self.trd.somm.addState(self.trd.somm.newState("Current", self.prs))
+    def changeSOMState(self, stateName, makePreviousDefault=True):
+        """change the current state of the StateOfMindManager and update the prs"""
+        SOMManagerInstance = self.trd.somm
+        if not self.matchName("Previous", SOMManagerInstance):
+            SOMManagerInstance.addState(SOMManagerInstance.newState("Previous", self.prs))
+        else:
+            SOMManagerInstance.states[SOMManagerInstance.resolveStateNameToIndex("Previous")].update(self.prs)
+        if makePreviousDefault:
+            SOMManagerInstance.makeDefault("Previous", "previousDefault")
+        self.prs = SOMManagerInstance.states[SOMManagerInstance.resolveStateNameToIndex(stateName)].storage
+        if not self.matchName("Current", SOMManagerInstance):
+            SOMManagerInstance.addState(SOMManagerInstance.newState("Current", self.prs))
+        else:
+            SOMManagerInstance.states[SOMManagerInstance.resolveStateNameToIndex("Current")].update(self.prs)
+        self.trd.somm = SOMManagerInstance
 
+    def saveCurrentSOMState(self):
+        """save the current prs in the "Current" state """
+        if self.matchName("Current", self.trd.somm):
+            self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("previous")].update(self.prs)
+        else:
+            self.trd.somm.addState(self.trd.somm.newState("Current", self.prs))
 
-def revertSOMStateToDefault(self):
-    """set the prs to the "Default" state"""
-    self.prs = self.somm[self.somm.resolveStateNameToIndex("Default")]
-    self.trd.somm.makeCurrent("Default")
+    def revertSOMStateToDefault(self):
+        """set the prs to the "Default" state"""
+        self.prs = self.trd.somm[self.trd.somm.resolveStateNameToIndex("Default")]
+        self.trd.somm.makeCurrent("Default")
 
+    def revertSOMStateToPrevious(self):
+        """set the prs to the "Default" state"""
+        self.prs = self.trd.somm[self.trd.somm.resolveStateNameToIndex("Previous")]
+        self.trd.somm.makeCurrent("Previous")
 
-def revertSOMStateToPrevious(self):
-    """set the prs to the "Default" state"""
-    self.prs = self.somm[self.somm.resolveStateNameToIndex("Previous")]
-    self.trd.somm.makeCurrent("Previous")
-
-
-def matchName(stateName, SOMMInstance):
-    """return True if  stateName is in any state in SOMInstance
-    return False otherwise
-    """
-    for tmpState in SOMMInstance.states:
-        if tmpState.tag["stateName"] == stateName:
-            return True
-    return False
+    @staticmethod
+    def matchName(stateName, SOMMInstance):
+        """return True if  stateName is in any state in SOMInstance
+        return False otherwise
+        """
+        for tmpState in SOMMInstance.states:
+            if tmpState.tag["stateName"] == stateName:
+                return True
+        return False
