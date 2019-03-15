@@ -1,5 +1,6 @@
 """Classes for the stateOfMind system"""
 import sys_objects
+import attribs.personality as personality
 
 
 class state(sys_objects.data):
@@ -22,11 +23,17 @@ class state(sys_objects.data):
 class SOMManger:
     """holder of states to be referenced from the thread"""
 
-    def __init__(self, states=None):
+    def __init__(self, states=None, default=None, current=None, previous=None):
         if states is None:
             self.states = []
         else:
             self.states = states
+        if default is None:
+            self.states.append(state("Default", personality.prs()))
+        if current is None:
+            self.states.append(state("Current", personality.prs()))
+        if previous is None:
+            self.states.append(state("Previous", personality.prs()))
 
     @staticmethod
     def newState(stateName, prs, tag=None):
@@ -43,18 +50,25 @@ class SOMManger:
 
     def makeDefault(self, stateName, renameForCurrentDefault):
         """Rename the state with the name "Default" to renameForCurrentDefault and state with stateName to "Default" """
-        self.states[self.resolveStateNameToIndex("Default")].rename(renameForCurrentDefault)
+        if self.resolveStateNameToIndex("Default") is not None:
+            self.states[self.resolveStateNameToIndex("Default")].rename(renameForCurrentDefault)
         self.states[self.resolveStateNameToIndex(stateName)].rename("Default")
 
     def makePrevious(self, stateName, renameForPrevious):
         """Rename the state with the name "Previous" to renameForPrevious and state with stateName to "Previous" """
-        self.states[self.resolveStateNameToIndex("Previous")].rename(renameForPrevious)
+        if self.resolveStateNameToIndex("Previous") is not None:
+            self.states[self.resolveStateNameToIndex("Previous")].rename(renameForPrevious)
         self.states[self.resolveStateNameToIndex(stateName)].rename("Previous")
 
     def makeCurrent(self, stateName):
         """Rename the state with the name "Current" to renameForCurrent and state with stateName to "Current" """
-        self.states[self.resolveStateNameToIndex("Previous")].\
-            update(self.states[self.resolveStateNameToIndex("Current")].storage)
+        if self.resolveStateNameToIndex("Previous") is not None:
+            if self.resolveStateNameToIndex("Current") is not None:
+                self.states[self.resolveStateNameToIndex("Previous")].\
+                    update(self.states[self.resolveStateNameToIndex("Current")].storage)
+        else:
+            if self.resolveStateNameToIndex("Current") is not None:
+                self.addState(state("Previous", self.states[self.resolveStateNameToIndex("Current")].storage))
         self.states[self.resolveStateNameToIndex(stateName)].rename("Current")
 
     def resolveStateNameToIndex(self, stateName):
@@ -64,6 +78,8 @@ class SOMManger:
             if stateInstance.tag["stateName"] == stateName:
                 break
             idx += 1
+        if idx == self.states.__len__():
+            return None
         return idx
 
 
