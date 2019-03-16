@@ -1,29 +1,35 @@
-"""Classes for the stateOfMind system"""
+"""Classes for the stateOfMind system."""
 import sys_objects
 import attribs.personality as personality
 
 
 class state(sys_objects.data):
-    """an individual state,
-    acts as a prs with a name encoded as a data
-    """
+    """An individual state, acts as a prs with a name encoded as a data."""
     def __init__(self, stateName, prs, tag=None):
-        super().__init__(tag)
-        self.storage = prs
+        """stateName: string
+            prs: attribs.personality.prs
+            tag: dictionary
+        """
+        super().__init__(prs, tag)
         if tag is None:
             self.tag = {"id": None, "name": None, "dataType": "SOMState", "stateName": stateName}
         else:
             self.tag = tag
 
     def rename(self, newName):
-        """Change stateName of state with currentName to newName."""
+        """Change stateName of state to newName."""
         self.tag["stateName"] = newName
 
 
 class SOMManger:
-    """holder of states to be referenced from the thread"""
+    """Hold and modify states."""
 
     def __init__(self, states=None, default=None, current=None, previous=None):
+        """states: list
+            default: attribs.personality.prs
+            current: attribs.personality.prs
+            previous: attribs.personality.prs
+        """
         if states is None:
             self.states = []
         else:
@@ -43,7 +49,7 @@ class SOMManger:
 
     @staticmethod
     def newState(stateName, prs, tag=None):
-        """return a new instance of state"""
+        """Return a new instance of state."""
         return state(stateName, prs, tag)
 
     def addState(self, stateToAdd):
@@ -55,19 +61,26 @@ class SOMManger:
         self.states.pop(self.resolveStateNameToIndex(stateName))
 
     def makeDefault(self, stateName, renameForCurrentDefault):
-        """Rename the state with the name "Default" to renameForCurrentDefault and state with stateName to "Default" """
+        """Rename the state with the name "Default" to renameForCurrentDefault if possible.
+            Rename state with stateName to "Default".
+        """
         if self.resolveStateNameToIndex("Default") is not None:
             self.states[self.resolveStateNameToIndex("Default")].rename(renameForCurrentDefault)
         self.states[self.resolveStateNameToIndex(stateName)].rename("Default")
 
     def makePrevious(self, stateName, renameForPrevious):
-        """Rename the state with the name "Previous" to renameForPrevious and state with stateName to "Previous" """
+        """Rename the state with the name "Previous" to renameForPrevious if possible.
+            Rename state with stateName to "Previous".
+        """
         if self.resolveStateNameToIndex("Previous") is not None:
             self.states[self.resolveStateNameToIndex("Previous")].rename(renameForPrevious)
         self.states[self.resolveStateNameToIndex(stateName)].rename("Previous")
 
     def makeCurrent(self, stateName):
-        """Rename the state with the name "Current" to renameForCurrent and state with stateName to "Current" """
+        """Rename the state with the name "Current" to "Previous" and state with stateName to "Current".
+            Create Previous if it doesn't exist
+            Don't change Previous is Current doesn't exist.
+        """
         if self.resolveStateNameToIndex("Previous") is not None:
             if self.resolveStateNameToIndex("Current") is not None:
                 self.states[self.resolveStateNameToIndex("Previous")].\
@@ -78,7 +91,7 @@ class SOMManger:
         self.states[self.resolveStateNameToIndex(stateName)].rename("Current")
 
     def resolveStateNameToIndex(self, stateName):
-        """find and return the index of the state with the stateName stateName"""
+        """Find and return the index of the state with the stateName stateName."""
         idx = 0
         for stateInstance in self.states:
             if stateInstance.tag["stateName"] == stateName:
@@ -89,17 +102,19 @@ class SOMManger:
         return idx
 
 
-# ADD THESE FUNCTIONS TO YOUR OBJECT
-# THEY MUST BE BOUND METHODS
-# Todo: explain type binding
-
 class SOMObject(sys_objects.user):
 
     def __init__(self, mod=None, trd=None, prs=None, mem=None, tag=None):
+        """mod: attribs.model.*
+            trd: attribs.thread.trd
+            prs: attribs.personality.prs
+            mem: attribs.memory.mem
+            tag: dictionary
+        """
         super().__init__(mod, trd, prs, mem, tag)
 
     def changeSOMState(self, stateName, makePreviousDefault=True):
-        """change the current state of the StateOfMindManager and update the prs"""
+        """Change the current state of the StateOfMindManager and update the prs."""
         SOMManagerInstance = self.trd.somm
         if not self.matchName("Previous", SOMManagerInstance):
             SOMManagerInstance.addState(SOMManagerInstance.newState("Previous", self.prs))
@@ -115,26 +130,27 @@ class SOMObject(sys_objects.user):
         self.trd.somm = SOMManagerInstance
 
     def saveCurrentSOMState(self):
-        """save the current prs in the "Current" state """
+        """Save the current prs in the "Current" state or add it as "Current" if "Current" doesn't exist."""
         if self.matchName("Current", self.trd.somm):
             self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Current")].update(self.prs)
         else:
             self.trd.somm.addState(self.trd.somm.newState("Current", self.prs))
 
     def revertSOMStateToDefault(self):
-        """set the prs to the "Default" state"""
+        """Set the prs to the "Default" state."""
         self.prs = self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Default")].storage
         self.trd.somm.makeCurrent("Default")
 
     def revertSOMStateToPrevious(self):
-        """set the prs to the "Default" state"""
+        """Set the prs to the "Default" state."""
         self.prs = self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Previous")].storage
         self.trd.somm.makeCurrent("Previous")
 
     @staticmethod
     def matchName(stateName, SOMMInstance):
-        """return True if  stateName is in any state in SOMInstance
-        return False otherwise
+        """See if stateName is in any state in SOMInstance.
+            Return True if there is a match.
+            Return False otherwise.
         """
         for tmpState in SOMMInstance.states:
             if tmpState.tag["stateName"] == stateName:
