@@ -30,10 +30,16 @@ class SOMManger:
             self.states = states
         if default is None:
             self.states.append(state("Default", personality.prs()))
+        else:
+            self.states.append(state("Default", default))
         if current is None:
             self.states.append(state("Current", personality.prs()))
+        else:
+            self.states.append(state("Current", current))
         if previous is None:
             self.states.append(state("Previous", personality.prs()))
+        else:
+            self.states.append(state("Previous", previous))
 
     @staticmethod
     def newState(stateName, prs, tag=None):
@@ -89,8 +95,8 @@ class SOMManger:
 
 class SOMObject(sys_objects.user):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, mod=None, trd=None, prs=None, mem=None, tag=None):
+        super().__init__(mod, trd, prs, mem, tag)
 
     def changeSOMState(self, stateName, makePreviousDefault=True):
         """change the current state of the StateOfMindManager and update the prs"""
@@ -111,18 +117,18 @@ class SOMObject(sys_objects.user):
     def saveCurrentSOMState(self):
         """save the current prs in the "Current" state """
         if self.matchName("Current", self.trd.somm):
-            self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("previous")].update(self.prs)
+            self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Current")].update(self.prs)
         else:
             self.trd.somm.addState(self.trd.somm.newState("Current", self.prs))
 
     def revertSOMStateToDefault(self):
         """set the prs to the "Default" state"""
-        self.prs = self.trd.somm[self.trd.somm.resolveStateNameToIndex("Default")]
+        self.prs = self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Default")].storage
         self.trd.somm.makeCurrent("Default")
 
     def revertSOMStateToPrevious(self):
         """set the prs to the "Default" state"""
-        self.prs = self.trd.somm[self.trd.somm.resolveStateNameToIndex("Previous")]
+        self.prs = self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Previous")].storage
         self.trd.somm.makeCurrent("Previous")
 
     @staticmethod
