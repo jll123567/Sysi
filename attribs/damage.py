@@ -1,17 +1,20 @@
-# Definition for damage profile
-# ModType:Def
+"""Define for damage profile."""
 
 
-# Damage Profiles (wep.dmg)
-# damages = {attribute to modify: amount(int), ...}
 class dmg:
+    """Hold damages."""
+
     def __init__(self, damages=None):
+        """Damages: dictionary"""
         if damages is None:
             self.damages = {"health": 0}
         else:
             self.damages = damages
 
+    def newDamage(self, stat, amount):
+        """Add {stat: amount}."""
+        self.damages.update({stat: amount})
 
-# Info at run
-if __name__ == "__main__":
-    print("Definition for damage profile\nModType:Def")
+    def removeDamage(self, stat):
+        """Remove the first damage that modifies stat."""
+        self.damages.pop(stat)

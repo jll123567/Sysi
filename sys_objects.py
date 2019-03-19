@@ -158,7 +158,7 @@ class user(sysObject):
         dta = data([self.trd.ram.storage],
                    {"id": None, "name": storedRamName, "relevancy": [0, 0, storedRamImportance]})
         dta.tag["id"] = prog.idGen.generateGenericId(self.mem.real, dta)
-        self.mem.store(1, dta)
+        self.mem.addMemory(1, dta)
 
     # load a mem obj to ram
     # block(int[0-2])*, index(int)
@@ -213,7 +213,7 @@ class user(sysObject):
     # none
     def saveQueue(self, tags):
         lastQueue = data(self.trd.que, tags)
-        self.mem.store(1, lastQueue)
+        self.mem.addMemory(1, lastQueue)
         print("queue saved to: ", lastQueue, "@", self.tag["id"], ".mem.real")
 
 

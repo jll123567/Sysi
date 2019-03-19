@@ -1,17 +1,20 @@
-# Definition for user memory
-# module type: def
+"""Definition for user memory."""
 import re
 import hashlib
 import sys_objects
 
 
-# User memory
-# internal - for user created content
-# real - for recorded events
-# external - admin data pushing store
 class mem:
-    #
+    """Hold arbitrary copies of objects.
+        Functions requesting a block want an int between 0 and 2.
+            0 is for internal, 1 is for real, 2 is for external
+    """
+
     def __init__(self, internal=None, real=None, external=None):
+        """Internal: list
+            Real: list
+            External: list
+        """
         if internal is None:
             self.internal = []
         else:
@@ -25,34 +28,31 @@ class mem:
         else:
             self.external = external
 
-    # Removes memories
-    # block(int[0-2])*, index(int)*
-    # none
-    def forget(self, block, index):
+    def removeMemory(self, block, index):
+        """Remove the memory at block[index]."""
         if block == 0:
-            print("no internal forgetting")
+            self.internal.pop(index)
         elif block == 1:
             self.real.pop(index)
         else:
-            print("requires direct mod")
+            self.external.pop(index)
 
-    # adds a memory(obj)
-    # block(in[0-2])*, obj(any)*
-    # none
-    def store(self, block, obj):
+    def addMemory(self, block, obj):
+        """Add obj to mem at block."""
         if block == 0:
             self.internal.append(obj)
         elif block == 1:
             self.real.append(obj)
         else:
-            print("requires direct mod")
+            self.external.append(obj)
 
     # finds something that matched the query and prints it, if nothing is found, None is printed
     # query(str)
     # console output(str)
-    def find(self, query=None):
-        if query is None:
-            query = input()
+    def find(self, query=""):
+        """Print objects in mem that match query.
+            If nothing is found None is printed.
+        """
         for d in self.__dict__:
             for i in d:
                 if re.match(str(i), r"*(.)" + query + r"*(.)"):
@@ -60,26 +60,19 @@ class mem:
                 else:
                     print(None)
 
-    # modified a memory
-    # block(int[0-2])*, index(int)*, value(any)*
     def modify(self, block, index, value):
+        """Set the value at index in block in mem."""
         if block == 0:
-            print("no internal modify")
-        elif block == 1:
             self.internal[index] = value
+        elif block == 1:
+            self.real[index] = value
         else:
-            print("requires direct mod")
+            self.external[index] = value
 
 
-# gives an md5 hash of obj
-# obj(any)*
-# dta(str[md5 Hash of obj])
-def saveObjHash(obj):
+def hashObj(obj):
+    """Return the MD5 hash of obj"""
     info = obj
     dta = sys_objects.data((hashlib.md5(info.encode('utf-8')).hexdigest()), obj.tag)
     return dta
-
-
-# info at run
-if __name__ == "__main__":
-    print("Definition for user memory\nmodule type: def")
+# The reason I do this here is [None]
