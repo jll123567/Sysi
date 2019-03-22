@@ -1,7 +1,6 @@
 # coding=utf-8
 # sysObject type definitions
 # module type: def
-from random import randint
 import attribs
 from math import sqrt
 import error
@@ -34,38 +33,6 @@ class sysObject:
         # noinspection PyTypeChecker
         self.tag.update({"oldModel": oldModel})
         self.mod = "assem"
-
-    # damages the internal of obj (mem type only on usr)
-    # wep(wep)*
-    # none/ Console Output(str)
-    def internalDamage(self, wep):
-        for i in wep.dmg.damages:
-            if i[1] == "mem":
-                if isinstance(self, user):
-                    self.mem.real.pop(randint(0, self.mem.real.len()))
-
-            elif "trd" == i[1]:
-                self.trd.tsk.current = None
-            else:
-                print("unsupported")
-
-    # modifies the value of <stat>
-    # wep(wep)*, dmgIndex(int)*
-    # none/ Console Output(str)
-    def statDamage(self, wep, dmgIndex):
-        for key in self.tag["stat"].keys():
-            if key == wep.dmg.damages[dmgIndex][1]:
-                self.tag["stat"][key] -= wep.dmg[dmgIndex][0]
-            else:
-                print("obj does not have the stat ", wep.dmg[dmgIndex][1], " \nDid you misspell it?")
-
-    # remove health based on atk
-    # wep(wep)*
-    # none
-    def attack(self, wep):
-        for i in wep.dmg.damages:
-            if i[1] == "health":
-                self.tag["health"] -= i[0]
 
     # asks some questions to check if obj is a usr
     # console input
@@ -124,7 +91,7 @@ class sysObject:
         self.trd.mov.c = parentMov[5]
         self.trd.sub.parent = None
 
-    def reciveDamage(self, damage):
+    def receiveDamage(self, damage):
         """Apply changes described in damage to stat tag"""
         for stat in self.tag["stat"].keys():
             for dmg in damage.keys():
@@ -326,7 +293,7 @@ class universe:
         else:
             self.obj = obj
         # objlist
-        # [usr, wep, obj, dta]
+        # [usr, obj, dta]
         if cont is None:
             self.cont = []
         else:
