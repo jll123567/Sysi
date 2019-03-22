@@ -22,7 +22,7 @@ class sysObject:
         else:
             self.trd = trd
         if tag is None:
-            self.tag = {"id": None, "name": None}
+            self.tag = {"id": None, "name": None, "stat": {"hp": 100}}
         else:
             self.tag = tag
 
@@ -124,6 +124,13 @@ class sysObject:
         self.trd.mov.c = parentMov[5]
         self.trd.sub.parent = None
 
+    def reciveDamage(self, damage):
+        """Apply changes described in damage to stat tag"""
+        for stat in self.tag["stat"].keys():
+            for dmg in damage.keys():
+                if stat == dmg:
+                    self.tag["stat"][stat] += damage[dmg]
+
 
 # sysh.sysObject.user
 # model(any), thread(thread.trd), prs(personality.prs), memory(memory.mem) tag({"id":(str), ...})
@@ -147,7 +154,7 @@ class user(sysObject):
         else:
             self.mem = mem
         if tag is None:
-            self.tag = {"id": None, "name": None, "alias": []}
+            self.tag = {"id": None, "name": None, "alias": [], "stat": {"hp": 100}}
         else:
             self.tag = tag
 
@@ -215,29 +222,6 @@ class user(sysObject):
         lastQueue = data(self.trd.que, tags)
         self.mem.addMemory(1, lastQueue)
         print("queue saved to: ", lastQueue, "@", self.tag["id"], ".mem.real")
-
-
-# weapons
-# mod(any), thread(thread.trd), damage profile(damage.dmg), tag({"id":(str), ...})
-class weapon(sysObject):
-    def __init__(self, mod=None, trd=None, dmg=None, tag=None):
-        super().__init__(mod, trd, tag)
-        if mod is None:
-            self.mod = attribs.model.sysModel()
-        else:
-            self.mod = mod
-        if trd is None:
-            self.trd = attribs.thread.trd()
-        else:
-            self.trd = trd
-        if dmg is None:
-            self.dmg = attribs.damage.dmg()
-        else:
-            self.dmg = dmg
-        if tag is None:
-            self.tag = {"id": None, "name": None}
-        else:
-            self.tag = tag
 
 
 # packaged data

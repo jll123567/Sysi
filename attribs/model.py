@@ -13,7 +13,7 @@
 # note: parents have a model of "assem"(str)
 
 
-# sysh's own 3d model format
+# sysh's own 3d model format(why not?)
 # geom(model Geometry), skel(model skeleton points), ani(animations), mat(material definitions)
 class sysModel:
     def __init__(self, geom=None, skel=None, ani=None, mat=None):
