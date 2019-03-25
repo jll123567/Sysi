@@ -5,11 +5,11 @@ task > CGE
 ["target(obj name)", "operation", [parameters]]
 CGE > sceneScript
 ["sender","target","operation",[parameters]]"""
-import re
 import sys_objects
 import warnings
 import prog.idGen as idGen
 import threading
+import types
 
 
 class CrossSessionHandler(threading.Thread):
@@ -138,35 +138,13 @@ class CGESession(threading.Thread):
             self.savedScene.scp.append(["this", "addObj", [obj], "this"])
 
     @staticmethod
-    def getAttribList(obj):
-        """get a list of the attributes of obj"""
-        objDict = str(obj.__dict__.keys())
-        stringList = str(re.search(r"'.*'", objDict).group())
-        words = []
-        word = ''
-        for char in stringList:
-            if char == '\'' or char == "\"" or char == ' ':
-                continue
-            if char == ',':
-                words.append(word)
-                word = ''
-            else:
-                word += char
-        words.append(word)
-        return words
-
-    def getMethods(self, obj):
-        """get a list of all methods of obj"""
-        attribList = self.getAttribList(obj)
-        methodList = dir(obj)
-        finalList = []
-        for method in methodList:
-            if method[0] == '_':
-                continue
-            if method in attribList:
-                continue
-            finalList.append(method)
-        return finalList
+    def getMethods(obj):
+        """get a list of all methods and functions of obj"""
+        methodsList = []
+        for i in dir(obj):
+            if isinstance(getattr(obj, i), types.MethodType) or isinstance(getattr(obj, i), types.FunctionType):
+                methodsList.append(i)
+        return methodsList
 
     def getOperations(self):
         """get all operations from trd.tsk of all objects in self.objectList"""
@@ -232,7 +210,7 @@ class CGESession(threading.Thread):
 
             else:
                 if operation[1] not in self.getMethods(self.objList[self.resolveIdToIndex(operation[0])]):
-                    raise operationNotPossible(str(operation[1]) + "not in" + str(operation[0]) + "'s method list")
+                    raise operationNotPossible(str(operation[1]) + " not in " + str(operation[0]) + "'s method list")
         return True
 
     def performSelectedOperation(self, objId, method, sourceId, subObjectReference=None, parameters=None):
@@ -254,19 +232,19 @@ class CGESession(threading.Thread):
                 try:
                     getattr(self, method)(*parameters)
                 except:
-                    raise operationNotPossible("this, " + method + ',' + parameters)
+                    raise operationNotPossible("this, " + method + ',' + str(parameters))
 
         elif subObjectReference is None:
             if parameters.__len__() == 0:
                 try:
                     getattr(self.objList[self.resolveIdToIndex(objId)], method)()
                 except:
-                    raise operationNotPossible(objId + ',' + method + ',' + parameters)
+                    raise operationNotPossible(objId + ',' + method + ',' + str(parameters))
             else:
                 try:
                     getattr(self.objList[self.resolveIdToIndex(objId)], method)(*parameters)
                 except:
-                    raise operationNotPossible(objId + ',' + method + ',' + parameters)
+                    raise operationNotPossible(objId + ',' + method + ',' + str(parameters))
         else:
             subObj = self.unpackSubObjFromExtension(self.objList[self.resolveIdToIndex(objId)], subObjectReference)
             if parameters.__len__() == 0:
@@ -278,7 +256,7 @@ class CGESession(threading.Thread):
                 try:
                     getattr(subObj, method)(*parameters)
                 except:
-                    raise operationNotPossible(objId + ',' + method + ',' + parameters)
+                    raise operationNotPossible(objId + ',' + method + ',' + str(parameters))
             self.objList[self.resolveIdToIndex(objId)] = self.repackSubToFull(
                 self.objList[self.resolveIdToIndex(objId)], subObj, subObjectReference)
 
@@ -357,7 +335,6 @@ class CGESession(threading.Thread):
         for idx in range(0, self.objList.__len__()):
             if self.objList[idx].trd.tsk.profile.__len__() == 0:
                 objsEmpty += 1
-                continue
             try:
                 self.objList[idx].trd.tsk.nextCurrent()
             except AttributeError:
@@ -378,7 +355,8 @@ class CGESession(threading.Thread):
 
     def exportScene(self, tlInfo, name, universe):
         """export self.savedScene with timeline info from tlInfo, the scene name from name,
-         and an Id generated with universe"""
+            and an Id generated with universe
+        """
         self.savedScene.scp[0] = tlInfo
         self.savedScene.tag["name"] = name
         self.savedScene.tag["id"] = idGen.generateUniversalId(universe, self.savedScene)
@@ -386,7 +364,8 @@ class CGESession(threading.Thread):
 
     def update(self, saveToScene=False):
         """extract and operate on objects in self.objectList using the operations from the threads of said objects
-        may return a string if an issue occurred or something unexpected happened"""
+            may return a string if an issue occurred or something unexpected happened
+        """
         if not self.objList:
             return "No objects to process"
         objIdx = 0
@@ -399,7 +378,7 @@ class CGESession(threading.Thread):
                 # replace me to debug
                 continue
             if not isinstance(self.objList[objIdx].trd.tsk.current[0], list):
-                # I just fix crappy tsk code
+                # It just fixes crappy tsk code
                 self.objList[objIdx].trd.tsk.current[0] = [self.objList[objIdx].trd.tsk.current[0]]
             objIdx += 1
         operationList = self.getOperations()
@@ -437,19 +416,23 @@ class CGESession(threading.Thread):
     # use .start() NOT .run()
     def run(self):
         """obligatory Thread.run
-    runs update dependant on self.runBehavior"""
+    runs update dependant on self.runBehavior
+    """
         # continued
         if self.runBehavior[0] == 'c':
+            # runBehavior: ['c', <saveToScene(bool)>]
             while self.update(self.runBehavior[1]) != "No operations":
                 continue
                 # put this line back if you want to be annoyed
                 # print("1No operations left to preform\n stopping!")
         # goal
         elif self.runBehavior[0] == 'g':
+            # runBehavior: ['g', <objId(str)>, <comparator(str)>, <goal(str)> <subObjReference(str)>, <saveToScene(bool)>
             self.updateWithGoal(self.runBehavior[2], self.runBehavior[3], self.runBehavior[4], self.runBehavior[1],
                                 self.runBehavior[5])
         # iterations
         elif self.runBehavior[0] == 'i':
+            # runBehavior: ['i', <saveToScene(bool)>, <iterations(int)>
             while self.runBehavior[2] > 0:
                 self.update(self.runBehavior[1])
                 self.runBehavior[2] -= 1

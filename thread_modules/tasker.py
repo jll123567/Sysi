@@ -82,6 +82,11 @@ class tsk:
     def wait(t):
         time.sleep(t)
 
+    @staticmethod
+    def doNothing():
+        """this LITERALLY does NOTHING"""
+        pass
+
     # set the following shift to loop infinitely
     # shift(tskShift)
     # requires self
@@ -152,9 +157,13 @@ class tsk:
     # dta(tsk attribs, tags)
     def package(self):
         return sys_objects.data([self.current, self.profile], {"name": "tread.tsk.package", "id": None,
-                                                          "dataType": "thread.tsk.package"})
+                                                               "dataType": "thread.tsk.package"})
 
 
-# info at run
-if __name__ == "__main__":
-    print("tasker\nmodule type: def")
+def createOperation(targetId, function, parameters, sourceId):
+    """create an operation and return it"""
+    return [targetId, function, parameters, sourceId]
+
+
+def createSustainOperation(objId):
+    return createOperation(objId + ".trd.tsk", "loopInf", [createOperation(objId + ".trd.tsk", "doNothing", [], objId)], objId)
