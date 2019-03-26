@@ -1,16 +1,17 @@
-# definition for trd attributes in obj
-# module type: def
-import sys_objects
+"""Definition for trd attributes in obj"""
 import thread_modules.tasker
+import thread_modules.ram
 
 
-# def for thread obj ram(thread_modules.ram), tsk(thread_modules.tasker), que(thread_modules.queue),
-# mov(thread_modules.move), lang(thread_modules.language), cpx(thread_modules.complex), vis(thread_modules.visual),
-# transf(thread_modules.transfer), sub(thread_modules.subObject)
 class trd:
+    """Holds self and public accessible data for computation."""
     def __init__(self, ram=None, tsk=None, que=None, somm=None, mov=None, lang=None, cpx=None, vis=None,
                  transf=None, sub=None):
-        self.ram = ram
+        """Check each thread_modules class of the same name."""
+        if ram is None:
+            self.ram = thread_modules.ram.ram()
+        else:
+            self.ram = ram
         if tsk is None:
             self.tsk = thread_modules.tasker.tsk()
         else:
@@ -24,22 +25,13 @@ class trd:
         self.transf = transf
         self.sub = sub
 
-    # stores audio data to ram
-    # none
-    # none
     def storeHeard(self):
-        dta = sys_objects.data(self.lang.heard, {})
+        """Store audio data to ram."""
+        dta = self.lang.package()
         self.ram.storage.append(dta)
 
-    # makes an sysObject a child sysObject of parent
-    # parent(sysObject.sysObject)*, offset([float, float, float])*
-    # none
     def makeChild(self, parent, offset):
+        """Make a sysObject a child of <parent>"""
         self.sub.parent = [parent, offset],
         self.sub.children = []
         self.mov = "sub"
-
-
-# info at run
-if __name__ == "__main__":
-    print("definition for trd attributes in obj\nmodule type: def")
