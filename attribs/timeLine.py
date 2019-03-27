@@ -1,44 +1,45 @@
-# Timeline management
-# module type: attrib
+"""Timeline definition"""
+# TODO: cleanup this mess of a tl system
+# reason: object attributes should not be added and dropped on a per instance basis
+# suggested solution: use a dictionary
 
 
-# defines a timeline
-# master([int]), line([str, int, int], ...)
-# input
-#   masterLine(int)
 class timeline:
-    def __init__(self, masterLine=0):
-        self.master = [masterLine]
+    """Structure for defining the order of scenes.
+        Each attribute of a timeline(tl) is a line.
+        Each line has a lineName(its name) a parent an offset off of that parent and a length.
+        Master is an exception, it only has a length.
+    """
+    def __init__(self, masterLineLength=0):
+        """MasterLineLength: int"""
+        self.master = [masterLineLength]
 
-    # creates a fork
-    # lineId(int)*, parent(int)*, offset(int)*, endpoint(int)*
-    # none/console output(str)
-    def forkLine(self, lineId, parent, offset, endpoint):
-        setattr(self, lineId, [parent, offset, endpoint])
+    def forkLine(self, lineName, parent, offset, length):
+        """Create a new line with the following parameters."""
+        setattr(self, lineName, [parent, offset, length])
 
-    # remove a line
-    # lineId(str)
-    # none/ console output(str)
-    def removeLine(self, lineId):
-        if lineId is not "master":
-            delattr(self, lineId)
+    def removeLine(self, lineName):
+        """Remove the line with the Name <lineName>."""
+        if lineName is not "master":
+            delattr(self, lineName)
         else:
             print("you cannot remove master")
 
-    # add time to the end of a tl
-    # lineId(int)*, time to add(int)*
-    # none
-    def extendTl(self, lineId, timeToAdd):
-        newTime = getattr(self, lineId)
+    def extendTl(self, lineName, timeToAdd):
+        """Extend the length of the line <lineName> with <timeToAdd>."""
+        newTime = getattr(self, lineName)
         newTime[-1] += timeToAdd
-        setattr(self, lineId, newTime)
+        setattr(self, lineName, newTime)
 
     # get the total offset of a tl
-    # lineId(int)*, off(int)
+    # lineName(int)*, off(int)
     # offset(int)
-    def getTotalOffsetTl(self, lineId, off=0):
+    def getTotalOffsetTl(self, lineName, off=0):
+        """Recursively get and return the total offset of <lineName> from master.
+            Try not to touch <off>.
+        """
         for line in dir(self):
-            if line == lineId:
+            if line == lineName:
                 if line == "master":
                     return off
                 else:
@@ -46,17 +47,11 @@ class timeline:
                     return self.getTotalOffsetTl(getattr(self, line)[0], off)
 
 
-# remove all timeline data in a universe
-#   btw uni.tl will be set to None not timeline()
-# uni(uni)
-# formatted uni(uni)
 def fullTlRemoval(uni):
+    """Remove all timeline data in a universe.
+        Returns the modified universe.
+    """
     for idx in uni.scn.__len__():
         uni.scn[idx].unPlotTl()
     uni.tl = None
     return uni
-
-
-# info at run
-if __name__ == "__main__":
-    print("Timeline management\nmodule type: attrib")
