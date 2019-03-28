@@ -49,3 +49,18 @@
 #
 # compact
 # CURRENT{SHIFT{OPERATION{a,print,["Hello, World!"],a,}}}
+#
+# Steps
+#     read file
+#     remove whitespace
+#     parse for profile / current
+#         prep read
+#         recurse shifts
+#         output tsk
+#     parse shift
+#         recurse operations
+#         output shift
+#     parse operations
+#         output operation
+#
+# script from shell???
