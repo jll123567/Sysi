@@ -69,7 +69,7 @@ import re
 # script from shell???
 
 def removeWhitespace(fileContents):
-    """remove all whitespace characters from <fileContents> unless its in brackets; returns the formatted text."""
+    """Remove all whitespace characters from <fileContents> unless its in brackets; returns the formatted text."""
     bracketSearch = False
     formattedContent = ""
     for char in fileContents:
@@ -87,3 +87,9 @@ def removeWhitespace(fileContents):
         else:
             formattedContent += char
     return formattedContent
+
+
+def formatOperation(text):
+    """"""
+    formattedOperation = ""
+    return formattedOperation
