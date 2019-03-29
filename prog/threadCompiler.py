@@ -1,3 +1,6 @@
+import re
+
+
 # OPERATION{
 #     Target, Method, Prams, Source
 # }
@@ -64,3 +67,23 @@
 #         output operation
 #
 # script from shell???
+
+def removeWhitespace(fileContents):
+    """remove all whitespace characters from <fileContents> unless its in brackets; returns the formatted text."""
+    bracketSearch = False
+    formattedContent = ""
+    for char in fileContents:
+        if bracketSearch:
+            if re.match(r"\]", char):
+                formattedContent += char
+                bracketSearch = False
+            else:
+                formattedContent += char
+        elif re.match(r"\s", char):
+            continue
+        elif re.match(r"\[", char):
+            formattedContent += char
+            bracketSearch = True
+        else:
+            formattedContent += char
+    return formattedContent
