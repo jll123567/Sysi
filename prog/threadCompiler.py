@@ -90,6 +90,53 @@ def removeWhitespace(fileContents):
 
 
 def formatOperation(text):
-    """"""
+    """Format <text> to be a valid operation."""
     formattedOperation = ""
+    mode = "start"
+    temp = ""
+    bracketCount = 0
+    for char in text:
+        if mode == "start":
+            if char == "{":
+                formattedOperation += '['
+                mode = "trg"
+        elif mode == "trg":
+            if char == ',':
+                formattedOperation += ('"' + temp + "\",")
+                mode = "mthd"
+                temp = ""
+            else:
+                temp += char
+        elif mode == "mthd":
+            if char == ',':
+                formattedOperation += ('"' + temp + "\",")
+                mode = "pram"
+                temp = ""
+            else:
+                temp += char
+        elif mode == "pram":
+            if bracketCount < 0:
+                pass
+                # raise ThreadCodeSyntaxError
+            if char == '[':
+                bracketCount += 1
+                temp += char
+            elif char == "]":
+                bracketCount -= 1
+                temp += char
+            elif bracketCount == 0 and char == ',':
+                formattedOperation += (temp + ',')
+                mode = "src"
+                temp = ""
+            else:
+                temp += char
+        elif mode == "src":
+            if char == '}':
+                formattedOperation += ('"' + temp + "\"]")
+                break
+            else:
+                temp += char
+        else:
+            pass
+            # raise GenericErr
     return formattedOperation
