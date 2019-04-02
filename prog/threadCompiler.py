@@ -140,3 +140,36 @@ def formatOperation(text):
             pass
             # raise GenericErr
     return formattedOperation
+
+
+def formatShift(text):
+    """Format the SHIFT in <text> and return it."""
+    outputText = "["
+    bracketCount = 0
+    opList = []
+    for shifter in range(0, text.__len__()):
+        if text[shifter] == '[':
+            bracketCount += 1
+        if bracketCount == 0:
+            if text[shifter: shifter + 9] == "OPERATION{":
+                temp = "OPERATION{"
+                subBracketCount = 0
+                for subShifter in range(shifter + 9, text.__len__() - (shifter + 9)):
+                    if text[subShifter] == '[':
+                        subBracketCount += 1
+
+                    elif text[subShifter] == ']':
+                        subBracketCount -= 1
+                    temp += text[subShifter]
+                    if text[subShifter] == '}' and subBracketCount == 0:
+                        opList.append(temp[:-1])
+                        break
+        elif text[shifter] == ']':
+            bracketCount -= 1
+    for opIndex in range(0, opList.__len__()):
+        if opIndex == opList.__len__():
+            outputText += (opList[opIndex])
+        else:
+            outputText += opList[opIndex]
+    outputText += ']'
+    return outputText
