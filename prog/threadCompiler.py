@@ -151,18 +151,17 @@ def formatShift(text):
         if text[shifter] == '[':
             bracketCount += 1
         if bracketCount == 0:
-            if text[shifter: shifter + 9] == "OPERATION{":
+            if text[shifter:shifter + 10] == "OPERATION{":
                 temp = "OPERATION{"
                 subBracketCount = 0
-                for subShifter in range(shifter + 9, text.__len__() - (shifter + 9)):
+                for subShifter in range(shifter + 10, text.__len__()):
                     if text[subShifter] == '[':
                         subBracketCount += 1
-
                     elif text[subShifter] == ']':
                         subBracketCount -= 1
                     temp += text[subShifter]
                     if text[subShifter] == '}' and subBracketCount == 0:
-                        opList.append(temp[:-1])
+                        opList.append(formatOperation(temp))
                         break
         elif text[shifter] == ']':
             bracketCount -= 1
@@ -171,5 +170,37 @@ def formatShift(text):
             outputText += (opList[opIndex])
         else:
             outputText += opList[opIndex]
+    outputText += ']'
+    return outputText
+
+
+def formatTskAtribs(text):
+    """Format the PROFILE in <text> and return it."""
+    outputText = "["
+    bracketCount = 0
+    shiftList = []
+    for shifter in range(0, text.__len__()):
+        if text[shifter] == '[':
+            bracketCount += 1
+        if bracketCount == 0:
+            if text[shifter:shifter + 6] == "SHIFT{":
+                temp = "SHIFT{"
+                subBracketCount = 0
+                for subShifter in range(shifter + 6, text.__len__()):
+                    if text[subShifter] == '[':
+                        subBracketCount += 1
+                    elif text[subShifter] == ']':
+                        subBracketCount -= 1
+                    temp += text[subShifter]
+                    if text[subShifter] == '}' and subBracketCount == 0:
+                        shiftList.append(formatShift(temp))
+                        break
+        elif text[shifter] == ']':
+            bracketCount -= 1
+    for opIndex in range(0, shiftList.__len__()):
+        if opIndex == shiftList.__len__():
+            outputText += (shiftList[opIndex])
+        else:
+            outputText += shiftList[opIndex]
     outputText += ']'
     return outputText

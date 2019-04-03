@@ -2,4 +2,4 @@
 # TODO: make a "programming language" for tsk operations. Something simple.
 import re
 import prog.threadCompiler as threadComp
-print(threadComp.formatOperation("OPERATION{abc,123,[\"ok\", \"what now?\"],succeed}"))
+print(threadComp.formatTskAtribs("PROFILE{SHIFT{OPERATION{a,b,[c],d}}}"))
