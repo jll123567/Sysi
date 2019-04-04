@@ -1,4 +1,5 @@
 import re
+from thread_modules.tasker import tsk
 
 
 # OPERATION{
@@ -204,3 +205,65 @@ def formatTskAtribs(text):
             outputText += shiftList[opIndex]
     outputText += ']'
     return outputText
+
+
+def parseFile(file):
+    """
+    :type file: str
+    """
+    # blah blah add filesystem use later
+    outputTrd = None
+    outputText = None
+    if "PROFILE" in file or "CURRENT" in file:
+        outputTrd = tsk()
+        bracketCount = 0
+        for shifter in range(0, file.__len__()):
+            if file[shifter] == '[':
+                bracketCount += 1
+            elif file[shifter] == ']':
+                bracketCount -= 1
+            if bracketCount == 0:
+                if file[shifter: shifter + 8] == "CURRENT{":
+                    braceCount = 1
+                    subBracketCount = 0
+                    temp = "CURRENT{"
+                    for subShift in (shifter + 8, file.__len__()):
+                        if file[shifter] == '[':
+                            bracketCount += 1
+                        elif file[shifter] == ']':
+                            bracketCount -= 1
+                        if subBracketCount == 0:
+                            if file[subShift] == '{':
+                                bracketCount += 1
+                            elif file[subShift] == '}':
+                                bracketCount -= 1
+                        temp += file[subShift]
+                        if braceCount == 0:
+                            outputTrd.current = formatTskAtribs(temp)
+                    if file[shifter: shifter + 8] == "PROFILE{":
+                        braceCount = 1
+                        subBracketCount = 0
+                        temp = "PROFILE{"
+                        for subShift in (shifter + 8, file.__len__()):
+                            if file[shifter] == '[':
+                                bracketCount += 1
+                            elif file[shifter] == ']':
+                                bracketCount -= 1
+                            if subBracketCount == 0:
+                                if file[subShift] == '{':
+                                    bracketCount += 1
+                                elif file[subShift] == '}':
+                                    bracketCount -= 1
+                            temp += file[subShift]
+                            if braceCount == 0:
+                                outputTrd.profile = formatTskAtribs(temp)
+        else:
+            outputText = formatTskAtribs("PROFILE{" + file + "}")
+
+        if outputTrd is not None:
+            return outputTrd
+        elif outputText is not None:
+            return outputText
+        else:
+            # raise UnknownErr
+            return None
