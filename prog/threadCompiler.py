@@ -148,14 +148,14 @@ def formatShift(text):
     outputText = "["
     bracketCount = 0
     opList = []
-    for shifter in range(0, text.__len__()):
+    for shifter in range(0, text.__len__()-1):
         if text[shifter] == '[':
             bracketCount += 1
         if bracketCount == 0:
             if text[shifter:shifter + 10] == "OPERATION{":
                 temp = "OPERATION{"
                 subBracketCount = 0
-                for subShifter in range(shifter + 10, text.__len__()):
+                for subShifter in range(shifter + 10, text.__len__()-1):
                     if text[subShifter] == '[':
                         subBracketCount += 1
                     elif text[subShifter] == ']':
@@ -166,8 +166,8 @@ def formatShift(text):
                         break
         elif text[shifter] == ']':
             bracketCount -= 1
-    for opIndex in range(0, opList.__len__()):
-        if opIndex == opList.__len__():
+    for opIndex in range(0, opList.__len__()-1):
+        if opIndex == opList.__len__()-1:
             outputText += (opList[opIndex])
         else:
             outputText += opList[opIndex]
@@ -180,14 +180,14 @@ def formatTskAtribs(text):
     outputText = "["
     bracketCount = 0
     shiftList = []
-    for shifter in range(0, text.__len__()):
+    for shifter in range(0, text.__len__()-1):
         if text[shifter] == '[':
             bracketCount += 1
         if bracketCount == 0:
             if text[shifter:shifter + 6] == "SHIFT{":
                 temp = "SHIFT{"
                 subBracketCount = 0
-                for subShifter in range(shifter + 6, text.__len__()):
+                for subShifter in range(shifter + 6, text.__len__()-1):
                     if text[subShifter] == '[':
                         subBracketCount += 1
                     elif text[subShifter] == ']':
@@ -198,8 +198,8 @@ def formatTskAtribs(text):
                         break
         elif text[shifter] == ']':
             bracketCount -= 1
-    for opIndex in range(0, shiftList.__len__()):
-        if opIndex == shiftList.__len__():
+    for opIndex in range(0, shiftList.__len__()-1):
+        if opIndex == shiftList.__len__()-1:
             outputText += (shiftList[opIndex])
         else:
             outputText += shiftList[opIndex]
@@ -212,58 +212,70 @@ def parseFile(file):
     :type file: str
     """
     # blah blah add filesystem use later
+    file = removeWhitespace(file)
+    print("rmWhite:\n", file)
     outputTrd = None
     outputText = None
+    profileSet = False
+    currentSet = False
+    print("PROFILE" in file or "CURRENT" in file)
     if "PROFILE" in file or "CURRENT" in file:
+        print("PROF/CURR:\n")
         outputTrd = tsk()
         bracketCount = 0
-        for shifter in range(0, file.__len__()):
+        for shifter in range(0, file.__len__()-1):
             if file[shifter] == '[':
                 bracketCount += 1
             elif file[shifter] == ']':
                 bracketCount -= 1
             if bracketCount == 0:
-                if file[shifter: shifter + 8] == "CURRENT{":
+                if file[shifter: shifter + 8] == "CURRENT{" and not currentSet:
+                    currentSet = True
                     braceCount = 1
                     subBracketCount = 0
                     temp = "CURRENT{"
-                    for subShift in (shifter + 8, file.__len__()):
+                    for subShift in range(shifter + 8, file.__len__()-1):
                         if file[shifter] == '[':
                             bracketCount += 1
                         elif file[shifter] == ']':
                             bracketCount -= 1
                         if subBracketCount == 0:
                             if file[subShift] == '{':
-                                bracketCount += 1
+                                braceCount += 1
                             elif file[subShift] == '}':
-                                bracketCount -= 1
+                                braceCount -= 1
                         temp += file[subShift]
                         if braceCount == 0:
                             outputTrd.current = formatTskAtribs(temp)
-                    if file[shifter: shifter + 8] == "PROFILE{":
-                        braceCount = 1
-                        subBracketCount = 0
-                        temp = "PROFILE{"
-                        for subShift in (shifter + 8, file.__len__()):
-                            if file[shifter] == '[':
-                                bracketCount += 1
-                            elif file[shifter] == ']':
-                                bracketCount -= 1
-                            if subBracketCount == 0:
-                                if file[subShift] == '{':
-                                    bracketCount += 1
-                                elif file[subShift] == '}':
-                                    bracketCount -= 1
-                            temp += file[subShift]
-                            if braceCount == 0:
-                                outputTrd.profile = formatTskAtribs(temp)
-        else:
-            outputText = formatTskAtribs("PROFILE{" + file + "}")
+                if file[shifter: shifter + 8] == "PROFILE{" and not profileSet:
+                    profileSet = True
+                    braceCount = 1
+                    subBracketCount = 0
+                    temp = "PROFILE{"
 
-        if outputTrd is not None:
-            return outputTrd
-        elif outputText is not None:
-            return outputText
-        else:
-            # raise UnknownErr
-            return None
+                    for subShift in range(shifter + 8, file.__len__()-1):
+                        print(temp, ':', file[subShift])
+                        if file[shifter] == '[':
+                            bracketCount += 1
+                        elif file[shifter] == ']':
+                            bracketCount -= 1
+                        if subBracketCount == 0:
+                            if file[subShift] == '{':
+                                braceCount += 1
+                            elif file[subShift] == '}':
+                                braceCount -= 1
+                        temp += file[subShift]
+                        if braceCount == 0:
+                            print(temp)
+                            outputTrd.profile = formatTskAtribs(temp)
+    else:
+        print("SHIFT:\n", file)
+        outputText = formatTskAtribs("PROFILE{" + file + "}")
+
+    if outputTrd is not None:
+        return outputTrd
+    elif outputText is not None:
+        return outputText
+    else:
+        # raise UnknownErr
+        return None
