@@ -210,63 +210,60 @@ def formatTskAtribs(text):
 
 def parseFile(file):
     """take a file and parse it for thread code, returning any found"""
-    # blah blah add filesystem use later
-    file = removeWhitespace(file)
+    fileData = open(file, 'r').read()
+    fileData = removeWhitespace(fileData)
     outputTrd = None
     outputText = None
     profileSet = False
     currentSet = False
-
-    if "PROFILE" in file or "CURRENT" in file:
-
+    if "PROFILE" in fileData or "CURRENT" in fileData:
         outputTrd = tsk()
         bracketCount = 0
-        for shifter in range(0, file.__len__()-1):
-            if file[shifter] == '[':
+        for shifter in range(0, fileData.__len__() - 1):
+            if fileData[shifter] == '[':
                 bracketCount += 1
-            elif file[shifter] == ']':
+            elif fileData[shifter] == ']':
                 bracketCount -= 1
             if bracketCount == 0:
-                if file[shifter: shifter + 8] == "CURRENT{" and not currentSet:
+                if fileData[shifter: shifter + 8] == "CURRENT{" and not currentSet:
                     currentSet = True
                     braceCount = 1
                     subBracketCount = 0
                     temp = "CURRENT{"
-                    for subShift in range(shifter + 8, file.__len__()):
-
-                        if file[subShift] == '[':
+                    for subShift in range(shifter + 8, fileData.__len__()):
+                        if fileData[subShift] == '[':
                             subBracketCount += 1
-                        elif file[subShift] == ']':
+                        elif fileData[subShift] == ']':
                             subBracketCount -= 1
                         if subBracketCount == 0:
-                            if file[subShift] == '{':
+                            if fileData[subShift] == '{':
                                 braceCount += 1
-                            elif file[subShift] == '}':
+                            elif fileData[subShift] == '}':
                                 braceCount -= 1
-                        temp += file[subShift]
+                        temp += fileData[subShift]
                         if braceCount == 0:
                             temp += '}'
                             outputTrd.current = formatTskAtribs(temp)
-                if file[shifter: shifter + 8] == "PROFILE{" and not profileSet:
+                if fileData[shifter: shifter + 8] == "PROFILE{" and not profileSet:
                     profileSet = True
                     braceCount = 1
                     subBracketCount = 0
                     temp = "PROFILE{"
-                    for subShift in range(shifter + 8, file.__len__()):
-                        if file[subShift] == '[':
+                    for subShift in range(shifter + 8, fileData.__len__()):
+                        if fileData[subShift] == '[':
                             subBracketCount += 1
-                        elif file[subShift] == ']':
+                        elif fileData[subShift] == ']':
                             subBracketCount -= 1
                         if subBracketCount == 0:
-                            if file[subShift] == '{':
+                            if fileData[subShift] == '{':
                                 braceCount += 1
-                            elif file[subShift] == '}':
+                            elif fileData[subShift] == '}':
                                 braceCount -= 1
-                        temp += file[subShift]
+                        temp += fileData[subShift]
                         if braceCount == 0:
                             outputTrd.profile = formatTskAtribs(temp)
     else:
-        outputText = formatTskAtribs("PROFILE{" + file + "}")
+        outputText = formatTskAtribs("PROFILE{" + fileData + "}")
     if outputTrd is not None:
         return outputTrd
     elif outputText is not None:

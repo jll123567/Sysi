@@ -2,7 +2,7 @@
 # TODO: make a "programming language" for tsk operations. Something simple.
 import prog.threadCompiler as threadComp
 import thread_modules.tasker
-a = threadComp.parseFile("PROFILE{SHIFT{\nOPERATION{ a, b, [\"PROFILE{\"], d}\n}}")
+a = threadComp.parseFile("f.txt")
 print(a)
 if isinstance(a, thread_modules.tasker.tsk):
     print("profile:\n\t", a.profile)
