@@ -117,8 +117,7 @@ def formatOperation(text):
                 temp += char
         elif mode == "pram":
             if bracketCount < 0:
-                pass
-                # raise ThreadCodeSyntaxError
+                raise ThreadCodeSyntaxError(text, "Too many closing brackets.")
             if char == '[':
                 bracketCount += 1
                 temp += char
@@ -139,7 +138,7 @@ def formatOperation(text):
                 temp += char
         else:
             pass
-            # raise GenericErr
+            raise UnknownError()
     return formattedOperation
 
 
@@ -148,24 +147,30 @@ def formatShift(text):
     outputText = "["
     bracketCount = 0
     opList = []
-    for shifter in range(0, text.__len__()-1):
+    for shifter in range(0, text.__len__() - 1):
         if text[shifter] == '[':
             bracketCount += 1
         elif text[shifter] == ']':
             bracketCount -= 1
+        if bracketCount < 0:
+            raise ThreadCodeSyntaxError(text, "Too many closing brackets.")
         if bracketCount == 0:
             if text[shifter:shifter + 10] == "OPERATION{":
                 temp = "OPERATION{"
                 subBracketCount = 0
-                for subShifter in range(shifter + 10, text.__len__()-1):
+                for subShifter in range(shifter + 10, text.__len__() - 1):
                     if text[subShifter] == '[':
                         subBracketCount += 1
                     elif text[subShifter] == ']':
                         subBracketCount -= 1
+                    if subBracketCount < 0:
+                        raise ThreadCodeSyntaxError(text, "Too many closing brackets.")
                     temp += text[subShifter]
                     if text[subShifter] == '}' and subBracketCount == 0:
                         opList.append(formatOperation(temp))
                         break
+    if opList.__len__() == 0:
+        raise ThreadCodeSyntaxError(text, "No operations were found in the shift.")
     for opIndex in range(0, opList.__len__()):
         outputText += opList[opIndex]
     outputText += ']'
@@ -177,7 +182,7 @@ def formatTskAtribs(text):
     outputText = "["
     bracketCount = 0
     shiftList = []
-    for shifter in range(0, text.__len__()-1):
+    for shifter in range(0, text.__len__() - 1):
         if text[shifter] == '[':
             bracketCount += 1
         if bracketCount == 0:
@@ -185,23 +190,30 @@ def formatTskAtribs(text):
                 temp = "SHIFT{"
                 subBracketCount = 0
                 braceCount = 1
-                for subShifter in range(shifter + 6, text.__len__()-1):
+                for subShifter in range(shifter + 6, text.__len__() - 1):
                     if text[subShifter] == '[':
                         subBracketCount += 1
                     elif text[subShifter] == ']':
                         subBracketCount -= 1
+                    if subBracketCount < 0:
+                        raise ThreadCodeSyntaxError(text, "Too many closing brackets.")
                     if subBracketCount == 0:
                         if text[subShifter] == '{':
                             braceCount += 1
                         elif text[subShifter] == '}':
                             braceCount -= 1
+                        if braceCount < 0:
+                            raise ThreadCodeSyntaxError(text, "Too many closing braces.")
                     temp += text[subShifter]
                     if braceCount == 0 and subBracketCount == 0:
-
                         shiftList.append(formatShift(temp))
                         break
         elif text[shifter] == ']':
             bracketCount -= 1
+        if bracketCount < 0:
+            raise ThreadCodeSyntaxError(text, "Too many closing brackets.")
+    if shiftList.__len__() == 0:
+        raise ThreadCodeSyntaxError(text, "No shifts were submitted.")
     for opIndex in range(0, shiftList.__len__()):
         outputText += shiftList[opIndex]
     outputText += ']'
@@ -224,6 +236,8 @@ def parseFile(file):
                 bracketCount += 1
             elif fileData[shifter] == ']':
                 bracketCount -= 1
+            if bracketCount < 0:
+                raise ThreadCodeSyntaxError(fileData, "Too many closing brackets.")
             if bracketCount == 0:
                 if fileData[shifter: shifter + 8] == "CURRENT{" and not currentSet:
                     currentSet = True
@@ -235,11 +249,15 @@ def parseFile(file):
                             subBracketCount += 1
                         elif fileData[subShift] == ']':
                             subBracketCount -= 1
+                        if subBracketCount < 0:
+                            raise ThreadCodeSyntaxError(fileData, "Too many closing brackets.")
                         if subBracketCount == 0:
                             if fileData[subShift] == '{':
                                 braceCount += 1
                             elif fileData[subShift] == '}':
                                 braceCount -= 1
+                            if braceCount < 0:
+                                raise ThreadCodeSyntaxError(fileData, "Too many closing braces.")
                         temp += fileData[subShift]
                         if braceCount == 0:
                             temp += '}'
@@ -254,11 +272,15 @@ def parseFile(file):
                             subBracketCount += 1
                         elif fileData[subShift] == ']':
                             subBracketCount -= 1
+                        if subBracketCount < 0:
+                            raise ThreadCodeSyntaxError(fileData, "Too many closing brackets.")
                         if subBracketCount == 0:
                             if fileData[subShift] == '{':
                                 braceCount += 1
                             elif fileData[subShift] == '}':
                                 braceCount -= 1
+                            if braceCount < 0:
+                                raise ThreadCodeSyntaxError(fileData, "Too many closing braces.")
                         temp += fileData[subShift]
                         if braceCount == 0:
                             outputTrd.profile = formatTskAtribs(temp)
@@ -269,5 +291,15 @@ def parseFile(file):
     elif outputText is not None:
         return outputText
     else:
-        # raise UnknownErr
-        return None
+        raise UnknownError()
+
+
+class ThreadCodeSyntaxError(Exception):
+    def __init__(self, expression, badSyntaxType):
+        self.message = "The following is incorrect syntax: " + str(badSyntaxType)
+        self.expression = expression
+
+
+class UnknownError(Exception):
+    def __init__(self):
+        self.message = "Something went horribly wrong in the thread compiler!"
