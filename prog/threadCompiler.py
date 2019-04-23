@@ -77,14 +77,14 @@ def removeWhitespace(fileContents):
     formattedContent = ""
     for char in fileContents:
         if bracketSearch:
-            if re.match(r"\]", char):
+            if char == "]":
                 formattedContent += char
                 bracketSearch = False
             else:
                 formattedContent += char
         elif re.match(r"\s", char):
             continue
-        elif re.match(r"\[", char):
+        elif char == "[":
             formattedContent += char
             bracketSearch = True
         else:
@@ -94,131 +94,28 @@ def removeWhitespace(fileContents):
 
 def formatOperation(text):
     """Format <text> to be a valid operation."""
-    formattedOperation = ""
-    mode = "start"
-    temp = ""
-    bracketCount = 0
-    for char in text:
-        if mode == "start":
-            if char == "{":
-                formattedOperation += '['
-                mode = "trg"
-        elif mode == "trg":
-            if char == ',':
-                formattedOperation += ('"' + temp + "\",")
-                mode = "mthd"
-                temp = ""
-            else:
-                temp += char
-        elif mode == "mthd":
-            if char == ',':
-                formattedOperation += ('"' + temp + "\",")
-                mode = "pram"
-                temp = ""
-            else:
-                temp += char
-        elif mode == "pram":
-            if bracketCount < 0:
-                raise ThreadCodeSyntaxError(text, "Too many closing brackets.")
-            if char == '[':
-                bracketCount += 1
-                temp += char
-            elif char == "]":
-                bracketCount -= 1
-                temp += char
-            elif bracketCount == 0 and char == ',':
-                formattedOperation += (temp + ',')
-                mode = "src"
-                temp = ""
-            else:
-                temp += char
-        elif mode == "src":
-            if char == '}':
-                formattedOperation += ('"' + temp + "\"]")
-                break
-            else:
-                temp += char
-        else:
-            pass
-            raise UnknownError()
-    return formattedOperation
+    operation = re.search(r"OPERATION{(.*),(.*),(\[.*\]),(.*)}", text)
+    return '["'+operation.group(1)+'","'+operation.group(2)+'",'+operation.group(3)+',"'+operation.group(4)+']'
 
 
 def formatShift(text):
     """Format the SHIFT in <text> and return it."""
+    shift = re.findall(r"OPERATION{.*},|OPERATION{.*}}", text)
     outputText = "["
-    bracketCount = 0
-    opList = []
-    for shifter in range(0, text.__len__() - 1):
-        if text[shifter] == '[':
-            bracketCount += 1
-        elif text[shifter] == ']':
-            bracketCount -= 1
-        if bracketCount < 0:
-            raise ThreadCodeSyntaxError(text, "Too many closing brackets.")
-        if bracketCount == 0:
-            if text[shifter:shifter + 10] == "OPERATION{":
-                temp = "OPERATION{"
-                subBracketCount = 0
-                for subShifter in range(shifter + 10, text.__len__() - 1):
-                    if text[subShifter] == '[':
-                        subBracketCount += 1
-                    elif text[subShifter] == ']':
-                        subBracketCount -= 1
-                    if subBracketCount < 0:
-                        raise ThreadCodeSyntaxError(text, "Too many closing brackets.")
-                    temp += text[subShifter]
-                    if text[subShifter] == '}' and subBracketCount == 0:
-                        opList.append(formatOperation(temp))
-                        break
-    if opList.__len__() == 0:
-        raise ThreadCodeSyntaxError(text, "No operations were found in the shift.")
-    for opIndex in range(0, opList.__len__()):
-        outputText += opList[opIndex]
+    for op in shift:
+        print(shift)
+        try:
+            outputText += (str(formatOperation(op[:-1]))+',')
+        except TypeError:
+            raise ThreadCodeSyntaxError(text, "No operations passed.")
+    if outputText[-1] == ',':
+        outputText = outputText[:-1]
     outputText += ']'
     return outputText
 
 
 def formatTskAtribs(text):
     """Format the PROFILE in <text> and return it."""
-    outputText = "["
-    bracketCount = 0
-    shiftList = []
-    for shifter in range(0, text.__len__() - 1):
-        if text[shifter] == '[':
-            bracketCount += 1
-        if bracketCount == 0:
-            if text[shifter:shifter + 6] == "SHIFT{":
-                temp = "SHIFT{"
-                subBracketCount = 0
-                braceCount = 1
-                for subShifter in range(shifter + 6, text.__len__() - 1):
-                    if text[subShifter] == '[':
-                        subBracketCount += 1
-                    elif text[subShifter] == ']':
-                        subBracketCount -= 1
-                    if subBracketCount < 0:
-                        raise ThreadCodeSyntaxError(text, "Too many closing brackets.")
-                    if subBracketCount == 0:
-                        if text[subShifter] == '{':
-                            braceCount += 1
-                        elif text[subShifter] == '}':
-                            braceCount -= 1
-                        if braceCount < 0:
-                            raise ThreadCodeSyntaxError(text, "Too many closing braces.")
-                    temp += text[subShifter]
-                    if braceCount == 0 and subBracketCount == 0:
-                        shiftList.append(formatShift(temp))
-                        break
-        elif text[shifter] == ']':
-            bracketCount -= 1
-        if bracketCount < 0:
-            raise ThreadCodeSyntaxError(text, "Too many closing brackets.")
-    if shiftList.__len__() == 0:
-        raise ThreadCodeSyntaxError(text, "No shifts were submitted.")
-    for opIndex in range(0, shiftList.__len__()):
-        outputText += shiftList[opIndex]
-    outputText += ']'
     return outputText
 
 

@@ -8,15 +8,9 @@
 #     print("profile:\n\t", a.profile)
 #     print("current:\n\t", a.current)
 import re
-text = "[\"im a stupid pram]\"]"
-text2 = ""
+import prog.threadCompiler as threadComp
 
-for i in text:
-    if i == ']':
-        break
-    text2 += i
-print(text2)
+text = "SHIFT{}"
+print(threadComp.formatShift(text))
 
-text = "OPERATION{\"a\",\"b\",[\"im a stupid pram]\"],\"d\"}"
-text2 = re.search(r"\[(.*)\]", text).group(1)
-print(text2)
+
