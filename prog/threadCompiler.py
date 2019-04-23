@@ -69,7 +69,7 @@ from thread_modules.tasker import tsk
 #
 # script from shell???
 
-# todo: find a way to get everything in prams to be ignored but the closing brackets
+# todo: trash this, use regular expressions
 
 def removeWhitespace(fileContents):
     """Remove all whitespace characters from <fileContents> unless its in brackets; returns the formatted text."""
