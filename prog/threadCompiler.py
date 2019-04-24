@@ -95,27 +95,56 @@ def removeWhitespace(fileContents):
 def formatOperation(text):
     """Format <text> to be a valid operation."""
     operation = re.search(r"OPERATION{(.*),(.*),(\[.*\]),(.*)}", text)
-    return '["'+operation.group(1)+'","'+operation.group(2)+'",'+operation.group(3)+',"'+operation.group(4)+']'
+    return '["' + operation.group(1) + '","' + operation.group(2) + '",' + operation.group(3) + ',"' + operation.group(
+        4) + '"]'
 
 
 def formatShift(text):
     """Format the SHIFT in <text> and return it."""
     shift = re.findall(r"OPERATION{.*},|OPERATION{.*}}", text)
     outputText = "["
-    for op in shift:
-        print(shift)
+    for operation in shift:
+        print(operation[:-1])
         try:
-            outputText += (str(formatOperation(op[:-1]))+',')
+            outputText += (str(formatOperation(operation[:-1])) + ',')
         except TypeError:
-            raise ThreadCodeSyntaxError(text, "No operations passed.")
+            raise ThreadCodeWarning(text, "No operations passed.")
     if outputText[-1] == ',':
         outputText = outputText[:-1]
     outputText += ']'
     return outputText
 
 
-def formatTskAtribs(text):
+def formatProfile(text):
     """Format the PROFILE in <text> and return it."""
+    profile = re.findall(r"SHIFT{.*}},|SHIFT{.*}}}", text)
+    outputText = "["
+    for shift in profile:
+        print(shift[:-1])
+        try:
+            outputText += (str(formatShift(shift[:-1])) + ',')
+        except TypeError:
+            raise ThreadCodeWarning(text, "No shifts passed.")
+    if outputText[-1] == ',':
+        outputText = outputText[:-1]
+    outputText += ']'
+    return outputText
+
+
+def formatCurrent(text):
+    """Format the PROFILE in <text> and return it."""
+    # todo: error if more than one shift
+    current = re.findall(r"SHIFT{.*}}}", text)
+    outputText = "["
+    for shift in current:
+        print(shift[:-1])
+        try:
+            outputText += (str(formatShift(shift[:-1])) + ',')
+        except TypeError:
+            raise ThreadCodeWarning(text, "No shifts passed.")
+    if outputText[-1] == ',':
+        outputText = outputText[:-1]
+    outputText += ']'
     return outputText
 
 
@@ -196,6 +225,12 @@ def parseFile(file):
 class ThreadCodeSyntaxError(Exception):
     def __init__(self, expression, badSyntaxType):
         self.message = "The following is incorrect syntax: " + str(badSyntaxType)
+        self.expression = expression
+
+
+class ThreadCodeWarning(Warning):
+    def __init__(self, expression, message):
+        self.message = message
         self.expression = expression
 
 

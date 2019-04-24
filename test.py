@@ -9,8 +9,16 @@
 #     print("current:\n\t", a.current)
 import re
 import prog.threadCompiler as threadComp
-
-text = "SHIFT{}"
-print(threadComp.formatShift(text))
+text = "PROFILE{" \
+              "SHIFT{" \
+                   "OPERATION{a,b,[c],d}" \
+              "}," \
+              "SHIFT{" \
+                   "OPERATION{a1,b1,[c1],d1}," \
+                   "OPERATION{a2,b2,[c2],d2}" \
+              "}" \
+       "}"
+# text = "PROFILE{SHIFT{OPERATION{a,b,[c],d}}}"
+print(threadComp.formatCurrent(text))
 
 
