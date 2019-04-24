@@ -31,26 +31,28 @@ from thread_modules.tasker import tsk
 #     Only one PROFILE may exist in a file
 #     Only accepts SHIFTs, comma delimited.
 #     If PROFILE in in the file, compiler will output a thread_modules.tsk.
+#     Must be after CURRENT.
 #
 # CURRENT
 #     Keyword for a thread_modules.tsk current.
 #     Only one CURRENT may exist in a file
 #     Only accepts a single SHIFT.
 #     If CURRENT in in the file, compiler will output a thread_modules.tsk.
+#     Must be before PROFILE.
 #
 # basic example
 #
 # CURRENT{
 #     SHIFT{
-#         OPERATION{
-#             a,
-#             print,
-#             ["Hello, World!"],
-#             a,
-#         }
+#         OPERATION{a,print,["Hello, World!"],a,}
 #     }
 # }
 #
+# PROFILE{
+#     SHIFT{
+#         OPERATION{a,print,["Hello, World!"],a,}
+#         }
+#     }
 # compact
 # CURRENT{SHIFT{OPERATION{a,print,["Hello, World!"],a,}}}
 #
@@ -104,7 +106,6 @@ def formatShift(text):
     shift = re.findall(r"OPERATION{.*},|OPERATION{.*}}", text)
     outputText = "["
     for operation in shift:
-        print(operation[:-1])
         try:
             outputText += (str(formatOperation(operation[:-1])) + ',')
         except TypeError:
@@ -120,7 +121,6 @@ def formatProfile(text):
     profile = re.findall(r"SHIFT{.*}},|SHIFT{.*}}}", text)
     outputText = "["
     for shift in profile:
-        print(shift[:-1])
         try:
             outputText += (str(formatShift(shift[:-1])) + ',')
         except TypeError:
@@ -137,7 +137,6 @@ def formatCurrent(text):
     current = re.findall(r"SHIFT{.*}}}", text)
     outputText = "["
     for shift in current:
-        print(shift[:-1])
         try:
             outputText += (str(formatShift(shift[:-1])) + ',')
         except TypeError:
@@ -149,87 +148,42 @@ def formatCurrent(text):
 
 
 def parseFile(file):
-    """take a file and parse it for thread code, returning any found"""
+    """take a file and parse it for thread code
+    return a threadModules tasker if PROFILE or CURRENT are in the file
+    return a string with either the first SHIFT or if none are found the first OPERATION
+    raise an error if nothing is found
+    """
     fileData = open(file, 'r').read()
     fileData = removeWhitespace(fileData)
-    outputTrd = None
-    outputText = None
-    profileSet = False
-    currentSet = False
-    if "PROFILE" in fileData or "CURRENT" in fileData:
-        outputTrd = tsk()
-        bracketCount = 0
-        for shifter in range(0, fileData.__len__() - 1):
-            if fileData[shifter] == '[':
-                bracketCount += 1
-            elif fileData[shifter] == ']':
-                bracketCount -= 1
-            if bracketCount < 0:
-                raise ThreadCodeSyntaxError(fileData, "Too many closing brackets.")
-            if bracketCount == 0:
-                if fileData[shifter: shifter + 8] == "CURRENT{" and not currentSet:
-                    currentSet = True
-                    braceCount = 1
-                    subBracketCount = 0
-                    temp = "CURRENT{"
-                    for subShift in range(shifter + 8, fileData.__len__()):
-                        if fileData[subShift] == '[':
-                            subBracketCount += 1
-                        elif fileData[subShift] == ']':
-                            subBracketCount -= 1
-                        if subBracketCount < 0:
-                            raise ThreadCodeSyntaxError(fileData, "Too many closing brackets.")
-                        if subBracketCount == 0:
-                            if fileData[subShift] == '{':
-                                braceCount += 1
-                            elif fileData[subShift] == '}':
-                                braceCount -= 1
-                            if braceCount < 0:
-                                raise ThreadCodeSyntaxError(fileData, "Too many closing braces.")
-                        temp += fileData[subShift]
-                        if braceCount == 0:
-                            temp += '}'
-                            outputTrd.current = formatTskAtribs(temp)
-                if fileData[shifter: shifter + 8] == "PROFILE{" and not profileSet:
-                    profileSet = True
-                    braceCount = 1
-                    subBracketCount = 0
-                    temp = "PROFILE{"
-                    for subShift in range(shifter + 8, fileData.__len__()):
-                        if fileData[subShift] == '[':
-                            subBracketCount += 1
-                        elif fileData[subShift] == ']':
-                            subBracketCount -= 1
-                        if subBracketCount < 0:
-                            raise ThreadCodeSyntaxError(fileData, "Too many closing brackets.")
-                        if subBracketCount == 0:
-                            if fileData[subShift] == '{':
-                                braceCount += 1
-                            elif fileData[subShift] == '}':
-                                braceCount -= 1
-                            if braceCount < 0:
-                                raise ThreadCodeSyntaxError(fileData, "Too many closing braces.")
-                        temp += fileData[subShift]
-                        if braceCount == 0:
-                            outputTrd.profile = formatTskAtribs(temp)
-    else:
-        outputText = formatTskAtribs("PROFILE{" + fileData + "}")
-    if outputTrd is not None:
+    outputTrd = tsk()
+    prf = re.search(r"(PROFILE{.*}}})", fileData)
+    cur = re.search(r"(CURRENT{.*}}})P", fileData)
+    shf = re.search(r"(SHIFT{.*}})", fileData)
+    opr = re.search(r"(OPERATION{.*})", fileData)
+    if prf or cur:
+        if re.match(r".*PROFILE{.*}.*CURRENT{.*}.*}", fileData):
+            raise ThreadCodeSyntaxError("PROFILE found before CURRENT.")
+        if prf:
+            outputTrd.profile = formatProfile(prf.group(1))
+        if cur:
+            outputTrd.current = formatCurrent(cur.group(1))
         return outputTrd
-    elif outputText is not None:
-        return outputText
+    elif shf:
+        return formatShift(shf.group(1))
+    elif opr:
+        return formatOperation(opr.group(1))
     else:
-        raise UnknownError()
+        raise ThreadCodeSyntaxError("No valid keywords used or empty file.")
 
 
 class ThreadCodeSyntaxError(Exception):
-    def __init__(self, expression, badSyntaxType):
-        self.message = "The following is incorrect syntax: " + str(badSyntaxType)
+    def __init__(self, message, expression=None):
+        self.message = "The following is incorrect syntax: " + str(message)
         self.expression = expression
 
 
 class ThreadCodeWarning(Warning):
-    def __init__(self, expression, message):
+    def __init__(self, message, expression):
         self.message = message
         self.expression = expression
 
