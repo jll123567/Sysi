@@ -7,7 +7,6 @@
 # if isinstance(a, thread_modules.tasker.tsk):
 #     print("profile:\n\t", a.profile)
 #     print("current:\n\t", a.current)
-import re
 import prog.threadCompiler as threadComp
 
-print(threadComp.parseFile("./argMaty.trc"))
+print(threadComp.parseFile("./argMaty.trc").profile)

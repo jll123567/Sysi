@@ -103,7 +103,10 @@ def formatOperation(text):
     if re.match(r"{", operation.group(1)):
         warnings.warn("\nFound a target that looks weird.\nDid you write \"OPERATION{{\"?", StrangeObjectName)
     if re.match(r".*}", operation.group(4)):
-        warnings.warn("\nFound a source that looks weird.\nDid you write did you close an OPERATION with an extra \"}\"?", StrangeObjectName)
+        warnings.warn(
+            "\nFound a source that looks weird.\nDid you write did you close an OPERATION with an extra \"}\"?",
+            StrangeObjectName)
+
     return '["' + operation.group(1) + '","' + operation.group(2) + '",' + operation.group(3) + ',"' + operation.group(
         4) + '"]'
 
@@ -117,7 +120,7 @@ def formatShift(text):
             outputText += (str(formatOperation(operation[:-1])) + ',')
         except TypeError:
             pass
-            #raise ThreadCodeWarning(text, "No operations passed.")
+            # raise ThreadCodeWarning(text, "No operations passed.")
     if outputText[-1] == ',':
         outputText = outputText[:-1]
     outputText += ']'
@@ -133,7 +136,7 @@ def formatProfile(text):
             outputText += (str(formatShift(shift[:-1])) + ',')
         except TypeError:
             pass
-            #raise ThreadCodeWarning(text, "No shifts passed.")
+            # raise ThreadCodeWarning(text, "No shifts passed.")
     if outputText[-1] == ',':
         outputText = outputText[:-1]
     outputText += ']'
@@ -150,7 +153,7 @@ def formatCurrent(text):
             outputText += (str(formatShift(shift[:-1])) + ',')
         except TypeError:
             pass
-            #raise ThreadCodeWarning(text, "No shifts passed.")
+            # raise ThreadCodeWarning(text, "No shifts passed.")
     if outputText[-1] == ',':
         outputText = outputText[:-1]
     outputText += ']'
@@ -173,7 +176,10 @@ def parseFile(file):
     if op != cls:
         warnings.warn(
             "\nThere may be an unmatched brace in code.\nHowever, this may false trigger for a parameter in an operation",
-            UnmatchedBraceWarning)
+            UnmatchedBrace)
+
+    if re.match(r".*\[.*[\[\]{}].*\].*", fileData):
+        warnings.warn("\nCode may not be parsed correctly due to a [ ] { or } between []", SpecialCharInPram)
 
     prf = re.search(r"(PROFILE{.*}}})", fileData)
     cur = re.search(r"(CURRENT{.*}}})P", fileData)
@@ -201,17 +207,25 @@ class ThreadCodeSyntaxError(Exception):
         self.expression = expression
 
 
-class UnmatchedBraceWarning(Warning):
+class UnmatchedBrace(Warning):
     """Raised if there are an odd number of braces."""
     pass
+
 
 class StrangeObjectName(Warning):
     """Raised if operation has leading or trailing braces."""
     pass
 
+
 class NoElementPassed(Warning):
     """Raised if no element was passed were passed where one was expected."""
     pass
+
+
+class SpecialCharInPram(Warning):
+    """Raised if there is a []{ or } in prams ([])"""
+    pass
+
 
 class UnknownError(Exception):
     def __init__(self):
