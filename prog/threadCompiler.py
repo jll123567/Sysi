@@ -1,5 +1,6 @@
 import re
 from thread_modules.tasker import tsk
+import warnings
 
 
 # OPERATION{
@@ -97,6 +98,12 @@ def removeWhitespace(fileContents):
 def formatOperation(text):
     """Format <text> to be a valid operation."""
     operation = re.search(r"OPERATION{(.*),(.*),(\[.*\]),(.*)}", text)
+
+    # syntax check
+    if re.match(r"{", operation.group(1)):
+        warnings.warn("\nFound a target that looks weird.\nDid you write \"OPERATION{{\"?", StrangeObjectName)
+    if re.match(r".*}", operation.group(4)):
+        warnings.warn("\nFound a source that looks weird.\nDid you write did you close an OPERATION with an extra \"}\"?", StrangeObjectName)
     return '["' + operation.group(1) + '","' + operation.group(2) + '",' + operation.group(3) + ',"' + operation.group(
         4) + '"]'
 
@@ -109,7 +116,8 @@ def formatShift(text):
         try:
             outputText += (str(formatOperation(operation[:-1])) + ',')
         except TypeError:
-            raise ThreadCodeWarning(text, "No operations passed.")
+            pass
+            #raise ThreadCodeWarning(text, "No operations passed.")
     if outputText[-1] == ',':
         outputText = outputText[:-1]
     outputText += ']'
@@ -124,7 +132,8 @@ def formatProfile(text):
         try:
             outputText += (str(formatShift(shift[:-1])) + ',')
         except TypeError:
-            raise ThreadCodeWarning(text, "No shifts passed.")
+            pass
+            #raise ThreadCodeWarning(text, "No shifts passed.")
     if outputText[-1] == ',':
         outputText = outputText[:-1]
     outputText += ']'
@@ -140,7 +149,8 @@ def formatCurrent(text):
         try:
             outputText += (str(formatShift(shift[:-1])) + ',')
         except TypeError:
-            raise ThreadCodeWarning(text, "No shifts passed.")
+            pass
+            #raise ThreadCodeWarning(text, "No shifts passed.")
     if outputText[-1] == ',':
         outputText = outputText[:-1]
     outputText += ']'
@@ -156,6 +166,15 @@ def parseFile(file):
     fileData = open(file, 'r').read()
     fileData = removeWhitespace(fileData)
     outputTrd = tsk()
+
+    # syntax check
+    op = re.findall(r"{(?!(?!.*\[).*\])", fileData).__len__()
+    cls = re.findall(r"}(?!(?!.*\[).*\])", fileData).__len__()
+    if op != cls:
+        warnings.warn(
+            "\nThere may be an unmatched brace in code.\nHowever, this may false trigger for a parameter in an operation",
+            UnmatchedBraceWarning)
+
     prf = re.search(r"(PROFILE{.*}}})", fileData)
     cur = re.search(r"(CURRENT{.*}}})P", fileData)
     shf = re.search(r"(SHIFT{.*}})", fileData)
@@ -182,11 +201,17 @@ class ThreadCodeSyntaxError(Exception):
         self.expression = expression
 
 
-class ThreadCodeWarning(Warning):
-    def __init__(self, message, expression):
-        self.message = message
-        self.expression = expression
+class UnmatchedBraceWarning(Warning):
+    """Raised if there are an odd number of braces."""
+    pass
 
+class StrangeObjectName(Warning):
+    """Raised if operation has leading or trailing braces."""
+    pass
+
+class NoElementPassed(Warning):
+    """Raised if no element was passed were passed where one was expected."""
+    pass
 
 class UnknownError(Exception):
     def __init__(self):

@@ -10,6 +10,4 @@
 import re
 import prog.threadCompiler as threadComp
 
-f = threadComp.parseFile("argMaty.trc")
-print(f, "\n\n", f.current, "\n\n", f.profile)
-
+print(threadComp.parseFile("./argMaty.trc"))
