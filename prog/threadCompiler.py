@@ -1,3 +1,14 @@
+"""
+Take .trc files and turn them into valid operations, shifts, profiles, or currents.
+To use from command-line:
+    Move or copy this file to sysh root directory. (*/sysh/)
+    Run with "python threadCompiler.py <filename>"
+    Prints to stdout.
+    Profiles and currents are followed by a newline.
+To use from a python module:
+    import prog.threadCompiler
+    parseFile(<filename>, <formatting="-t">) returns the thread code.
+"""
 import re
 from thread_modules.tasker import tsk
 from sys import argv
@@ -12,8 +23,8 @@ import warnings
 # CURRENT{SHIFT{}}
 #
 # whitespace is not parsed accept for in Prams.
-# Keywords have open and close brackets.
 # Lists of elements are comma delimited.
+#
 # OPERATION
 #     Keyword for an operation, requires four elements  comma separated.
 #     Target: the target for the operation, converted to a string when compiled(ex. a -> "a")
@@ -55,23 +66,9 @@ import warnings
 #         OPERATION{a,print,["Hello, World!"],a,}
 #         }
 #     }
-# compact
-# CURRENT{SHIFT{OPERATION{a,print,["Hello, World!"],a,}}}
+# Output:
 #
-# Steps
-#     read file
-#     remove whitespace
-#     parse for profile / current
-#         prep read
-#         recurse shifts
-#         output tsk
-#     parse shift
-#         recurse operations
-#         output shift
-#     parse operations
-#         output operation
-#
-# script from shell???
+
 
 def removeWhitespace(fileContents):
     """Remove all whitespace characters from <fileContents> unless its in brackets; returns the formatted text."""
@@ -144,7 +141,6 @@ def formatProfile(text):
 
 def formatCurrent(text):
     """Format the PROFILE in <text> and return it."""
-    # todo: error if more than one shift
     current = re.findall(r"SHIFT{.*}}}", text)
     outputText = "["
     for shift in current:
@@ -159,8 +155,9 @@ def formatCurrent(text):
     return outputText
 
 
-def parseFile(file):
+def parseFile(file, outputFormat="-t"):
     """take a file and parse it for thread code
+    <outputFormat> as "-t" for text, "-o" for a tasker object(if supported).
     return a threadModules tasker if PROFILE or CURRENT are in the file
     return a string with either the first SHIFT or if none are found the first OPERATION
     raise an error if nothing is found
@@ -168,6 +165,7 @@ def parseFile(file):
     fileData = open(file, 'r').read()
     fileData = removeWhitespace(fileData)
     outputTrd = tsk()
+    outputTxt = ""
 
     # syntax check
     op = re.findall(r"{(?!(?!.*\[).*\])", fileData).__len__()
@@ -188,10 +186,20 @@ def parseFile(file):
         if re.match(r".*PROFILE{.*}.*CURRENT{.*}.*}", fileData):
             raise ThreadCodeSyntaxError("PROFILE found before CURRENT.")
         if prf:
-            outputTrd.profile = formatProfile(prf.group(1))
+            if outputFormat == '-o':
+                outputTrd.profile = formatProfile(prf.group(1))
+            elif outputFormat == '-t':
+                outputTxt += (formatProfile(prf.group(1))+"/n")
+
         if cur:
-            outputTrd.current = formatCurrent(cur.group(1))
-        return outputTrd
+            if outputFormat == '-o':
+                outputTrd.profile = formatProfile(cur.group(1))
+            elif outputFormat == '-t':
+                outputTxt += (formatProfile(cur.group(1))+"\n")
+        if outputTxt != "":
+            return outputTxt
+        else:
+            return outputTrd
     elif shf:
         return formatShift(shf.group(1))
     elif opr:
@@ -201,6 +209,7 @@ def parseFile(file):
 
 
 class ThreadCodeSyntaxError(Exception):
+    """Raised if syntax is wrong."""
     def __init__(self, message, expression=None):
         self.message = "The following is incorrect syntax: " + str(message)
         self.expression = expression
@@ -240,6 +249,7 @@ class BadFileType(Exception):
 
 
 if __name__ == "__main__":
+    fileName = ""
     try:
         fileName = argv[1]
     except IndexError:
@@ -252,5 +262,9 @@ if __name__ == "__main__":
     if not re.match(r".*\.trc$", fileName):
         raise BadFileType(fileName)
     else:
-        print(parseFile(fileName))
-# todo docs, file not found error, instructions, syntax
+        outForm = "-t"
+        try:
+            outForm = argv[2]
+        except IndexError:
+            pass
+        print(parseFile(fileName, outForm))
