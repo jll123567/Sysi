@@ -9,4 +9,5 @@
 #     print("current:\n\t", a.current)
 import prog.threadCompiler as threadComp
 
-print(threadComp.parseFile("./argMaty.trc").profile)
+#print(threadComp.parseFile("./argMaty.trc").profile)
+#f = open("f.txt")

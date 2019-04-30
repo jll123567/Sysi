@@ -1,5 +1,6 @@
 import re
 from thread_modules.tasker import tsk
+from sys import argv
 import warnings
 
 
@@ -71,8 +72,6 @@ import warnings
 #         output operation
 #
 # script from shell???
-
-# todo: trash this, use regular expressions
 
 def removeWhitespace(fileContents):
     """Remove all whitespace characters from <fileContents> unless its in brackets; returns the formatted text."""
@@ -228,5 +227,30 @@ class SpecialCharInPram(Warning):
 
 
 class UnknownError(Exception):
+    """If you see this error, run."""
     def __init__(self):
         self.message = "Something went horribly wrong in the thread compiler!"
+
+
+class BadFileType(Exception):
+    """Raised if the file is not of the expected type"""
+    def __init__(self, expression=None):
+        self.message = "threadCompiler only accepts .trc files"
+        self.expression = expression
+
+
+if __name__ == "__main__":
+    try:
+        fileName = argv[1]
+    except IndexError:
+        print("This script requires an argument. Use '-h' for more information")
+        exit(1)
+    if argv[1] == "-h":
+        print("threadCompiler.py <filePath>\n\t Compiles and prints a .trc file."
+              "\nthreadCompiler.py -h\n\t This help message.")
+        exit(0)
+    if not re.match(r".*\.trc$", fileName):
+        raise BadFileType(fileName)
+    else:
+        print(parseFile(fileName))
+# todo docs, file not found error, instructions, syntax
