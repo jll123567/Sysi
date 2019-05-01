@@ -233,7 +233,7 @@ class scene:
             self.scp = [["master", None, 30]]
         else:
             self.scp = scp
-        # [time([tl branch, start point, shift per sec]),command0,command1,...]
+        # [time([tl branch, start point]),command0,command1,...]
         # if timeline start point is none then is "unploted"
         if obj is None:
             self.obj = []
@@ -251,16 +251,18 @@ class scene:
         else:
             self.tag = tag
 
-    # unplot the scene from a uni time line
-    # none
-    # none
-    def unplotTl(self):
-        self.scp[0] = ["master", None, 30]
+    def tlUnplot(self):
+        """Unplot the scene from a time line."""
+        self.scp[0] = [None, None]
+
+    def tlPlot(self, line, startOffset):
+        """Plot the scene to a time line."""
+        self.scp[0] = [line, startOffset]
 
     # add an error to the scene
     # objListIdx(int)*, type(int[0-2])*, sev(int[0-])*, mes(str)*, res([str])*, sel(int)
     # none
-    def raiseError(self, objListIdx, errType, sev, mes, res, sel):
+    def raiseSyshError(self, objListIdx, errType, sev, mes, res, sel):
         e = error.err(errType, sev, mes, res, sel, self.obj[objListIdx], self.cont, {"id": ""})
         e.tag["id"] = prog.idGen.generateGenericId(self.obj, e)
         self.obj.append(e)
@@ -277,11 +279,7 @@ class scene:
 # scene container timeline(time line info), scn([scn]), obj([obj]), cont([cont]), funct([functions]),
 # rule([operations to run on all obj each shift]), tag({"id":(str), ...})
 class universe:
-    def __init__(self, tl=None, scn=None, obj=None, cont=None, funct=None, rule=None, tag=None):
-        if tl is None:
-            self.tl = attribs.timeLine.timeline()
-        else:
-            self.tl = tl
+    def __init__(self, scn=None, obj=None, cont=None, funct=None, rule=None, tag=None):
         if scn is None:
             self.scn = []
         else:
@@ -314,6 +312,22 @@ class universe:
             self.tag = {"id": None, "name": None}
         else:
             self.tag = tag
+
+    def tlGetEndOfLine(self, line):
+        """Find the time in shifts that a lines and return it."""
+        tempScnList = []
+        for scnLn in self.scn:
+            if scnLn.scp[0][0] == line:
+                tempScnList.append(scnLn)
+        scnIdx = 0
+        currentScnIdx = 0
+        largestStartTime = 0
+        for scnChk in tempScnList:
+            if scnChk.scp[0][1] > largestStartTime:
+                scnIdx = currentScnIdx
+                largestStartTime = scnChk.scp[0][1]
+            currentScnIdx += 1
+        return tempScnList[scnIdx].__len__() - 1
 
 
 # info at run
