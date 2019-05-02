@@ -231,7 +231,7 @@ class scene:
         """
         :param tl: List with lineName and startTime in that order. None for both if un-plotted.
         :param scp: List of shifts to run.
-        :param obj: List of obects in scene.
+        :param obj: List of objects in scene.
         :param cont: Container that encapsulates the scene.
         :param tag: Dict for system tracking.
         """
