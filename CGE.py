@@ -357,7 +357,7 @@ class CGESession(threading.Thread):
         """export self.savedScene with timeline info from tlInfo, the scene name from name,
             and an Id generated with universe
         """
-        self.savedScene.scp[0] = tlInfo
+        self.savedScene.tl = tlInfo
         self.savedScene.tag["name"] = name
         self.savedScene.tag["id"] = idGen.generateUniversalId(universe, self.savedScene)
         return self.savedScene

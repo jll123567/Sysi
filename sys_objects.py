@@ -225,27 +225,32 @@ class container:
             self.tag = tag
 
 
-# sysObject change oer time
-# scp([tlInfo, shft0, shft1, ...]), obj in scene([obj]), loc(container), tag({"id":(str), ...})
 class scene:
-    def __init__(self, scp=None, obj=None, cont=None, tag=None):
+    """Describes objects calling methods in an container for a time."""
+    def __init__(self, tl=None, scp=None, obj=None, cont=None, tag=None):
+        """
+        :param tl: List with lineName and startTime in that order. None for both if un-plotted.
+        :param scp: List of shifts to run.
+        :param obj: List of obects in scene.
+        :param cont: Container that encapsulates the scene.
+        :param tag: Dict for system tracking.
+        """
+        if tl is None:
+            self.tl = [None, None]
+        else:
+            self.tl = tl
         if scp is None:
             self.scp = [["master", None, 30]]
         else:
             self.scp = scp
-        # [time([tl branch, start point]),command0,command1,...]
-        # if timeline start point is none then is "unploted"
         if obj is None:
             self.obj = []
         else:
             self.obj = obj
-        # objlist
         if cont is None:
             self.cont = container([None, 0, 0, 0], ["h,0,0,0-0,0,0"], {"id": None, "name": "defaultContainer"})
         else:
             self.cont = cont
-        # cont
-        # use a super cont that will contain all relevant containers
         if tag is None:
             self.tag = {"id": None, "name": None}
         else:
@@ -253,61 +258,56 @@ class scene:
 
     def tlUnplot(self):
         """Unplot the scene from a time line."""
-        self.scp[0] = [None, None]
+        self.tl = [None, None]
 
     def tlPlot(self, line, startOffset):
         """Plot the scene to a time line."""
-        self.scp[0] = [line, startOffset]
+        self.tl = [line, startOffset]
 
-    # add an error to the scene
-    # objListIdx(int)*, type(int[0-2])*, sev(int[0-])*, mes(str)*, res([str])*, sel(int)
-    # none
     def raiseSyshError(self, objListIdx, errType, sev, mes, res, sel):
+        """Add an error to the scene."""
         e = error.err(errType, sev, mes, res, sel, self.obj[objListIdx], self.cont, {"id": ""})
         e.tag["id"] = prog.idGen.generateGenericId(self.obj, e)
         self.obj.append(e)
 
-    # add a request to the scene
-    # request(str)*, index for requester in scn.obj(int)*
-    # none
     def raiseRequest(self, request, objListIdx):
+        """Add a request to the scene."""
         d = data([request, self.cont, self.obj[objListIdx]], {"id": "", "dataType": "request"})
         d.tag["id"] = prog.idGen.generateGenericId(self.obj, d)
         self.obj.append(d)
 
 
-# scene container timeline(time line info), scn([scn]), obj([obj]), cont([cont]), funct([functions]),
-# rule([operations to run on all obj each shift]), tag({"id":(str), ...})
 class universe:
+    """Describes a collection of scenes and relevant information."""
     def __init__(self, scn=None, obj=None, cont=None, funct=None, rule=None, tag=None):
+        """
+        :param scn: List of scenes.
+        :param obj: List of objects.
+        :param cont: List of containers.
+        :param funct: List of functions.
+        :param rule: List of operations to be run each shift in applicable scenes.
+        :param tag: Dict for system tracking.
+        """
         if scn is None:
             self.scn = []
         else:
             self.scn = scn
-        # scene list in or
-        # der like(0,0)(0,1)(1,0)(1,1)
         if obj is None:
             self.obj = []
         else:
             self.obj = obj
-        # objlist
-        # [usr, obj, dta]
         if cont is None:
             self.cont = []
         else:
             self.cont = cont
-        # container struct
         if funct is None:
             self.funct = []
         else:
             self.funct = funct
-        # functions unique to uni
         if rule is None:
             self.rule = []
         else:
             self.rule = rule
-            # a rule is an operation run at each sysObject
-            # [extension(optional. None for no ext), function, [parameters]]
         if tag is None:
             self.tag = {"id": None, "name": None}
         else:
@@ -317,15 +317,15 @@ class universe:
         """Find the time in shifts that a lines and return it."""
         tempScnList = []
         for scnLn in self.scn:
-            if scnLn.scp[0][0] == line:
+            if scnLn.tl[0] == line:
                 tempScnList.append(scnLn)
         scnIdx = 0
         currentScnIdx = 0
         largestStartTime = 0
         for scnChk in tempScnList:
-            if scnChk.scp[0][1] > largestStartTime:
+            if scnChk.tl[1] > largestStartTime:
                 scnIdx = currentScnIdx
-                largestStartTime = scnChk.scp[0][1]
+                largestStartTime = scnChk.tl[1]
             currentScnIdx += 1
         return tempScnList[scnIdx].__len__() - 1
 
