@@ -1,5 +1,5 @@
 """The Content Generation engine
-objects in objList are simulated and run based on the instructions in trd.tsk
+objects in objList are simulated and run based on the instructions in Thread.tsk
 Module type: prog
 task > CGE
 ["target(obj name)", "operation", [parameters]]
@@ -147,7 +147,7 @@ class CGESession(threading.Thread):
         return methodsList
 
     def getOperations(self):
-        """get all operations from trd.tsk of all objects in self.objectList"""
+        """get all operations from Thread.tsk of all objects in self.objectList"""
         operationList = []
         for obj in self.objList:
             try:
@@ -327,7 +327,7 @@ class CGESession(threading.Thread):
         return fullObj
 
     def moveThreadAlong(self):
-        """move trd of all objects in self.objList to next shift"""
+        """move Thread of all objects in self.objList to next shift"""
         while True:
             if not self.crossPosts:
                 break
@@ -369,7 +369,7 @@ class CGESession(threading.Thread):
         if not self.objList:
             return "No objects to process"
         objIdx = 0
-        # check if sysObject has a thread and a tasker and the trd.tsk.current[0] is a list
+        # check if sysObject has a Thread and a tasker and the Thread.tsk.current[0] is a list
         for _ in self.objList:
             if self.objList[objIdx].trd is None:
                 # replace me to debug

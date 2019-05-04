@@ -34,8 +34,8 @@ class snsNode:
     # none
     # snsNode dta([pos, pres, reTmp], tags)
     def package(self):
-        return sys_objects.data(self.flatten(), {"name": "tread.tact.snsNode.package", "id": None,
-                                            "dataType": "thread.tact.snsNode.package"})
+        return sys_objects.data(self.flatten(), {"name": "Thread.tact.snsNode.package", "id": None,
+                                                 "dataType": "Thread.tact.snsNode.package"})
 
     # flattens the node to a list
     # none

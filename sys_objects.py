@@ -7,17 +7,17 @@ import error
 import prog.idGen
 
 
-# sysh.sysObject.sysObject(oof better name pls) model of sysObject(any), relevant self viewable data(attrib's.thread.trd),
+# sysh.sysObject.sysObject(oof better name pls) model of sysObject(any), relevant self viewable data(attrib.Thread),
 # tags and data for system/admin({tag:(str),...}) noinspection PyShadowingBuiltins
 # noinspection PyShadowingBuiltins
 class sysObject:
     def __init__(self, mod=None, trd=None, tag=None):
         if mod is None:
-            self.mod = attribs.model.sysModel()
+            self.mod = attribs.SysModel()
         else:
             self.mod = mod
         if trd is None:
-            self.trd = attribs.thread.trd()
+            self.trd = attribs.Thread()
         else:
             self.trd = trd
         if tag is None:
@@ -100,24 +100,24 @@ class sysObject:
 
 
 # sysh.sysObject.user
-# model(any), thread(thread.trd), prs(personality.prs), memory(memory.mem) tag({"id":(str), ...})
+# model(any), thread(Thread), Personality(Personality), memory(UsrMemory) tag({"id":(str), ...})
 class user(sysObject):
     def __init__(self, mod=None, trd=None, prs=None, mem=None, tag=None):
         super().__init__(mod, trd, tag)
         if mod is None:
-            self.mod = attribs.model.sysModel()
+            self.mod = attribs.SysModel()
         else:
             self.mod = mod
         if trd is None:
-            self.trd = attribs.thread.trd()
+            self.trd = attribs.Thread()
         else:
             self.trd = trd
         if prs is None:
-            self.prs = attribs.personality.prs()
+            self.prs = attribs.Personality()
         else:
             self.prs = prs
         if mem is None:
-            self.mem = attribs.memory.mem()
+            self.mem = attribs.UsrMemory()
         else:
             self.mem = mem
         if tag is None:
@@ -134,7 +134,7 @@ class user(sysObject):
         dta.tag["id"] = prog.idGen.generateGenericId(self.mem.real, dta)
         self.mem.addMemory(1, dta)
 
-    # load a mem obj to ram
+    # load a UsrMemory obj to ram
     # block(int[0-2])*, index(int)
     # none
     def loadToRam(self, block, index):
@@ -176,19 +176,19 @@ class user(sysObject):
             return (100 * ((1 / 3) ** obj.tag["relevancy"][0])) + (sqrt(obj.tag["relevancy"][1]) * 10) + (
                 obj.tag["relevancy"][2])
 
-    # load a queue from real memory
+    # load a queue from UsrMemory.real
     # real index(int)*
     # none
     def loadQueue(self, realIndex):
         self.trd.que = self.mem.real[realIndex].storage
 
-    # save a queue to real mem
+    # save a queue to UsrMemory.real
     # tags(tag)*
     # none
     def saveQueue(self, tags):
         lastQueue = data(self.trd.que, tags)
         self.mem.addMemory(1, lastQueue)
-        print("queue saved to: ", lastQueue, "@", self.tag["id"], ".mem.real")
+        print("queue saved to: ", lastQueue, "@", self.tag["id"], ".UsrMemory.real")
 
 
 # packaged data

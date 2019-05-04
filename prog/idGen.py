@@ -33,8 +33,6 @@ def generateUniversalId(uni, obj):
         objTypeLetter = 'o'
     elif isinstance(obj, sys_objects.user):
         objTypeLetter = 'u'
-    elif isinstance(obj, sys_objects.weapon):
-        objTypeLetter = 'w'
     elif isinstance(obj, sys_objects.data):
         objTypeLetter = 'd'
     elif isinstance(obj, sys_objects.container):
@@ -88,8 +86,6 @@ def generateGenericId(objList, obj):
         objTypeLetter = 'o'
     elif isinstance(obj, sys_objects.user):
         objTypeLetter = 'u'
-    elif isinstance(obj, sys_objects.weapon):
-        objTypeLetter = 'w'
     elif isinstance(obj, sys_objects.data):
         objTypeLetter = 'd'
     elif isinstance(obj, sys_objects.container):

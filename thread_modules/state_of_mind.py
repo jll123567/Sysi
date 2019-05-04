@@ -1,14 +1,15 @@
 """Classes for the stateOfMind system."""
 import sys_objects
-import attribs.personality as personality
+from attribs import Personality
 
 
 class state(sys_objects.data):
-    """An individual state, acts as a prs with a name encoded as a data."""
+    """An individual state, acts as a Personality with a name encoded as a data."""
     def __init__(self, stateName, prs, tag=None):
-        """stateName: string
-            prs: attribs.personality.prs
-            tag: dictionary
+        """
+        stateName: string
+        Personality: attribs.Personality
+        tag: dictionary
         """
         super().__init__(prs, tag)
         if tag is None:
@@ -25,32 +26,33 @@ class SOMManger:
     """Hold and modify states."""
 
     def __init__(self, states=None, default=None, current=None, previous=None):
-        """states: list
-            default: attribs.personality.prs
-            current: attribs.personality.prs
-            previous: attribs.personality.prs
+        """
+        states: list
+        default: attribs.Personality
+        current: attribs.Personality
+        previous: attribs.Personality
         """
         if states is None:
             self.states = []
         else:
             self.states = states
         if default is None:
-            self.states.append(state("Default", personality.prs()))
+            self.states.append(state("Default", Personality()))
         else:
             self.states.append(state("Default", default))
         if current is None:
-            self.states.append(state("Current", personality.prs()))
+            self.states.append(state("Current", Personality()))
         else:
             self.states.append(state("Current", current))
         if previous is None:
-            self.states.append(state("Previous", personality.prs()))
+            self.states.append(state("Previous", Personality()))
         else:
             self.states.append(state("Previous", previous))
 
     @staticmethod
-    def newState(stateName, prs, tag=None):
+    def newState(stateName, personality, tag=None):
         """Return a new instance of state."""
-        return state(stateName, prs, tag)
+        return state(stateName, personality, tag)
 
     def addState(self, stateToAdd):
         """Add state to self.states."""
@@ -105,16 +107,17 @@ class SOMManger:
 class SOMObject(sys_objects.user):
 
     def __init__(self, mod=None, trd=None, prs=None, mem=None, tag=None):
-        """mod: attribs.model.*
-            trd: attribs.thread.trd
-            prs: attribs.personality.prs
-            mem: attribs.memory.mem
-            tag: dictionary
+        """
+        mod: attribs.SysObject or attribs.FileObject
+        trd: attribs.Thread
+        prs: attribs.Personality
+        mem: attribs.UsrMemory
+        tag: dictionary
         """
         super().__init__(mod, trd, prs, mem, tag)
 
     def changeSOMState(self, stateName, makePreviousDefault=True):
-        """Change the current state of the StateOfMindManager and update the prs."""
+        """Change the current state of the StateOfMindManager and update the Personality."""
         SOMManagerInstance = self.trd.somm
         if not self.matchName("Previous", SOMManagerInstance):
             SOMManagerInstance.addState(SOMManagerInstance.newState("Previous", self.prs))
@@ -130,27 +133,28 @@ class SOMObject(sys_objects.user):
         self.trd.somm = SOMManagerInstance
 
     def saveCurrentSOMState(self):
-        """Save the current prs in the "Current" state or add it as "Current" if "Current" doesn't exist."""
+        """Save the current Personality in the "Current" state or add it as "Current" if "Current" doesn't exist."""
         if self.matchName("Current", self.trd.somm):
             self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Current")].update(self.prs)
         else:
             self.trd.somm.addState(self.trd.somm.newState("Current", self.prs))
 
     def revertSOMStateToDefault(self):
-        """Set the prs to the "Default" state."""
+        """Set the Personality to the "Default" state."""
         self.prs = self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Default")].storage
         self.trd.somm.makeCurrent("Default")
 
     def revertSOMStateToPrevious(self):
-        """Set the prs to the "Default" state."""
+        """Set the Personality to the "Default" state."""
         self.prs = self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Previous")].storage
         self.trd.somm.makeCurrent("Previous")
 
     @staticmethod
     def matchName(stateName, SOMMInstance):
-        """See if stateName is in any state in SOMInstance.
-            Return True if there is a match.
-            Return False otherwise.
+        """
+        See if stateName is in any state in SOMInstance.
+        Return True if there is a match.
+        Return False otherwise.
         """
         for tmpState in SOMMInstance.states:
             if tmpState.tag["stateName"] == stateName:

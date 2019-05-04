@@ -150,7 +150,7 @@ def streamListen(server, channel, usr):
                     if i[3][count][3]:
                         connectedToStream = True
                         while connectedToStream:
-                            usr.thread.language.listen(i[2][0])
+                            usr.trd.language.listen(i[2][0])
                             n = input("dc?")
                             if n == 'y':
                                 connectedToStream = False

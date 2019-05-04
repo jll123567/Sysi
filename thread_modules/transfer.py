@@ -25,7 +25,7 @@ class transf:
             self.interface = sender.trd.transf.interface
         except AttributeError:
             print("listed sender:" + str(sender.tag["name"]) + "'s transf interface was not found\ndoes it have a "
-                                                               "trd.transf")
+                                                               "Thread.transf")
 
     # clears the interface
     # none

@@ -4,7 +4,7 @@
 import sys_objects
 
 
-# complex Thread module
+# complex thread module
 # problems[], solutions[]
 class cpx:
     def __init__(self, problems=None, solutions=None):
@@ -34,8 +34,8 @@ class cpx:
     # none
     # dta(cpx attribs, tags)
     def package(self):
-        return sys_objects.data([self.problems, self.solutions], {"name": "tread.cpx.package", "id": None,
-                                                             "dataType": "thread.cpx.package"})
+        return sys_objects.data([self.problems, self.solutions], {"name": "Thread.cpx.package", "id": None,
+                                                                  "dataType": "Thread.cpx.package"})
 
 
 # Info at run

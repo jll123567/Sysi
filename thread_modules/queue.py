@@ -59,8 +59,8 @@ class que:
 
 
 # make exact exact tasks into a valid tsk profile(broken at the moment)
-# queue(trd.queue)*
-# tsk profile(trd.tsk)
+# queue(Thread.queue)*
+# tsk profile(Thread.tsk)
 def makeValidTskProfile(queue):
     if isinstance(queue, que):
         tasks = queue.tasks

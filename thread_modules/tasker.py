@@ -97,7 +97,7 @@ class tsk:
                 break
             else:
                 objId += char
-        objId += ".trd.tsk"
+        objId += ".Thread.tsk"
         self.addShift([operation, [objId, "loopInf", [operation], operation[3]]])
 
     # determine the next shift based on the state of object0 and object1(they don't need to be sysh.sysObject.sysObject s)
@@ -166,4 +166,4 @@ def createOperation(targetId, function, parameters, sourceId):
 
 
 def createSustainOperation(objId):
-    return createOperation(objId + ".trd.tsk", "loopInf", [createOperation(objId + ".trd.tsk", "doNothing", [], objId)], objId)
+    return createOperation(objId + ".Thread.tsk", "loopInf", [createOperation(objId + ".Thread.tsk", "doNothing", [], objId)], objId)

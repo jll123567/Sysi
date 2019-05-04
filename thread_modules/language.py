@@ -88,5 +88,5 @@ class lang:
 
     def package(self):
         """Pack audio data into a data obj and return it."""
-        return sys_objects.data([self.heard, self.speakQue], {"name": "tread.lang.package", "id": None,
-                                                                 "dataType": "thread.lang.package"})
+        return sys_objects.data([self.heard, self.speakQue], {"name": "Thread.lang.package", "id": None,
+                                                              "dataType": "Thread.lang.package"})

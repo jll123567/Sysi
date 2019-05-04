@@ -68,7 +68,7 @@ class mov:
     def attract(self, o1, force):
         """changes position based on another sysObject's position and a force
 
-        o1 needs to be a trd.mov not an sysObject.sysObject
+        o1 needs to be a Thread.mov not an sysObject.sysObject
         attract pusses together"""
         if self.x > o1.x:
             self.vx = (force * -1)
@@ -93,7 +93,7 @@ class mov:
     def repel(self, o1, force):
         """changes position based on another sysObject's position and a force
 
-        o1 needs to be a trd.mov not an sysObject.sysObject
+        o1 needs to be a Thread.mov not an sysObject.sysObject
         repel pushes away"""
         if self.x > o1.x:
             self.vx = force
@@ -119,4 +119,4 @@ class mov:
         """pack attributes into a data sysObject and return it"""
         return sys_objects.data([self.x, self.y, self.z, self.vx, self.vy, self.vz, self.rx,
                                  self.ry, self.rz, self.rvx, self.rvy, self.rvz],
-                                {"name": "tread.mov.package", "id": None, "dataType": "thread.mov.package"})
+                                {"name": "Thread.mov.package", "id": None, "dataType": "Thread.mov.package"})

@@ -38,7 +38,7 @@ class ram:
                 return idx
             idx += 1
         if not matched:
-            print("no results. try obj.sysh.thread.ram.read()")
+            print("no results. try obj.trd.ram.read()")
 
     def free(self, index):
         """removes an sysObject from self.storage(with *style*)
