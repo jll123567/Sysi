@@ -49,7 +49,7 @@ def populateQueue(scn, mode='e'):
                 except AttributeError:
                     noTagAtObject(obj)
                 except KeyError:
-                    pass
+                    print("KeyError passed")
 
 
 # assign an issue to a user

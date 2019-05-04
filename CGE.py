@@ -129,7 +129,7 @@ class CGESession(threading.Thread):
             if self.savedScene is not None:
                 self.savedScene.scp.append(["this", "removeObj", [objId], "this"])
         except objectNotInObjList:
-            pass
+            print("objectNotInObjList passed")
 
     def addObj(self, obj):
         """add obj to self.objList"""
@@ -338,7 +338,7 @@ class CGESession(threading.Thread):
             try:
                 self.objList[idx].trd.tsk.nextCurrent()
             except AttributeError:
-                pass
+                print("AttributeError passed")
         if objsEmpty == self.objList.__len__():
             self.objList = []
 

@@ -115,8 +115,7 @@ def formatShift(text):
         try:
             outputText += (str(formatOperation(operation[:-1])) + ',')
         except TypeError:
-            pass
-            # raise ThreadCodeWarning(text, "No operations passed.")
+            warnings.warn(NoElementPassed)
     if outputText[-1] == ',':
         outputText = outputText[:-1]
     outputText += ']'
@@ -131,8 +130,7 @@ def formatProfile(text):
         try:
             outputText += (str(formatShift(shift[:-1])) + ',')
         except TypeError:
-            pass
-            # raise ThreadCodeWarning(text, "No shifts passed.")
+            warnings.warn(NoElementPassed)
     if outputText[-1] == ',':
         outputText = outputText[:-1]
     outputText += ']'
@@ -147,8 +145,7 @@ def formatCurrent(text):
         try:
             outputText += (str(formatShift(shift[:-1])) + ',')
         except TypeError:
-            pass
-            # raise ThreadCodeWarning(text, "No shifts passed.")
+            warnings.warn(NoElementPassed)
     if outputText[-1] == ',':
         outputText = outputText[:-1]
     outputText += ']'
@@ -189,13 +186,13 @@ def parseFile(file, outputFormat="-t"):
             if outputFormat == '-o':
                 outputTrd.profile = formatProfile(prf.group(1))
             elif outputFormat == '-t':
-                outputTxt += (formatProfile(prf.group(1))+"/n")
+                outputTxt += (formatProfile(prf.group(1)) + "/n")
 
         if cur:
             if outputFormat == '-o':
                 outputTrd.profile = formatProfile(cur.group(1))
             elif outputFormat == '-t':
-                outputTxt += (formatProfile(cur.group(1))+"\n")
+                outputTxt += (formatProfile(cur.group(1)) + "\n")
         if outputTxt != "":
             return outputTxt
         else:
@@ -210,6 +207,7 @@ def parseFile(file, outputFormat="-t"):
 
 class ThreadCodeSyntaxError(Exception):
     """Raised if syntax is wrong."""
+
     def __init__(self, message, expression=None):
         self.message = "The following is incorrect syntax: " + str(message)
         self.expression = expression
@@ -226,7 +224,7 @@ class StrangeObjectName(Warning):
 
 
 class NoElementPassed(Warning):
-    """Raised if no element was passed were passed where one was expected."""
+    """Raised if no elements were passed where one was expected."""
     pass
 
 
@@ -237,12 +235,14 @@ class SpecialCharInPram(Warning):
 
 class UnknownError(Exception):
     """If you see this error, run."""
+
     def __init__(self):
         self.message = "Something went horribly wrong in the thread compiler!"
 
 
 class BadFileType(Exception):
     """Raised if the file is not of the expected type"""
+
     def __init__(self, expression=None):
         self.message = "threadCompiler only accepts .trc files"
         self.expression = expression
@@ -265,6 +265,6 @@ if __name__ == "__main__":
         outForm = "-t"
         try:
             outForm = argv[2]
-        except IndexError:
+        except IndexError:  # If no second argument was passed.
             pass
         print(parseFile(fileName, outForm))
