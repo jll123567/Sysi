@@ -2,8 +2,7 @@
 import re
 import hashlib
 import sys_objects
-import thread_modules.tasker
-import thread_modules.ram
+import thread_modules
 
 
 class UsrMemory:
@@ -111,7 +110,7 @@ class FileModel:
 class Personality:
     """
     Define loosely the behavior of users.
-    Pers only helps loosely define user behavior but does not code for behavior. Use Thread.tsk for this.
+    Pers only helps loosely define user behavior but does not code for behavior. Use Thread.Tasker for this.
     Goals and limits are boolean expressions ranked most important to least important(goal[0] is most).
     Goals are encouraged, limits are not.
     """
@@ -179,11 +178,11 @@ class Thread:
                  transf=None, sub=None):
         """Check each thread_modules class of the same name."""
         if ram is None:
-            self.ram = thread_modules.ram.ram()
+            self.ram = thread_modules.Ram()
         else:
             self.ram = ram
         if tsk is None:
-            self.tsk = thread_modules.tasker.tsk()
+            self.tsk = thread_modules.Tasker()
         else:
             self.tsk = tsk
         self.que = que
@@ -196,7 +195,7 @@ class Thread:
         self.sub = sub
 
     def storeHeard(self):
-        """Store audio data to ram."""
+        """Store audio data to Ram."""
         dta = self.lang.package()
         self.ram.storage.append(dta)
 

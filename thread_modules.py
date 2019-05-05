@@ -1,11 +1,12 @@
-""""""
+"""Modules for attribs.Thread"""
 import sys_objects
 import prog.idGen
 from attribs import Personality
 import time
+import socket
 
 
-class cpx:
+class Complex:
     """Arbitrary resolution."""
 
     def __init__(self, problems=None, solutions=None):
@@ -32,12 +33,12 @@ class cpx:
         self.solutions.insert(problemIndex, solution)
 
     def package(self):
-        """Pack data for ram."""
-        return sys_objects.data([self.problems, self.solutions], {"name": "Thread.cpx.package", "id": None,
-                                                                  "dataType": "Thread.cpx.package"})
+        """Pack data for Ram."""
+        return sys_objects.data([self.problems, self.solutions], {"name": "Thread.Complex.package", "id": None,
+                                                                  "dataType": "Thread.Complex.package"})
 
 
-class audioStereo:
+class AudioStereo:
     """Hold stereo audio."""
 
     def __init__(self, left=None, right=None):
@@ -55,7 +56,7 @@ class audioStereo:
             self.right = right
 
 
-class audioMono:
+class AudioMono:
     """Hold mono audio."""
 
     def __init__(self, sound=None):
@@ -68,10 +69,10 @@ class audioMono:
             self.sound = sound
 
 
-class lang:
+class Language:
     """Hold and manipulate audio."""
 
-    def __init__(self, heard=audioStereo(), speakQue=audioMono()):
+    def __init__(self, heard=AudioStereo(), speakQue=AudioMono()):
         """
         :param heard: AudioStereo
         :param speakQue: AudioMono
@@ -124,11 +125,11 @@ class lang:
 
     def package(self):
         """Pack audio data into a data obj and return it."""
-        return sys_objects.data([self.heard, self.speakQue], {"name": "Thread.lang.package", "id": None,
-                                                              "dataType": "Thread.lang.package"})
+        return sys_objects.data([self.heard, self.speakQue], {"name": "Thread.Language.package", "id": None,
+                                                              "dataType": "Thread.Language.package"})
 
 
-class mov:
+class Move:
     """holds sysObject position, acceleration and rotation"""
 
     def __init__(self, x=0, y=0, z=0, vx=0, vy=0, vz=0, rx=0, ry=0, rz=0, rvx=0, rvy=0, rvz=0):
@@ -197,7 +198,7 @@ class mov:
     def attract(self, o1, force):
         """changes position based on another sysObject's position and a force
 
-        o1 needs to be a Thread.mov not an sysObject.sysObject
+        o1 needs to be a Thread.Move not an sysObject.sysObject
         attract pusses together"""
         if self.x > o1.x:
             self.vx = (force * -1)
@@ -222,7 +223,7 @@ class mov:
     def repel(self, o1, force):
         """changes position based on another sysObject's position and a force
 
-        o1 needs to be a Thread.mov not an sysObject.sysObject
+        o1 needs to be a Thread.Move not an sysObject.sysObject
         repel pushes away"""
         if self.x > o1.x:
             self.vx = force
@@ -248,73 +249,72 @@ class mov:
         """pack attributes into a data sysObject and return it"""
         return sys_objects.data([self.x, self.y, self.z, self.vx, self.vy, self.vz, self.rx,
                                  self.ry, self.rz, self.rvx, self.rvy, self.rvz],
-                                {"name": "Thread.mov.package", "id": None, "dataType": "Thread.mov.package"})
+                                {"name": "Thread.Move.package", "id": None, "dataType": "Thread.Move.package"})
 
 
-class olf:
-    """Hold olfactory input for thread.
+class Olfactor:
+    """
+    Hold olfactory input for thread.
     descriptor is a string
-    strength is a float between and including 0 and 1"""
+    strength is a float between and including 0 and 1
+    """
 
     def __init__(self, descriptor="None", strength=0):
-        """Initialize attributes
-        descriptor:"None"
-        strength:0"""
+        """
+        :param descriptor: str
+        :param strength: int
+        """
         self.descriptor = descriptor
         self.strength = strength
 
     def package(self):
-        """Pack olf data into a data sysObject(it needs an id) and return it."""
-        return sys_objects.data([self.descriptor, self.strength], {"name": "Thread.olf.package", "id": None,
-                                                                   "dataType": "Thread.olf.package"})
+        """Pack Olfactor data into a data sysObject(it needs an id) and return it."""
+        return sys_objects.data([self.descriptor, self.strength], {"name": "Thread.Olfactor.package", "id": None,
+                                                                   "dataType": "Thread.Olfactor.package"})
 
 
-# thread module queue
-# tasks([])
-class que:
+class Queue:
+    """Soft Tasker planning."""
+
     def __init__(self, tasks=None):
+        """
+        :param tasks: list
+        """
         if tasks is None:
             self.tasks = []
         else:
             self.tasks = tasks
 
-    # empty queue
-    # none
-    # none
     def close(self):
+        """Empty queue."""
         self.tasks = []
 
-    # insert a task at an index
-    # task(task(str)*, index(int)
-    # none
     def interrupt(self, task, index=0):
+        """Insert <task> at <index> in self.tasks."""
         self.tasks.insert(index, task)
 
-    # complete a ask
-    # index(int)
-    # none
     def complete(self, index=None):
+        """
+        Remove the task at <index>.
+        if <index> is None then remove self.tasks[0].
+        """
         if index is None:
             self.tasks.pop(0)
         else:
             self.tasks.pop(index)
 
-    # show that tasks in the queue
-    # none
-    # console output(str)
     def showTask(self):
-        # iterates through that thatThingThat'sAListOfThings and recursively adds indents
-        # thatThingThat'sAListOfThings([])*, indent(int)*
-        # console output(str)
-        # noinspection SpellCheckingInspection
-        def recurse(thatThingThatsAListOfThings, indent):
-            if isinstance(thatThingThatsAListOfThings, list):
-                recurse(thatThingThatsAListOfThings, indent + 1)
+        """Print all tasks in self."""
+
+        def recurse(thatThingThatIsAListOfThings, indent):
+            """Iterate through thatThingThatIsAListOfThings and recursively add indents."""
+            if isinstance(thatThingThatIsAListOfThings, list):
+                recurse(thatThingThatIsAListOfThings, indent + 1)
             else:
                 if i[0] == "e":
-                    print("  " * indent, "exact:", thatThingThatsAListOfThings)
+                    print("  " * indent, "exact:", thatThingThatIsAListOfThings)
                 elif i[0] == "i":
-                    print("  " * indent, "inexact:", thatThingThatsAListOfThings)
+                    print("  " * indent, "inexact:", thatThingThatIsAListOfThings)
                 else:
                     print("Not a valid task type")
 
@@ -322,11 +322,643 @@ class que:
             recurse(i, 0)
 
 
-# make exact exact tasks into a valid tsk profile(broken at the moment)
+class Ram:
+    """
+    Holds random data the thread needs to store temporarily.
+    Storage elements hold any.
+    """
+
+    def __init__(self, storage=None):
+        """
+        :param storage: list
+        """
+        if storage is None:
+            self.storage = []
+        else:
+            self.storage = storage
+
+    def load(self, dta):
+        """Put dta into self.storage ."""
+        self.storage.append(dta)
+
+    def loadTrdDta(self, dta):
+        """Generate a generic id for dta and load() it."""
+        dta.tag["id"] = prog.idGen.generateGenericId(self.storage, dta)
+        self.load(dta)
+
+    def read(self):
+        """Print the contents of self.storage to the console."""
+        for i in self.storage:
+            print(i)
+
+    def search(self, query):
+        """
+        Search self.storage for query
+        Returns the index if the sysObject in storage and query are equal.
+        Prints a message to the console if nothing was found.
+        """
+        matched = True
+        idx = 0
+        for i in self.storage:
+            if i == query:
+                return idx
+            idx += 1
+        if not matched:
+            print("no results. try obj.trd.Ram.read()")
+
+    def free(self, index):
+        """
+        Removes an sysObject from self.storage(with *style*).
+
+        Index(int): Remove self.storage[index].
+        Index(None): Remove self.storage[-1]
+        Index("all"): Set self.storage = []
+        Index(anything else): Print "invalid request".
+        """
+        if index is None:
+            self.storage.pop(-1)
+        elif index == "all":
+            self.storage = []
+        elif isinstance(index, int):
+            self.storage.pop(index)
+        else:
+            print("invalid request")
+
+
+class SOMState(sys_objects.data):
+    """An individual SOMState, acts as a Personality with a name encoded as a data."""
+
+    def __init__(self, stateName, prs, tag=None):
+        """
+        :param stateName: string
+        :param prs: attribs.Personality
+        :param tag: dictionary
+        """
+        super().__init__(prs, tag)
+        if tag is None:
+            self.tag = {"id": None, "name": None, "dataType": "SOMState", "stateName": stateName}
+        else:
+            self.tag = tag
+
+    def rename(self, newName):
+        """Change stateName of SOMState to newName."""
+        self.tag["stateName"] = newName
+
+
+class SOMManger:
+    """Hold and modify states."""
+
+    def __init__(self, states=None, default=None, current=None, previous=None):
+        """
+        :param states: list
+        :param default: attribs.Personality
+        :param current: attribs.Personality
+        :param previous: attribs.Personality
+        """
+        if states is None:
+            self.states = []
+        else:
+            self.states = states
+        if default is None:
+            self.states.append(SOMState("Default", Personality()))
+        else:
+            self.states.append(SOMState("Default", default))
+        if current is None:
+            self.states.append(SOMState("Current", Personality()))
+        else:
+            self.states.append(SOMState("Current", current))
+        if previous is None:
+            self.states.append(SOMState("Previous", Personality()))
+        else:
+            self.states.append(SOMState("Previous", previous))
+
+    @staticmethod
+    def newState(stateName, personality, tag=None):
+        """Return a new instance of SOMState."""
+        return SOMState(stateName, personality, tag)
+
+    def addState(self, stateToAdd):
+        """Add SOMState to self.states."""
+        self.states.append(stateToAdd)
+
+    def removeState(self, stateName):
+        """Remove SOMState named stateName from self.states."""
+        self.states.pop(self.resolveStateNameToIndex(stateName))
+
+    def makeDefault(self, stateName, renameForCurrentDefault):
+        """Rename the SOMState with the name "Default" to renameForCurrentDefault if possible.
+            Rename SOMState with stateName to "Default".
+        """
+        if self.resolveStateNameToIndex("Default") is not None:
+            self.states[self.resolveStateNameToIndex("Default")].rename(renameForCurrentDefault)
+        self.states[self.resolveStateNameToIndex(stateName)].rename("Default")
+
+    def makePrevious(self, stateName, renameForPrevious):
+        """Rename the SOMState with the name "Previous" to renameForPrevious if possible.
+            Rename SOMState with stateName to "Previous".
+        """
+        if self.resolveStateNameToIndex("Previous") is not None:
+            self.states[self.resolveStateNameToIndex("Previous")].rename(renameForPrevious)
+        self.states[self.resolveStateNameToIndex(stateName)].rename("Previous")
+
+    def makeCurrent(self, stateName):
+        """Rename the SOMState with the name "Current" to "Previous" and SOMState with stateName to "Current".
+            Create Previous if it doesn't exist
+            Don't change Previous is Current doesn't exist.
+        """
+        if self.resolveStateNameToIndex("Previous") is not None:
+            if self.resolveStateNameToIndex("Current") is not None:
+                self.states[self.resolveStateNameToIndex("Previous")]. \
+                    update(self.states[self.resolveStateNameToIndex("Current")].storage)
+        else:
+            if self.resolveStateNameToIndex("Current") is not None:
+                self.addState(SOMState("Previous", self.states[self.resolveStateNameToIndex("Current")].storage))
+        self.states[self.resolveStateNameToIndex(stateName)].rename("Current")
+
+    def resolveStateNameToIndex(self, stateName):
+        """Find and return the index of the SOMState with the stateName stateName."""
+        idx = 0
+        for stateInstance in self.states:
+            if stateInstance.tag["stateName"] == stateName:
+                break
+            idx += 1
+        if idx == self.states.__len__():
+            return None
+        return idx
+
+
+# this is an example class for SOM
+# class SOMObject(sys_objects.user):
+#
+#     def __init__(self, mod=None, trd=None, prs=None, mem=None, tag=None):
+#         """
+#         :param mod: attribs.SysObject or attribs.FileObject
+#         :param trd: attribs.Thread
+#         :param prs: attribs.Personality
+#         :param mem: attribs.UsrMemory
+#         :param tag: dictionary
+#         """
+#         super().__init__(mod, trd, prs, mem, tag)
+#
+#     def changeSOMState(self, stateName, makePreviousDefault=True):
+#         """Change the current SOMState of the StateOfMindManager and update the Personality."""
+#         SOMManagerInstance = self.trd.somm
+#         if not self.matchName("Previous", SOMManagerInstance):
+#             SOMManagerInstance.addState(SOMManagerInstance.newState("Previous", self.prs))
+#         else:
+#             SOMManagerInstance.states[SOMManagerInstance.resolveStateNameToIndex("Previous")].update(self.prs)
+#         if makePreviousDefault:
+#             SOMManagerInstance.makeDefault("Previous", "previousDefault")
+#         self.prs = SOMManagerInstance.states[SOMManagerInstance.resolveStateNameToIndex(stateName)].storage
+#         if not self.matchName("Current", SOMManagerInstance):
+#             SOMManagerInstance.addState(SOMManagerInstance.newState("Current", self.prs))
+#         else:
+#             SOMManagerInstance.states[SOMManagerInstance.resolveStateNameToIndex("Current")].update(self.prs)
+#         self.trd.somm = SOMManagerInstance
+#
+#     def saveCurrentSOMState(self):
+#         """Save the current Personality in the "Current" SOMState or add it as "Current" if "Current" doesn't exist."""
+#         if self.matchName("Current", self.trd.somm):
+#             self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Current")].update(self.prs)
+#         else:
+#             self.trd.somm.addState(self.trd.somm.newState("Current", self.prs))
+#
+#     def revertSOMStateToDefault(self):
+#         """Set the Personality to the "Default" SOMState."""
+#         self.prs = self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Default")].storage
+#         self.trd.somm.makeCurrent("Default")
+#
+#     def revertSOMStateToPrevious(self):
+#         """Set the Personality to the "Default" SOMState."""
+#         self.prs = self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Previous")].storage
+#         self.trd.somm.makeCurrent("Previous")
+#
+#     @staticmethod
+#     def matchName(stateName, SOMMInstance):
+#         """
+#         See if stateName is in any SOMState in SOMInstance.
+#         Return True if there is a match.
+#         Return False otherwise.
+#         """
+#         for tmpState in SOMMInstance.states:
+#             if tmpState.tag["stateName"] == stateName:
+#                 return True
+#         return False
+
+
+class SubObjManager:
+    """
+    Data for SysObjects that are/have subObjects.
+
+    Objects can be like groups without being groups.
+    Parent and child objects have a "SubObjManager" section in their Thread.
+    """
+
+    def __init__(self, parent=None, children=None):
+        """
+        :param parent: list
+            [reference, offset]
+        :param children: list
+            [reference, ...]
+
+        reference = object's id
+
+        offset = [x,y,z]
+
+        If a sysObject has no children but a parent leave "children" set to an empty list ([])
+
+        If a sysObject has no parent set "parent" to None
+
+        If an sysObject has neither children or a parent remove the "SubObjManager" entry or set parent and children to None.
+
+        If has a parent, move becomes child.trd.mov = "sub"
+        """
+        self.parent = parent
+        if children is None:
+            self.children = []
+        else:
+            self.children = children
+
+    def setParent(self, parent, offset):
+        """Set the parent and offset."""
+        self.parent = [parent, offset]
+
+    def setChildren(self, children):
+        """Set children."""
+        self.children = children
+
+    def addChild(self, child):
+        """Append self.children with <child>."""
+        self.children.append(child)
+
+    def removeChild(self, index):
+        """Remove the child at <index>."""
+        self.children.pop(index)
+
+    def package(self):
+        """Package for Ram."""
+        return sys_objects.data([self.parent, self.children], {"name": "Thread.SubObjManager.package", "id": None,
+                                                               "dataType": "Thread.SubObjManager.package"})
+
+
+class Tasker:
+    """
+    Handle function requests for CGE
+    Essential for threads.
+    """
+
+    def __init__(self, current=None, profile=None):
+        """
+        :param current: shift
+        :param profile: list
+            [shift, ...]
+
+        shift = [operation, ...]
+
+        operation = [target, method, [paramaters, ...], source(this SysObject's id)]
+        """
+        if current is None:
+            self.current = []
+        else:
+            self.current = current
+        if profile is None:
+            self.profile = []
+        else:
+            self.profile = profile
+
+    def nextCurrent(self):
+        """Move shift in self.profile[0] to self.current."""
+        if self.profile:
+            if isinstance(self.profile[0], list):
+                self.current = self.profile[0]
+            else:
+                self.current = [self.profile[0]]
+            self.profile.pop(0)
+        else:
+            self.current = []
+
+    def debugCurrentOp(self):
+        """
+        Print self.current[0] or the shift in current.
+        This can be used for debugging but also can be used to leak data from the thread in unexpected ways.
+        """
+        print(self.current[0])
+
+    def setCurrent(self, shift):
+        """Set self.current to <shift>."""
+        self.current = shift
+
+    def appendCurrent(self, operation):
+        """Append <operation> to self.current ."""
+        self.current.append(operation)
+
+    def addShift(self, shift):
+        """Append <shift> to self.profile ."""
+        self.profile.append(shift)
+
+    def removeShift(self, index):
+        """Remove self.profile[<index>]."""
+        self.profile.pop(index)
+
+    @staticmethod
+    def wait(t):
+        """Time.sleep() for <t> seconds."""
+        time.sleep(t)
+
+    @staticmethod
+    def doNothing():
+        """Do LITERALLY NOTHING."""
+        pass
+
+    def loopInf(self, operation):  # todo extend the functionality of this a tad?
+        """Add a shift that runs <operation> and this method(<operation>)."""
+        objId = ""
+        for char in operation[0]:
+            if char == '.':
+                break
+            else:
+                objId += char
+        objId += ".Thread.Tasker"
+        self.addShift([operation, [objId, "loopInf", [operation], operation[3]]])
+
+    def ifStatement(self, comparator, object0, object1, then, els=None):
+        """
+        Determine the next shift based on the state of <object0> and <object1>.
+
+        :param comparator: ("==","!=",">","<","<=",">=")
+        :param object0: any
+        :param object1: any
+        :param then: shift
+        :param els: shift or None
+        """
+        if not isinstance(then[0], list):
+            then = [then]
+        if comparator == '==':
+            if object0 == object1:
+                self.profile.insert(0, then)
+            else:
+                if els is not None:
+                    self.profile.insert(0, els)
+        elif comparator == '!=':
+            if object0 != object1:
+                self.profile.insert(0, then)
+            else:
+                if els is not None:
+                    self.profile.insert(0, els)
+        elif comparator == '>':
+            if object0 > object1:
+                self.profile.insert(0, then)
+            else:
+                if els is not None:
+                    self.profile.insert(0, els)
+        elif comparator == '<':
+            if object0 < object1:
+                self.profile.insert(0, then)
+            else:
+                if els is not None:
+                    self.profile.insert(0, els)
+        elif comparator == '>=':
+            if object0 >= object1:
+                self.profile.insert(0, then)
+            else:
+                if els is not None:
+                    self.profile.insert(0, els)
+        elif comparator == '<=':
+            if object0 <= object1:
+                self.profile.insert(0, then)
+            else:
+                if els is not None:
+                    self.profile.insert(0, els)
+        else:
+            print("the comparator inputted is not valid")
+
+    @staticmethod
+    def debugPrint(msg):
+        """Print <msg>."""
+        print(msg)
+
+    # pack data for Ram
+    # none
+    # dta(Tasker attribs, tags)
+    def package(self):
+        """Package data for Ram."""
+        return sys_objects.data([self.current, self.profile], {"name": "Thread.Tasker.package", "id": None,
+                                                               "dataType": "Thread.Tasker.package"})
+
+
+class taste:
+    """Handle taste."""
+
+    def __init__(self, bit=0.0, swt=0.0, slt=0.0, sor=0.0, pln=0.0):
+        """
+        All attributes are floats from 0 to 1.
+
+        :param bit: float
+        :param swt: float
+        :param slt: float
+        :param sor: float
+        :param pln: float
+        """
+        self.bit = bit
+        self.swt = swt
+        self.slt = slt
+        self.sor = sor
+        self.pln = pln
+
+    def package(self):
+        """pack taste into a data and return it"""
+        return sys_objects.data([self.bit, self.swt, self.slt, self.pln], {"name": "Thread.Olfactor.package",
+                                                                           "id": None,
+                                                                           "dataType": "Thread.Olfactor.package"})
+
+
+class Tactile:
+    """Handle tactile input."""
+    def __init__(self, tctSnsNds):
+        """
+        :param tctSnsNds: list
+            [TactileSensoryNode, ...]
+        """
+        self.tctSnsNds = tctSnsNds
+
+    def package(self):
+        """Package for Ram."""
+        nodeList = []
+        for node in self.tctSnsNds:
+            nodeList.append(node.flatten())
+        return sys_objects.data(nodeList,
+                                {"name": "Thread.Tactile.package", "id": None, "dataType": "Thread.Tactile.package"})
+
+
+# sensory nodes
+# position([float, float, float]), pressure(float), relTemp(float)
+class TactileSensoryNode:
+    def __init__(self, position=None, pressure=0.0, relTemp=0.0):
+        if position is None:
+            self.position = [0.0, 0.0, 0.0]
+        else:
+            self.position = position
+        self.pressure = pressure
+        self.relTemp = relTemp
+
+    # packs the node into a dta
+    # none
+    # TactileSensoryNode dta([pos, pres, reTmp], tags)
+    def package(self):
+        return sys_objects.data(self.flatten(), {"name": "Thread.Tactile.TactileSensoryNode.package", "id": None,
+                                                 "dataType": "Thread.Tactile.TactileSensoryNode.package"})
+
+    # flattens the node to a list
+    # none
+    # [pos, pres, reTmp]
+    def flatten(self):
+        return [self.position, self.pressure, self.relTemp]
+
+
+# Transfer
+# interface(dta/socket)
+class Transfer:
+    def __init__(self, interface=None):
+        self.interface = interface
+
+    # package dta for sending
+    # sender(objId)*, dta(dta)*
+    # none
+    def send(self, sender, dta):
+        pkg = dta
+        pkg.tag.update({"sender": sender})
+        self.interface = pkg
+
+    # receive data from an obj
+    # sender(obj)*
+    # none/console output(str)
+    def receive(self, sender):
+        try:
+            self.interface = sender.trd.transf.interface
+        except AttributeError:
+            print("listed sender:" + str(sender.tag["name"]) + "'s Transfer interface was not found\ndoes it have a "
+                                                               "Thread.Transfer")
+
+    # clears the interface
+    # none
+    # none
+    def clearInterface(self):
+        self.interface = None
+
+    # socket code based off: https://docs.python.org/3/howto/sockets.html
+
+    # sets <obj>'s transfer interface to a socket
+    # none
+    # none
+    def makeSocketInterface(self):
+        self.interface = socket.socket()
+
+    # connects the socket to <host> at <port>
+    # host(ip/hostname(str))*, port(int)*
+    # none
+    def connectSocket(self, host, port):
+        self.interface.connect((host, port))
+
+    # sends an ascii encoded message though the socket
+    # msg(str)*
+    # none
+    def sendSocket(self, msg):
+        msg = msg.encode("ascii")
+        totalSent = 0
+        while totalSent < len(msg):
+            sent = self.interface.send(msg[totalSent:])
+            if sent == 0:
+                raise RuntimeError("socket connection broken")
+            totalSent = totalSent + sent
+
+    # receives 254 bytes from the socket
+    # none
+    # received data(bytes
+    def receiveSocket(self):
+        chunks = []
+        bytes_recd = 0
+        while bytes_recd < 254:
+            chunk = self.interface.recv(min(254 - bytes_recd, 2048))
+            if chunk == b'':
+                raise RuntimeError("socket connection broken")
+            chunks.append(chunk)
+            bytes_recd = bytes_recd + len(chunk)
+        return b''.join(chunks)
+
+    # closes the socket
+    # none
+    # none
+    def disconnectSocket(self):
+        self.interface.close()
+
+
+class Visual:
+    """hold and process visual data
+
+    rawImg is a list with images(images will be added later)
+    rx is float representing degrees
+    so are ry and rz"""
+
+    def __init__(self, rawImg=None, pitch=0, yaw=0, roll=0):
+        """initialize sysObject attributes
+        rawImg is an empty list
+        pitch is 0
+        yaw is 0
+        roll is 0"""
+        if rawImg is None:
+            self.rawImg = []
+        else:
+            self.rawImg = rawImg
+        self.rx = pitch
+        self.ry = yaw
+        self.rz = roll
+
+    def rotate(self, rx, ry, rz):
+        """set the rotation attributes of the visual thread"""
+        self.rx = rx
+        self.ry = ry
+        self.rz = rz
+
+    # clear image from raw img
+    # none
+    # none
+    def clearImg(self):
+        """set the rawImg attribute to an empty list"""
+        self.rawImg = []
+
+    # reset position of camera
+    # none
+    # none
+    def resetPos(self):
+        """set rotation attributes to 0"""
+        self.rx = 0
+        self.ry = 0
+        self.rz = 0
+
+    # pack data for Ram
+    # none
+    # dta(Visual attribs, tags)
+    def package(self):
+        """pack attributes into a data sysObject and return it"""
+        return sys_objects.data([self.rawImg, self.rx, self.ry, self.rz], {"name": "Thread.Visual.package", "id": None,
+                                                                           "dataType": "Thread.Visual.package"})
+
+
+def createOperation(targetId, function, parameters, sourceId):
+    """create an operation and return it"""
+    return [targetId, function, parameters, sourceId]
+
+
+def createSustainOperation(objId):
+    return createOperation(objId + ".Thread.Tasker", "loopInf",
+                           [createOperation(objId + ".Thread.Tasker", "doNothing", [], objId)], objId)
+
+
+# make exact exact tasks into a valid Tasker profile(broken at the moment)
 # queue(Thread.queue)*
-# tsk profile(Thread.tsk)
+# Tasker profile(Thread.Tasker)
 def makeValidTskProfile(queue):
-    if isinstance(queue, que):
+    if isinstance(queue, Queue):
         tasks = queue.tasks
     else:
         tasks = queue
@@ -340,279 +972,3 @@ def makeValidTskProfile(queue):
         else:
             mainTask.append(item)
     return mainTask
-
-
-class ram:
-    """holds random data the thread needs to store temporarily
-    storage is a list that holds any"""
-
-    def __init__(self, storage=None):
-        """Initialize attributes
-        Storage:[]"""
-        if storage is None:
-            self.storage = []
-        else:
-            self.storage = storage
-
-    def load(self, dta):
-        """put dta into self.storage"""
-        self.storage.append(dta)
-
-    def loadTrdDta(self, dta):
-        """generate a generic id for dta and load() it"""
-        dta.tag["id"] = prog.idGen.generateGenericId(self.storage, dta)
-        self.load(dta)
-
-    def read(self):
-        """print the contents of self.storage to the console"""
-        for i in self.storage:
-            print(i)
-
-    def search(self, query):
-        """searched self.storage for query
-        returns the index if the sysObject in storage and query are equal
-        prints a message to the console if nothing was found"""
-        matched = True
-        idx = 0
-        for i in self.storage:
-            if i == query:
-                return idx
-            idx += 1
-        if not matched:
-            print("no results. try obj.trd.ram.read()")
-
-    def free(self, index):
-        """removes an sysObject from self.storage(with *style*)
-
-        index(int) is the int-th item in self.storage
-        index(None) removes the last (or -1st) item in ram
-        index("all") sets ram to []
-        index(else) print error to console"""
-        if index is None:
-            self.storage.pop(-1)
-        elif index == "all":
-            self.storage = []
-        elif isinstance(index, int):
-            self.storage.pop(index)
-        else:
-            print("invalid request")
-
-
-class state(sys_objects.data):
-    """An individual state, acts as a Personality with a name encoded as a data."""
-
-    def __init__(self, stateName, prs, tag=None):
-        """
-        stateName: string
-        Personality: attribs.Personality
-        tag: dictionary
-        """
-        super().__init__(prs, tag)
-        if tag is None:
-            self.tag = {"id": None, "name": None, "dataType": "SOMState", "stateName": stateName}
-        else:
-            self.tag = tag
-
-    def rename(self, newName):
-        """Change stateName of state to newName."""
-        self.tag["stateName"] = newName
-
-
-class SOMManger:
-    """Hold and modify states."""
-
-    def __init__(self, states=None, default=None, current=None, previous=None):
-        """
-        states: list
-        default: attribs.Personality
-        current: attribs.Personality
-        previous: attribs.Personality
-        """
-        if states is None:
-            self.states = []
-        else:
-            self.states = states
-        if default is None:
-            self.states.append(state("Default", Personality()))
-        else:
-            self.states.append(state("Default", default))
-        if current is None:
-            self.states.append(state("Current", Personality()))
-        else:
-            self.states.append(state("Current", current))
-        if previous is None:
-            self.states.append(state("Previous", Personality()))
-        else:
-            self.states.append(state("Previous", previous))
-
-    @staticmethod
-    def newState(stateName, personality, tag=None):
-        """Return a new instance of state."""
-        return state(stateName, personality, tag)
-
-    def addState(self, stateToAdd):
-        """Add state to self.states."""
-        self.states.append(stateToAdd)
-
-    def removeState(self, stateName):
-        """Remove state named stateName from self.states."""
-        self.states.pop(self.resolveStateNameToIndex(stateName))
-
-    def makeDefault(self, stateName, renameForCurrentDefault):
-        """Rename the state with the name "Default" to renameForCurrentDefault if possible.
-            Rename state with stateName to "Default".
-        """
-        if self.resolveStateNameToIndex("Default") is not None:
-            self.states[self.resolveStateNameToIndex("Default")].rename(renameForCurrentDefault)
-        self.states[self.resolveStateNameToIndex(stateName)].rename("Default")
-
-    def makePrevious(self, stateName, renameForPrevious):
-        """Rename the state with the name "Previous" to renameForPrevious if possible.
-            Rename state with stateName to "Previous".
-        """
-        if self.resolveStateNameToIndex("Previous") is not None:
-            self.states[self.resolveStateNameToIndex("Previous")].rename(renameForPrevious)
-        self.states[self.resolveStateNameToIndex(stateName)].rename("Previous")
-
-    def makeCurrent(self, stateName):
-        """Rename the state with the name "Current" to "Previous" and state with stateName to "Current".
-            Create Previous if it doesn't exist
-            Don't change Previous is Current doesn't exist.
-        """
-        if self.resolveStateNameToIndex("Previous") is not None:
-            if self.resolveStateNameToIndex("Current") is not None:
-                self.states[self.resolveStateNameToIndex("Previous")]. \
-                    update(self.states[self.resolveStateNameToIndex("Current")].storage)
-        else:
-            if self.resolveStateNameToIndex("Current") is not None:
-                self.addState(state("Previous", self.states[self.resolveStateNameToIndex("Current")].storage))
-        self.states[self.resolveStateNameToIndex(stateName)].rename("Current")
-
-    def resolveStateNameToIndex(self, stateName):
-        """Find and return the index of the state with the stateName stateName."""
-        idx = 0
-        for stateInstance in self.states:
-            if stateInstance.tag["stateName"] == stateName:
-                break
-            idx += 1
-        if idx == self.states.__len__():
-            return None
-        return idx
-
-
-class SOMObject(sys_objects.user):
-
-    def __init__(self, mod=None, trd=None, prs=None, mem=None, tag=None):
-        """
-        mod: attribs.SysObject or attribs.FileObject
-        trd: attribs.Thread
-        prs: attribs.Personality
-        mem: attribs.UsrMemory
-        tag: dictionary
-        """
-        super().__init__(mod, trd, prs, mem, tag)
-
-    def changeSOMState(self, stateName, makePreviousDefault=True):
-        """Change the current state of the StateOfMindManager and update the Personality."""
-        SOMManagerInstance = self.trd.somm
-        if not self.matchName("Previous", SOMManagerInstance):
-            SOMManagerInstance.addState(SOMManagerInstance.newState("Previous", self.prs))
-        else:
-            SOMManagerInstance.states[SOMManagerInstance.resolveStateNameToIndex("Previous")].update(self.prs)
-        if makePreviousDefault:
-            SOMManagerInstance.makeDefault("Previous", "previousDefault")
-        self.prs = SOMManagerInstance.states[SOMManagerInstance.resolveStateNameToIndex(stateName)].storage
-        if not self.matchName("Current", SOMManagerInstance):
-            SOMManagerInstance.addState(SOMManagerInstance.newState("Current", self.prs))
-        else:
-            SOMManagerInstance.states[SOMManagerInstance.resolveStateNameToIndex("Current")].update(self.prs)
-        self.trd.somm = SOMManagerInstance
-
-    def saveCurrentSOMState(self):
-        """Save the current Personality in the "Current" state or add it as "Current" if "Current" doesn't exist."""
-        if self.matchName("Current", self.trd.somm):
-            self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Current")].update(self.prs)
-        else:
-            self.trd.somm.addState(self.trd.somm.newState("Current", self.prs))
-
-    def revertSOMStateToDefault(self):
-        """Set the Personality to the "Default" state."""
-        self.prs = self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Default")].storage
-        self.trd.somm.makeCurrent("Default")
-
-    def revertSOMStateToPrevious(self):
-        """Set the Personality to the "Default" state."""
-        self.prs = self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Previous")].storage
-        self.trd.somm.makeCurrent("Previous")
-
-    @staticmethod
-    def matchName(stateName, SOMMInstance):
-        """
-        See if stateName is in any state in SOMInstance.
-        Return True if there is a match.
-        Return False otherwise.
-        """
-        for tmpState in SOMMInstance.states:
-            if tmpState.tag["stateName"] == stateName:
-                return True
-        return False
-
-
-# objects can be like groups without being groups
-# parent and child objects have a "sub" section in their thread_modules
-
-# "sub": {"parent": [reference, offset], "children": [reference, ...]}
-
-# reference:objId
-# offset: is the distance of the  parent's position to the sysObject's position in the format [x,y,z]
-# if an sysObject has one child put it in a list by its self
-# if a sysObject has no children but a prent leave "children" set to an empty list ([])
-# if a sysObject has no parent set "parent" to None
-# if an sysObject has neither children or a parent remove the "sub" entry or set it to None
-# children's move becomes child.mov = "sub"
-
-# ex parent: "sub": {"parent": None, "children": [child0]}
-# ex child: "sub": {"parent": [parent0, [1,1,1]], "children":[child1]}
-
-
-# Sub sysObject
-# parent([objId(str), [x,y,z]]/None), children([obj]/[])
-class sub:
-    def __init__(self, parent=None, children=None):
-        self.parent = parent
-        if children is None:
-            self.children = []
-        else:
-            self.children = children
-
-    # sets parent
-    # parent(obId(str)), offset([x,y,z])
-    # none
-    def setParent(self, parent, offset):
-        self.parent = [parent, offset]
-
-    # set children
-    # children([child(objId(str))])
-    # none
-    def setChildren(self, children):
-        self.children = children
-
-    # add a child to a parent
-    # child(objId(str))
-    # none
-    def addChild(self, child):
-        self.children.append(child)
-
-    # remove child rom parent
-    # index(int)
-    # none
-    def removeChild(self, index):
-        self.children.pop(index)
-
-    # pack data for ram
-    # none
-    # dta(sub attribs, tags)
-    def package(self):
-        return sys_objects.data([self.parent, self.children], {"name": "tread.sub.package", "id": None,
-                                                               "dataType": "thread.sub.package"})
-

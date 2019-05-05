@@ -1,5 +1,5 @@
 """The Content Generation engine
-objects in objList are simulated and run based on the instructions in Thread.tsk
+objects in objList are simulated and run based on the instructions in Thread.Tasker
 Module type: prog
 task > CGE
 ["target(obj name)", "operation", [parameters]]
@@ -97,7 +97,7 @@ class CGESession(threading.Thread):
         run update until all 'i'terations completed
     saveScene is a scene to save to
     crossPosts is a list holding each cross post
-    uniRules is a list of tsk operations to run each shift"""
+    uniRules is a list of Tasker operations to run each shift"""
 
     def __init__(self, sessionId, objList, runBehavior, savedScene=None, crossPosts=None, uniRules=None):
         """savedScene: an empty scene
@@ -147,7 +147,7 @@ class CGESession(threading.Thread):
         return methodsList
 
     def getOperations(self):
-        """get all operations from Thread.tsk of all objects in self.objectList"""
+        """get all operations from Thread.Tasker of all objects in self.objectList"""
         operationList = []
         for obj in self.objList:
             try:
@@ -369,7 +369,7 @@ class CGESession(threading.Thread):
         if not self.objList:
             return "No objects to process"
         objIdx = 0
-        # check if sysObject has a Thread and a tasker and the Thread.tsk.current[0] is a list
+        # check if sysObject has a Thread and a tasker and the Thread.Tasker.current[0] is a list
         for _ in self.objList:
             if self.objList[objIdx].trd is None:
                 # replace me to debug
@@ -378,7 +378,7 @@ class CGESession(threading.Thread):
                 # replace me to debug
                 continue
             if not isinstance(self.objList[objIdx].trd.tsk.current[0], list):
-                # It just fixes crappy tsk code
+                # It just fixes crappy Tasker code
                 self.objList[objIdx].trd.tsk.current[0] = [self.objList[objIdx].trd.tsk.current[0]]
             objIdx += 1
         operationList = self.getOperations()

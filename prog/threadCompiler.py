@@ -10,7 +10,7 @@ To use from a python module:
     parseFile(<filename>, <formatting="-t">) returns the thread code.
 """
 import re
-from thread_modules.tasker import tsk
+from thread_modules import Tasker
 from sys import argv
 import warnings
 
@@ -40,17 +40,17 @@ import warnings
 #     OPERATIONs must be comma delimited
 #
 # PROFILE
-#     Keyword for a thread_modules.tsk profile.
+#     Keyword for a thread_modules.Tasker profile.
 #     Only one PROFILE may exist in a file
 #     Only accepts SHIFTs, comma delimited.
-#     If PROFILE in in the file, compiler will output a thread_modules.tsk.
+#     If PROFILE in in the file, compiler will output a thread_modules.Tasker.
 #     Must be after CURRENT.
 #
 # CURRENT
-#     Keyword for a thread_modules.tsk current.
+#     Keyword for a thread_modules.Tasker current.
 #     Only one CURRENT may exist in a file
 #     Only accepts a single SHIFT.
-#     If CURRENT in in the file, compiler will output a thread_modules.tsk.
+#     If CURRENT in in the file, compiler will output a thread_modules.Tasker.
 #     Must be before PROFILE.
 #
 # basic example
@@ -140,7 +140,7 @@ def formatProfile(text):
 def formatCurrent(text):
     """Format the PROFILE in <text> and return it."""
     current = re.findall(r"SHIFT{.*}}}", text)
-    outputText = "["
+    outputText = ""
     for shift in current:
         try:
             outputText += (str(formatShift(shift[:-1])) + ',')
@@ -148,7 +148,6 @@ def formatCurrent(text):
             warnings.warn(NoElementPassed)
     if outputText[-1] == ',':
         outputText = outputText[:-1]
-    outputText += ']'
     return outputText
 
 
@@ -161,7 +160,7 @@ def parseFile(file, outputFormat="-t"):
     """
     fileData = open(file, 'r').read()
     fileData = removeWhitespace(fileData)
-    outputTrd = tsk()
+    outputTrd = Tasker()
     outputTxt = ""
 
     # syntax check

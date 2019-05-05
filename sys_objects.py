@@ -125,7 +125,7 @@ class user(sysObject):
         else:
             self.tag = tag
 
-    # saves a copy of ram ro memory
+    # saves a copy of Ram ro memory
     # storedRamName(str)*, storedRamImportance(int[0-100])*
     # none
     def storeToMemory(self, storedRamName, storedRamImportance):
@@ -134,7 +134,7 @@ class user(sysObject):
         dta.tag["id"] = prog.idGen.generateGenericId(self.mem.real, dta)
         self.mem.addMemory(1, dta)
 
-    # load a UsrMemory obj to ram
+    # load a UsrMemory obj to Ram
     # block(int[0-2])*, index(int)
     # none
     def loadToRam(self, block, index):

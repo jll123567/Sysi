@@ -1,5 +1,6 @@
 # a chat system that doesnt quite work and hasn't been implemented
 # module type: prog
+# todo: update me
 
 # server formatting:
 # server=dta
@@ -116,7 +117,7 @@ def removeUser(server, usr):
 def joinStream(server, channel, usr):
     for i in server.storage[1]:
         if i[1] == channel:
-            i[2][2].append([usr.tag["id"], usr.trd["lang"][1]])
+            i[2][2].append([usr.tag["id"], usr.trd["Language"][1]])
 
 
 # im not sure honestly
@@ -138,7 +139,7 @@ def updateStream(server, channel):
                 i[2][0] = 100
 
 
-# send steam audio to usr.trd.lang.in
+# send steam audio to usr.trd.Language.in
 # server(dta)*, channel(str)*, usr(usr)*
 # none
 def streamListen(server, channel, usr):
