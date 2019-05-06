@@ -321,6 +321,22 @@ class Queue:
         for i in self.tasks:
             recurse(i, 0)
 
+    def makeValidTskProfile(self, queue):
+        if isinstance(queue, Queue):
+            tasks = queue.tasks
+        else:
+            tasks = queue
+        # flatten "function" by rightfootin
+        # snippet link: https://rightfootin.blogspot.com/2006/09/more-on-python-flatten.html
+        #   modified to not include nested tuples as queues only support lists (or at least they're supposed to)
+        mainTask = []
+        for item in tasks:
+            if isinstance(item, list):
+                mainTask.extend(self.makeValidTskProfile(item))
+            else:
+                mainTask.append(item)
+        return mainTask
+
 
 class Ram:
     """
@@ -615,7 +631,7 @@ class Tasker:
 
         shift = [operation, ...]
 
-        operation = [target, method, [paramaters, ...], source(this SysObject's id)]
+        operation = [target, method, [parameters, ...], source(this SysObject's id)]
         """
         if current is None:
             self.current = []
@@ -737,9 +753,15 @@ class Tasker:
         """Print <msg>."""
         print(msg)
 
-    # pack data for Ram
-    # none
-    # dta(Tasker attribs, tags)
+    @staticmethod
+    def createOperation(targetId, function, parameters, sourceId):
+        """Create an operation and return it."""
+        return [targetId, function, parameters, sourceId]
+
+    def createSustainOperation(self, objId):
+        return self.createOperation(objId + ".Thread.Tasker", "loopInf",
+                                    [self.createOperation(objId + ".Thread.Tasker", "doNothing", [], objId)], objId)
+
     def package(self):
         """Package data for Ram."""
         return sys_objects.data([self.current, self.profile], {"name": "Thread.Tasker.package", "id": None,
@@ -774,6 +796,7 @@ class taste:
 
 class Tactile:
     """Handle tactile input."""
+
     def __init__(self, tctSnsNds):
         """
         :param tctSnsNds: list
@@ -790,10 +813,15 @@ class Tactile:
                                 {"name": "Thread.Tactile.package", "id": None, "dataType": "Thread.Tactile.package"})
 
 
-# sensory nodes
-# position([float, float, float]), pressure(float), relTemp(float)
 class TactileSensoryNode:
+    """Individual points for Tactile."""
+
     def __init__(self, position=None, pressure=0.0, relTemp=0.0):
+        """
+        :param position: list
+        :param pressure: float
+        :param relTemp: float
+        """
         if position is None:
             self.position = [0.0, 0.0, 0.0]
         else:
@@ -801,68 +829,57 @@ class TactileSensoryNode:
         self.pressure = pressure
         self.relTemp = relTemp
 
-    # packs the node into a dta
-    # none
-    # TactileSensoryNode dta([pos, pres, reTmp], tags)
     def package(self):
+        """Package for Ram."""
         return sys_objects.data(self.flatten(), {"name": "Thread.Tactile.TactileSensoryNode.package", "id": None,
                                                  "dataType": "Thread.Tactile.TactileSensoryNode.package"})
 
-    # flattens the node to a list
-    # none
-    # [pos, pres, reTmp]
     def flatten(self):
+        """Return a list of self.position, self.pressure, and self.relTemp respectively."""
         return [self.position, self.pressure, self.relTemp]
 
 
-# Transfer
-# interface(dta/socket)
 class Transfer:
+    """General SysData I/O with socket support."""
+
     def __init__(self, interface=None):
+        """
+        :param interface: any
+        """
         self.interface = interface
 
-    # package dta for sending
-    # sender(objId)*, dta(dta)*
-    # none
     def send(self, sender, dta):
+        """Package data for sending."""
         pkg = dta
         pkg.tag.update({"sender": sender})
         self.interface = pkg
 
-    # receive data from an obj
-    # sender(obj)*
-    # none/console output(str)
     def receive(self, sender):
+        """Grab data using a copy of the sending object."""
+        # Is there a better way to do this? Probably.
         try:
             self.interface = sender.trd.transf.interface
         except AttributeError:
             print("listed sender:" + str(sender.tag["name"]) + "'s Transfer interface was not found\ndoes it have a "
                                                                "Thread.Transfer")
 
-    # clears the interface
-    # none
-    # none
     def clearInterface(self):
+        """Set self.interface to None."""
         self.interface = None
 
-    # socket code based off: https://docs.python.org/3/howto/sockets.html
-
-    # sets <obj>'s transfer interface to a socket
-    # none
-    # none
     def makeSocketInterface(self):
+        """Create a new socket at self.interface ."""
         self.interface = socket.socket()
 
-    # connects the socket to <host> at <port>
-    # host(ip/hostname(str))*, port(int)*
-    # none
     def connectSocket(self, host, port):
+        """Connect the socket using its provided method."""
         self.interface.connect((host, port))
 
-    # sends an ascii encoded message though the socket
-    # msg(str)*
-    # none
     def sendSocket(self, msg):
+        """
+        Send ascii text.
+        Raise a RuntimeError if the connection breaks.
+        """
         msg = msg.encode("ascii")
         totalSent = 0
         while totalSent < len(msg):
@@ -871,10 +888,11 @@ class Transfer:
                 raise RuntimeError("socket connection broken")
             totalSent = totalSent + sent
 
-    # receives 254 bytes from the socket
-    # none
-    # received data(bytes
     def receiveSocket(self):
+        """
+        Grab 254 bytes from the socket.
+        Raise a RuntimeError if the connection breaks.
+        """
         chunks = []
         bytes_recd = 0
         while bytes_recd < 254:
@@ -885,26 +903,21 @@ class Transfer:
             bytes_recd = bytes_recd + len(chunk)
         return b''.join(chunks)
 
-    # closes the socket
-    # none
-    # none
     def disconnectSocket(self):
+        """Close the socket."""
         self.interface.close()
 
 
 class Visual:
-    """hold and process visual data
-
-    rawImg is a list with images(images will be added later)
-    rx is float representing degrees
-    so are ry and rz"""
+    """Hold and process visual data."""
 
     def __init__(self, rawImg=None, pitch=0, yaw=0, roll=0):
-        """initialize sysObject attributes
-        rawImg is an empty list
-        pitch is 0
-        yaw is 0
-        roll is 0"""
+        """
+        :param rawImg: list
+        :param pitch: float
+        :param yaw: float
+        :param roll: float
+        """
         if rawImg is None:
             self.rawImg = []
         else:
@@ -914,61 +927,22 @@ class Visual:
         self.rz = roll
 
     def rotate(self, rx, ry, rz):
-        """set the rotation attributes of the visual thread"""
+        """Set the rotation attributes of the visual thread."""
         self.rx = rx
         self.ry = ry
         self.rz = rz
 
-    # clear image from raw img
-    # none
-    # none
     def clearImg(self):
-        """set the rawImg attribute to an empty list"""
+        """Set the rawImg attribute to an empty list."""
         self.rawImg = []
 
-    # reset position of camera
-    # none
-    # none
     def resetPos(self):
-        """set rotation attributes to 0"""
+        """Set rotation attributes to 0."""
         self.rx = 0
         self.ry = 0
         self.rz = 0
 
-    # pack data for Ram
-    # none
-    # dta(Visual attribs, tags)
     def package(self):
-        """pack attributes into a data sysObject and return it"""
+        """Package for Ram"""
         return sys_objects.data([self.rawImg, self.rx, self.ry, self.rz], {"name": "Thread.Visual.package", "id": None,
                                                                            "dataType": "Thread.Visual.package"})
-
-
-def createOperation(targetId, function, parameters, sourceId):
-    """create an operation and return it"""
-    return [targetId, function, parameters, sourceId]
-
-
-def createSustainOperation(objId):
-    return createOperation(objId + ".Thread.Tasker", "loopInf",
-                           [createOperation(objId + ".Thread.Tasker", "doNothing", [], objId)], objId)
-
-
-# make exact exact tasks into a valid Tasker profile(broken at the moment)
-# queue(Thread.queue)*
-# Tasker profile(Thread.Tasker)
-def makeValidTskProfile(queue):
-    if isinstance(queue, Queue):
-        tasks = queue.tasks
-    else:
-        tasks = queue
-    # flatten function by rightfootin
-    # snippet link: https://rightfootin.blogspot.com/2006/09/more-on-python-flatten.html
-    #   modified to not include nested tuples as queues only support lists (or at least they're supposed to)
-    mainTask = []
-    for item in tasks:
-        if isinstance(item, list):
-            mainTask.extend(makeValidTskProfile(item))
-        else:
-            mainTask.append(item)
-    return mainTask
