@@ -1,10 +1,10 @@
 # a small bug tracker like thing
 # module type: prog
-import error
+from sys_objects import sysErr
 import sys_objects
 import prog.idGen
 
-# error queue(fill with err)
+# error queue(fill with sysErr)
 errQueue = []
 requestQueue = []
 inProgress = {}
@@ -12,7 +12,7 @@ cases = []
 
 
 # queues and resolves a list of errors
-# errs([err])*
+# errs([sysErr])*
 # Console output(str)
 def errorResolve(userId=None):
     global inProgress, errQueue
@@ -38,7 +38,7 @@ def populateQueue(scn, mode='e'):
     if mode == 'e':
         for scn in scn.scn:
             for obj in scn:
-                if isinstance(obj, error.err):
+                if isinstance(obj, sysErr):
                     errQueue.append(obj)
     else:
         for scn in scn.scn:
@@ -108,8 +108,8 @@ def exportQueue():
 # none
 def importQueue(queue):
     global errQueue, inProgress, cases
-    for err in queue.storage[0]:
-        errQueue.append(err)
+    for errInst in queue.storage[0]:
+        errQueue.append(errInst)
     inProgress = queue[1]
     for case in queue.storage[2]:
         cases.append(case)

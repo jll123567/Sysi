@@ -3,8 +3,8 @@
 # module type: def
 import attribs
 from math import sqrt
-import error
 import prog.idGen
+import time
 
 
 # sysh.sysObject.sysObject(oof better name pls) model of sysObject(any), relevant self viewable data(attrib.Thread),
@@ -227,6 +227,7 @@ class container:
 
 class scene:
     """Describes objects calling methods in an container for a time."""
+
     def __init__(self, tl=None, scp=None, obj=None, cont=None, tag=None):
         """
         :param tl: List with lineName and startTime in that order. None for both if un-plotted.
@@ -266,7 +267,7 @@ class scene:
 
     def raiseSyshError(self, objListIdx, errType, sev, mes, res, sel):
         """Add an error to the scene."""
-        e = error.err(errType, sev, mes, res, sel, self.obj[objListIdx], self.cont, {"id": ""})
+        e = sysErr(errType, sev, mes, res, sel, self.obj[objListIdx], self.cont, {"id": ""})
         e.tag["id"] = prog.idGen.generateGenericId(self.obj, e)
         self.obj.append(e)
 
@@ -279,6 +280,7 @@ class scene:
 
 class universe:
     """Describes a collection of scenes and relevant information."""
+
     def __init__(self, scn=None, obj=None, cont=None, funct=None, rule=None, tag=None):
         """
         :param scn: List of scenes.
@@ -328,6 +330,93 @@ class universe:
                 largestStartTime = scnChk.tl[1]
             currentScnIdx += 1
         return tempScnList[scnIdx].__len__() - 1
+
+
+class sysErr:
+    """Deprecated"""
+    def __init__(self, errType=None, severity=None, message=None, resolutions=None, selected=None, obj=None, cont=None,
+                 tag=None):
+        """
+        :param errType: int:
+            0 resolved
+            1 warn
+            2 error
+        :param severity: int:
+            0 resolved
+            1 low
+            2 medium
+            3 high
+            4 critical
+            5 fatal
+        :param message: str
+        :param resolutions: list
+            [str, ...]
+        :param selected: None/int
+        :param obj: str
+            obj Id
+        :param cont: str
+            cont Id
+        :param tag: dict
+            system tracking
+        """
+        if resolutions is None:
+            self.resolutions = []
+        else:
+            self.resolutions = resolutions
+        if selected is None:
+            self.selected = []
+        else:
+            self.selected = selected
+        if tag is None:
+            self.tag = {"name": None, "id": None}
+        else:
+            self.tag = tag
+        self.errType = errType
+        self.severity = severity
+        self.message = message
+        self.obj = obj
+        self.cont = cont
+        self.timeRaised = time.clock()
+
+    def setError(self, errType, severity, message, resolutions, selected, obj, cont):
+        """Set error attributes."""
+        self.errType = errType
+        self.severity = severity
+        self.message = message
+        self.obj = obj
+        self.cont = cont
+        self.resolutions = resolutions
+        self.selected = selected
+
+    # clear the error
+    # none
+    # none
+    def clearError(self):
+        """Clear error attributes."""
+        self.resolutions = None
+        self.selected = None
+        self.errType = None
+        self.severity = None
+        self.message = None
+        self.obj = None
+        self.cont = None
+
+    def resolveError(self):
+        """Console thing to do resolution."""
+        resolving = True
+        print(self.errType + ',' + self.severity + ':' + self.message)
+        count = 0
+        for resolution in self.resolutions:
+            print(str(count) + ":" + resolution)
+            count += 1
+        while resolving:
+            try:
+                selected = input("resolution?:")
+                self.selected = int(selected)
+            except ValueError:
+                print("int only")
+            else:
+                resolving = False
 
 
 # info at run
