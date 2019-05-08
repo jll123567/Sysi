@@ -8,35 +8,37 @@ import thread_modules
 class UsrMemory:
     """
     Hold arbitrary copies of objects.
-        Functions requesting a block want an int between 0 and 2.
-            0 is for internal, 1 is for real, 2 is for external
+        Functions requesting a block want an int.
+            0 is for internal, 1 is for external.
     """
 
-    def __init__(self, internal=None, real=None, external=None):
+    def __init__(self, internal=None, external=None):
         """
         :param internal: list
-        :param real: list
+
+            for conceived stuff
         :param external: list
+
+            for observed stuff
         """
         if internal is None:
             self.internal = []
         else:
             self.internal = internal
-        if real is None:
-            self.real = []
-        else:
-            self.real = real
         if external is None:
             self.external = []
         else:
             self.external = external
 
     def removeMemory(self, block, index):
-        """Remove the memory at block[index]."""
+        """
+        Remove the memory at block[index].
+
+        :type block: int
+        :type index: int
+        """
         if block == 0:
             self.internal.pop(index)
-        elif block == 1:
-            self.real.pop(index)
         else:
             self.external.pop(index)
 
@@ -44,8 +46,6 @@ class UsrMemory:
         """Add obj to UsrMemory at block."""
         if block == 0:
             self.internal.append(obj)
-        elif block == 1:
-            self.real.append(obj)
         else:
             self.external.append(obj)
 
@@ -65,8 +65,6 @@ class UsrMemory:
         """Set the value at index in block in UsrMemory."""
         if block == 0:
             self.internal[index] = value
-        elif block == 1:
-            self.real[index] = value
         else:
             self.external[index] = value
 

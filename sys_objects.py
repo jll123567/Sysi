@@ -102,7 +102,16 @@ class sysObject:
 # sysh.sysObject.user
 # model(any), thread(Thread), Personality(Personality), memory(UsrMemory) tag({"id":(str), ...})
 class user(sysObject):
+    """A person in sysh."""
     def __init__(self, mod=None, trd=None, prs=None, mem=None, tag=None):
+        """
+
+        :param mod:
+        :param trd:
+        :param prs:
+        :param mem:
+        :param tag:
+        """
         super().__init__(mod, trd, tag)
         if mod is None:
             self.mod = attribs.SysModel()
@@ -125,70 +134,99 @@ class user(sysObject):
         else:
             self.tag = tag
 
-    # saves a copy of Ram ro memory
-    # storedRamName(str)*, storedRamImportance(int[0-100])*
-    # none
     def storeToMemory(self, storedRamName, storedRamImportance):
+        """
+        Save a copy of self.trd.ram to memory.
+
+        :type storedRamName: str
+        :type storedRamImportance: int
+        :param storedRamName: A string to identify the object by.
+        :param storedRamImportance:  A value for relevancy importance.
+        """
         dta = data([self.trd.ram.storage],
                    {"id": None, "name": storedRamName, "relevancy": [0, 0, storedRamImportance]})
-        dta.tag["id"] = prog.idGen.generateGenericId(self.mem.real, dta)
+        dta.tag["id"] = prog.idGen.generateGenericId(self.mem.external, dta)
         self.mem.addMemory(1, dta)
 
-    # load a UsrMemory obj to Ram
-    # block(int[0-2])*, index(int)
-    # none
-    def loadToRam(self, block, index):
-        if block == 0:
-            print("no internal access")
-        elif block == 1:
-            self.trd.ram.load(self.mem.real[index])
-        else:
-            self.trd.ram.load(self.mem.external[index])
+    def loadToRam(self, block, idx):
+        """
+        Load an obj from self.mem to self.trd.ram .
 
-    # check the integrity of an sysObject
-    # past of obj(obj)*, obj now(obj)*
-    # status(str)
+        :type block: int
+        :type idx: int
+        :param block: Memory block to load from.
+        :param idx: Index from block to load from
+        """
+        if block == 0:
+            self.trd.ram.load(self.mem.internal[idx])
+        else:
+            self.trd.ram.load(self.mem.external[idx])
+
     @staticmethod
     def checkIteg(objPast, objCurrent):
+        """
+        Check the integrity of a sysObject.
+
+        :type objPast: sysObject
+        :type objCurrent: sysObject
+        :param objPast: Old version of object.
+        :param objCurrent: New version of object.
+        :return: Reduced or maintained.
+        """
         if objPast.tag["health"] > objCurrent.tag["health"]:
             return "reduced"
         else:
             return "maintained"
 
-    # check freedom of will(functions available)
-    # past of obj(obj)*, obj now(obj)*
-    # status(str)
     @staticmethod
     def checkWill(objPast, objCurrent):
+        """
+        Check the will of a sysObject.
+
+        :type objPast: sysObject
+        :type objCurrent: sysObject
+        :param objPast: Old version of object.
+        :param objCurrent: New version of object.
+        :return: Reduced or maintained.
+        """
         if objPast.tag["functlist"].__len__() > objCurrent.tag["functlist"].__len__():
             return "reduced"
         else:
             return "maintained"
 
-    # get the relevancy of an sysObject
-    # obj(obj)*
-    # relevancy(int)
     @staticmethod
     def calculate_relevancy(obj):
+        """
+        Calculate the relevancy of an object.
+
+        :type obj: sysObject
+        :param obj: Object to calculate relevancy of.
+        :return: Relevancy
+        """
         if obj.tag["relevancy"][1] == 0:
             return 100 + (sqrt(obj.tag["relevancy"][1]) * 10) + 25 + (obj.tag["relevancy"][2])
         else:
             return (100 * ((1 / 3) ** obj.tag["relevancy"][0])) + (sqrt(obj.tag["relevancy"][1]) * 10) + (
                 obj.tag["relevancy"][2])
 
-    # load a queue from UsrMemory.real
-    # real index(int)*
-    # none
-    def loadQueue(self, realIndex):
-        self.trd.que = self.mem.real[realIndex].storage
+    def loadQueue(self, idx):
+        """
+        Load a queue from self.mem.external .
 
-    # save a queue to UsrMemory.real
-    # tags(tag)*
-    # none
+        :type idx: int
+        :param idx: Index of self.mem.external .
+        """
+        self.trd.que = self.mem.external[idx].storage
+
     def saveQueue(self, tags):
-        lastQueue = data(self.trd.que, tags)
+        """
+        Save a queue to self.mem.external .
+
+        :type tags: dict
+        :param tags: Tags for the queue's enclosing data object.
+        """
+        lastQueue = data(self.trd.que, tags)  # todo: make a package for queue and use it here.
         self.mem.addMemory(1, lastQueue)
-        print("queue saved to: ", lastQueue, "@", self.tag["id"], ".UsrMemory.real")
 
 
 # packaged data
@@ -334,6 +372,7 @@ class universe:
 
 class sysErr:
     """Deprecated"""
+
     def __init__(self, errType=None, severity=None, message=None, resolutions=None, selected=None, obj=None, cont=None,
                  tag=None):
         """
