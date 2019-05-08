@@ -1,6 +1,5 @@
 # coding=utf-8
-# sysObject type definitions
-# module type: def
+"""Definitions for base sysh objects."""
 import attribs
 from math import sqrt
 import prog.idGen
@@ -99,18 +98,19 @@ class sysObject:
                     self.tag["stat"][stat] += damage[dmg]
 
 
-# sysh.sysObject.user
-# model(any), thread(Thread), Personality(Personality), memory(UsrMemory) tag({"id":(str), ...})
 class user(sysObject):
     """A person in sysh."""
     def __init__(self, mod=None, trd=None, prs=None, mem=None, tag=None):
         """
-
-        :param mod:
-        :param trd:
-        :param prs:
-        :param mem:
-        :param tag:
+        :type trd: attribs.Thread
+        :type prs: attribs.Personality
+        :type mem: attribs.UsrMemory
+        :type tag: dict
+        :param mod: Model.
+        :param trd: Thread.
+        :param prs: Personality.
+        :param mem: Memory.
+        :param tag: System tracking.
         """
         super().__init__(mod, trd, tag)
         if mod is None:
@@ -229,10 +229,15 @@ class user(sysObject):
         self.mem.addMemory(1, lastQueue)
 
 
-# packaged data
-# storage(any), tag({"id":(str), ...})
 class data:
+    """Arbitrary data with tags."""
     def __init__(self, storage=None, tag=None):
+        """
+        :type storage: any
+        :type tag: dict
+        :param storage: Arbitrary data.
+        :param tag: System tracking.
+        """
         if tag is None:
             self.tag = {"id": None, "name": None}
         else:
