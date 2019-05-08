@@ -507,17 +507,9 @@ class SOMManger:
 # class SOMObject(sys_objects.user):
 #
 #     def __init__(self, mod=None, trd=None, prs=None, mem=None, tag=None):
-#         """
-#         :param mod: attribs.SysObject or attribs.FileObject
-#         :param trd: attribs.Thread
-#         :param prs: attribs.Personality
-#         :param mem: attribs.UsrMemory
-#         :param tag: dictionary
-#         """
 #         super().__init__(mod, trd, prs, mem, tag)
 #
 #     def changeSOMState(self, stateName, makePreviousDefault=True):
-#         """Change the current SOMState of the StateOfMindManager and update the Personality."""
 #         SOMManagerInstance = self.trd.somm
 #         if not self.matchName("Previous", SOMManagerInstance):
 #             SOMManagerInstance.addState(SOMManagerInstance.newState("Previous", self.prs))
@@ -533,29 +525,21 @@ class SOMManger:
 #         self.trd.somm = SOMManagerInstance
 #
 #     def saveCurrentSOMState(self):
-#         """Save the current Personality in the "Current" SOMState or add it as "Current" if "Current" doesn't exist."""
 #         if self.matchName("Current", self.trd.somm):
 #             self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Current")].update(self.prs)
 #         else:
 #             self.trd.somm.addState(self.trd.somm.newState("Current", self.prs))
 #
 #     def revertSOMStateToDefault(self):
-#         """Set the Personality to the "Default" SOMState."""
 #         self.prs = self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Default")].storage
 #         self.trd.somm.makeCurrent("Default")
 #
 #     def revertSOMStateToPrevious(self):
-#         """Set the Personality to the "Default" SOMState."""
 #         self.prs = self.trd.somm.states[self.trd.somm.resolveStateNameToIndex("Previous")].storage
 #         self.trd.somm.makeCurrent("Previous")
 #
 #     @staticmethod
 #     def matchName(stateName, SOMMInstance):
-#         """
-#         See if stateName is in any SOMState in SOMInstance.
-#         Return True if there is a match.
-#         Return False otherwise.
-#         """
 #         for tmpState in SOMMInstance.states:
 #             if tmpState.tag["stateName"] == stateName:
 #                 return True
