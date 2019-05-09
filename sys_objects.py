@@ -20,7 +20,7 @@ class sysObject:
         else:
             self.trd = trd
         if tag is None:
-            self.tag = {"id": None, "name": None, "stat": {"hp": 100}}
+            self.tag = {"id": None, "name": None, "stat": {"hp": 100}, "permissions": {}, }
         else:
             self.tag = tag
 
@@ -100,6 +100,7 @@ class sysObject:
 
 class user(sysObject):
     """A person in sysh."""
+
     def __init__(self, mod=None, trd=None, prs=None, mem=None, tag=None):
         """
         :type trd: attribs.Thread
@@ -231,6 +232,7 @@ class user(sysObject):
 
 class data:
     """Arbitrary data with tags."""
+
     def __init__(self, storage=None, tag=None):
         """
         :type storage: any
