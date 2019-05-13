@@ -88,21 +88,25 @@ class CrossSessionHandler(threading.Thread):
 
 
 class CGESession(threading.Thread):
-    """an instance of CGE
-    sessionID is a string
-    objList is a list of objects
-    run behavior is a list where index 0 is a single character string t, g or i
-        run update 'c'ontinuealy
-        run update until 'g'oal met
-        run update until all 'i'terations completed
-    saveScene is a scene to save to
-    crossPosts is a list holding each cross post
-    uniRules is a list of Tasker operations to run each shift"""
+    """An instance of CGE; used to simulate object interactions."""
 
-    def __init__(self, sessionId, objList, runBehavior, savedScene=None, crossPosts=None, uniRules=None):
-        """savedScene: an empty scene
-        uniRules: []
-        crossPosts: []"""
+    def __init__(self, sessionId, objList, runBehavior, savedScene=None, crossPosts=None, uniRules=None, permissions=None):
+        """
+        :param sessionId: Session identification.
+        :param objList: List of objects in session.
+        :param runBehavior: A list that specifies the run behavior of the session. Check run() for more info.
+        :param savedScene: A scene to save the events of the session to.
+        :param crossPosts: Messages to send to the CrossSessionHandler holing this session.
+        :param uniRules: A list of operations to run each shift.
+        :param permissions: Session wide permissions, unlisted methods are allowed by default.
+        :type sessionId: str
+        :type objList: list
+        :type runBehavior: list
+        :type savedScene: sys_objects.Scene
+        :type crossPosts: list
+        :type uniRules: list
+        :type permissions: dict
+        """
         super().__init__()
         self.sessionId = sessionId
         self.objList = objList
@@ -119,6 +123,10 @@ class CGESession(threading.Thread):
             self.crossPosts = []
         else:
             self.crossPosts = crossPosts
+        if permissions is None:
+            self.permissions = {}
+        else:
+            self.permissions = permissions
 
     def removeObj(self, objId):
         """removes the sysObject with objId from self.objList
@@ -152,7 +160,15 @@ class CGESession(threading.Thread):
         for obj in self.objList:
             try:
                 for operation in obj.trd.tsk.current:
-                    operationList.append(operation)
+                    try:
+                        if obj.tag["permissions"][operation[1]] != "blocked":
+                            try:
+                                if self.permissions[operation[1]] != "blocked":
+                                    operationList.append(operation)
+                            except KeyError:
+                                operationList.append(operationList)
+                    except KeyError:
+                        pass
             except AttributeError:
                 warnings.warn(
                     "the sysObject " + str(

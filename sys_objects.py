@@ -356,7 +356,7 @@ class universe:
         else:
             self.rule = rule
         if tag is None:
-            self.tag = {"id": None, "name": None}
+            self.tag = {"id": None, "name": None, "permissions": {}}
         else:
             self.tag = tag
 
