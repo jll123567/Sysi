@@ -9,6 +9,8 @@ uni also have permissions that apply to all objects in a uni
     allow by default
     struct
         {"<methodName>": "<blocked, unblocked, default>", ...}
+        if the method belongs to an attribute of the base object
+            <subObjReference>.<methodName>
     where this will go idk
 CGE has to enforce this by checking if it can do it
     iterate though opList

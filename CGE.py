@@ -5,6 +5,7 @@ task > CGE
 ["target(obj name)", "operation", [parameters]]
 CGE > sceneScript
 ["sender","target","operation",[parameters]]"""
+
 import sys_objects
 import warnings
 import prog.idGen as idGen
@@ -161,9 +162,13 @@ class CGESession(threading.Thread):
             try:
                 for operation in obj.trd.tsk.current:
                     try:
-                        if obj.tag["permissions"][operation[1]] != "blocked":
+                        if self.extractId(operation)[1] == "":
+                            subObjReference = ""
+                        else:
+                            subObjReference = self.extractId(operation)[1] + "."
+                        if obj.tag["permissions"][subObjReference + operation[1]] != "blocked":
                             try:
-                                if self.permissions[operation[1]] != "blocked":
+                                if self.permissions[subObjReference + operation[1]] != "blocked":
                                     operationList.append(operation)
                             except KeyError:
                                 operationList.append(operationList)
@@ -237,7 +242,6 @@ class CGESession(threading.Thread):
             parameters = []
         if objId == "CSH":
             self.crossPosts.append(sourceId)
-
         elif objId == "this":
             if parameters.__len__() == 0:
                 try:
@@ -249,7 +253,6 @@ class CGESession(threading.Thread):
                     getattr(self, method)(*parameters)
                 except:
                     raise operationNotPossible("this, " + method + ',' + str(parameters))
-
         elif subObjectReference is None:
             if parameters.__len__() == 0:
                 try:
@@ -295,7 +298,7 @@ class CGESession(threading.Thread):
 
     @staticmethod
     def extractId(operation):
-        """takes an operation and gives back a list with the target sysObject id and the sub-sysObject reference if any"""
+        """Takes an operation and gives back a tuple with the target sysObject id and the sub-sysObject reference if any."""
         objId = ""
         ext = ""
         mode = 'n'
@@ -309,12 +312,10 @@ class CGESession(threading.Thread):
                     objId += char
                 if mode == 'e':
                     ext += char
-            if ext == "":
-                ext = None
-            else:
+            if ext != "":
                 ext = ext[1:]
             pass
-        return [objId, ext]
+        return objId, ext
 
     @staticmethod
     def repackSubToFull(fullObj, subObj, subObjReference):
@@ -406,6 +407,7 @@ class CGESession(threading.Thread):
 
         for op in operationList:
             idHold = self.extractId(op)
+            idHold = [idHold[0], idHold[1]]
             reservedIds = ["CSH", "this"]
             if op[0] not in reservedIds:
                 if idHold[1] == "":
@@ -519,6 +521,7 @@ class CGESession(threading.Thread):
             self.areOperationsPossible(shift)
             for operation in shift:
                 idHold = self.extractId(operation)
+                idHold = [idHold[0], idHold[1]]
                 if idHold[1] == "":
                     idHold[0] = operation[0]
                     self.performSelectedOperation(self.resolveIdToIndex(idHold[0]), operation[1], operation[3], None,
