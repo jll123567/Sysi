@@ -1,10 +1,16 @@
 """Modules for attribs.Thread"""
 import sys_objects
 import prog.idGen
-from attribs import Personality
+import attribs
 import time
 import socket
-
+try:
+    from sys_objects import data
+    a = sys_objects.data()
+    del a
+except AttributeError:
+    print("thread_modules cant see sys_objects.data")
+    print(dir(sys_objects))
 
 class Complex:
     """Arbitrary resolution."""
@@ -436,15 +442,15 @@ class SOMManger:
         else:
             self.states = states
         if default is None:
-            self.states.append(SOMState("Default", Personality()))
+            self.states.append(SOMState("Default", attribs.Personality()))
         else:
             self.states.append(SOMState("Default", default))
         if current is None:
-            self.states.append(SOMState("Current", Personality()))
+            self.states.append(SOMState("Current", attribs.Personality()))
         else:
             self.states.append(SOMState("Current", current))
         if previous is None:
-            self.states.append(SOMState("Previous", Personality()))
+            self.states.append(SOMState("Previous", attribs.Personality()))
         else:
             self.states.append(SOMState("Previous", previous))
 

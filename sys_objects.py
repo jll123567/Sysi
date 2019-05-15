@@ -1,9 +1,31 @@
 # coding=utf-8
 """Definitions for base sysh objects."""
-import attribs
 from math import sqrt
 import prog.idGen
 import time
+
+
+class data:
+    """Arbitrary data with tags."""
+
+    def __init__(self, storage=None, tag=None):
+        """
+        :type storage: any
+        :type tag: dict
+        :param storage: Arbitrary data.
+        :param tag: System tracking.
+        """
+        if tag is None:
+            self.tag = {"id": None, "name": None}
+        else:
+            self.tag = tag
+        self.storage = storage
+
+    def update(self, storage):
+        self.storage = storage
+
+
+import attribs  # Hey, this doesn't belong here! Well it does to fix an error due to shit package management. Bear with it.
 
 
 # sysh.sysObject.sysObject(oof better name pls) model of sysObject(any), relevant self viewable data(attrib.Thread),
@@ -228,26 +250,6 @@ class user(sysObject):
         """
         lastQueue = data(self.trd.que, tags)  # todo: make a package for queue and use it here.
         self.mem.addMemory(1, lastQueue)
-
-
-class data:
-    """Arbitrary data with tags."""
-
-    def __init__(self, storage=None, tag=None):
-        """
-        :type storage: any
-        :type tag: dict
-        :param storage: Arbitrary data.
-        :param tag: System tracking.
-        """
-        if tag is None:
-            self.tag = {"id": None, "name": None}
-        else:
-            self.tag = tag
-        self.storage = storage
-
-    def update(self, storage):
-        self.storage = storage
 
 
 # spaces

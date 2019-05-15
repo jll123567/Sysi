@@ -171,7 +171,7 @@ class CGESession(threading.Thread):
                                 if self.permissions[subObjReference + operation[1]] != "blocked":
                                     operationList.append(operation)
                             except KeyError:
-                                operationList.append(operationList)
+                                operationList.append(operation)
                     except KeyError:
                         pass
             except AttributeError:
