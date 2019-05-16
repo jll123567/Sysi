@@ -88,10 +88,12 @@ class CrossSessionHandler(threading.Thread):
             self.checkForPost()
 
 
+# todo: Figure out why this randomly dies.
 class CGESession(threading.Thread):
     """An instance of CGE; used to simulate object interactions."""
 
-    def __init__(self, sessionId, objList, runBehavior, savedScene=None, crossPosts=None, uniRules=None, permissions=None):
+    def __init__(self, sessionId, objList, runBehavior, savedScene=None, crossPosts=None, uniRules=None,
+                 permissions=None):
         """
         :param sessionId: Session identification.
         :param objList: List of objects in session.
@@ -129,10 +131,12 @@ class CGESession(threading.Thread):
         else:
             self.permissions = permissions
 
-    def removeObj(self, objId):
-        """removes the sysObject with objId from self.objList
-        only use after sysObject has been copied to another session to avoid data loss
-        this operation is saved """
+    def removeObj(self, objId: str):
+        """
+        Removes the sysObject with objId from self.objList .
+        Only use after sysObject has been copied to another session to avoid data loss.
+        This operation is saved.
+        """
         try:
             self.objList.pop(self.resolveIdToIndex(objId))
             if self.savedScene is not None:
@@ -141,14 +145,14 @@ class CGESession(threading.Thread):
             print("objectNotInObjList passed")
 
     def addObj(self, obj):
-        """add obj to self.objList"""
+        """Add obj to self.objList ."""
         self.objList.append(obj)
         if self.savedScene is not None:
             self.savedScene.scp.append(["this", "addObj", [obj], "this"])
 
     @staticmethod
     def getMethods(obj):
-        """get a list of all methods and functions of obj"""
+        """Get a list of all methods and functions of <obj>."""
         methodsList = []
         for i in dir(obj):
             if isinstance(getattr(obj, i), types.MethodType) or isinstance(getattr(obj, i), types.FunctionType):
@@ -156,7 +160,7 @@ class CGESession(threading.Thread):
         return methodsList
 
     def getOperations(self):
-        """get all operations from Thread.Tasker of all objects in self.objectList"""
+        """Get all operations from Thread.Tasker of all objects in self.objectList ."""
         operationList = []
         for obj in self.objList:
             try:
@@ -188,7 +192,7 @@ class CGESession(threading.Thread):
         return operationList
 
     def resolveIdToIndex(self, objId):
-        """get the index in self.objectList of the sysObject with the id, objId"""
+        """Get the index in self.objectList of the sysObject with the id, <objId>."""
         if self.objList.__len__() == 1:
             return 0
         ndx = 0
@@ -199,10 +203,12 @@ class CGESession(threading.Thread):
         raise objectNotInObjList(objId)
 
     def areOperationsPossible(self, operationList):
-        """checks if operations in operationList are possible by seeing if there is the requested method at the
-            requested sysObject
-        returns True if all operations have usable methods
-        raises operationNotPossible otherwise"""
+        """
+        Checks if operations in <operationList> are possible by seeing if there is the requested method at the
+            requested sysObject.
+        Return True if all operations have usable methods.
+        Raise operationNotPossible otherwise.
+        """
         for operation in operationList:
             if operation[0] == "CSH":
                 if operation[1] == "crossWarp":
@@ -235,9 +241,11 @@ class CGESession(threading.Thread):
         return True
 
     def performSelectedOperation(self, objId, method, sourceId, subObjectReference=None, parameters=None):
-        """checks if the sysObject with an id of sourceId can request method
-        if yes, method(parameters), is call to the sysObject in the objList with the id of objId or it's sub sysObject
-        otherwise raise operationNotPossible"""
+        """
+        Checks if the sysObject with an id of <sourceId> can request <method>.
+        If yes, <method>(<parameters>), call to the sysObject in the objList with the id of <objId> or it's subObject.
+        Otherwise raise operationNotPossible.
+        """
         if parameters is None:
             parameters = []
         if objId == "CSH":
@@ -281,7 +289,7 @@ class CGESession(threading.Thread):
 
     @staticmethod
     def unpackSubObjFromExtension(obj, subObjReference):
-        """get the sub sysObject, referenced by subObReference, of obj"""
+        """Get the subObject, referenced by <subObReference>, of <obj>."""
         subs = []
         sub = ""
         for char in subObjReference:
@@ -319,7 +327,10 @@ class CGESession(threading.Thread):
 
     @staticmethod
     def repackSubToFull(fullObj, subObj, subObjReference):
-        """return fullObj with its sub sysObject, referenced by subObjReference, equal to subObj"""
+        """
+        Take <fullObj> and the updated <subObj> and put it back according to <subObjReference>.
+        Return this object.
+        """
         subs = []
         sub = ""
         for char in subObjReference:
@@ -344,7 +355,7 @@ class CGESession(threading.Thread):
         return fullObj
 
     def moveThreadAlong(self):
-        """move Thread of all objects in self.objList to next shift"""
+        """Move Thread of all objects in self.objList to next shift."""
         while True:
             if not self.crossPosts:
                 break
@@ -360,28 +371,31 @@ class CGESession(threading.Thread):
             self.objList = []
 
     def addUniRules(self, uni):
-        """add a rule to  self.uniRules"""
+        """Add rules from <uni> to self.uniRules ."""
         for rul in uni.rule:
             self.uniRules.append(rul)
 
     def saveSceneInit(self, cont=None):
-        """save the current state of the session as the initial state of self.saveScene"""
+        """
+        Save the current state of the session as the initial state of self.saveScene .
+        Specify the container with <cont>.
+        """
         if cont is not None:
             self.savedScene.loc = cont
         self.savedScene.obj = self.objList
 
     def exportScene(self, tlInfo, name, universe):
-        """export self.savedScene with timeline info from tlInfo, the scene name from name,
-            and an Id generated with universe
-        """
+        """Export self.savedScene with timeline info from <tlInfo>, the scenename from <name>, and an Id generated with <universe>."""
         self.savedScene.tl = tlInfo
         self.savedScene.tag["name"] = name
         self.savedScene.tag["id"] = idGen.generateUniversalId(universe, self.savedScene)
         return self.savedScene
 
     def update(self, saveToScene=False):
-        """extract and operate on objects in self.objectList using the operations from the threads of said objects
-            may return a string if an issue occurred or something unexpected happened
+        """
+        Extract and operate on objects in self.objectList using the operations from the threads of said objects
+        Specify saving of shifts to a scene using <saveToScene>.
+        May return a string if an issue occurred or something unexpected happened.
         """
         if not self.objList:
             return "No objects to process"
@@ -433,9 +447,7 @@ class CGESession(threading.Thread):
 
     # use .start() NOT .run()
     def run(self):
-        """obligatory Thread.run
-    runs update dependant on self.runBehavior
-    """
+        """Obligatory Thread.run. Runs session dependant on self.runBehavior."""
         # continued
         if self.runBehavior[0] == 'c':
             # runBehavior: ['c', <saveToScene(bool)>]
@@ -458,8 +470,10 @@ class CGESession(threading.Thread):
             return "specify a mode"
 
     def updateWithGoal(self, objId, comparator, goal, subObjReference=None, saveToScene=False):
-        """update but check if a value at an sysObject in self.objectList is equal, more than, less than, etc... of a goal
-        value. When that goal is met stop updating."""
+        """
+        Update but check if a value at an sysObject in self.objectList is equal, more than, less than, etc... of a goal value.
+        When that goal is met stop updating.
+        """
         if comparator == '==':
             if subObjReference is None:
                 while goal != self.resolveIdToIndex(objId):

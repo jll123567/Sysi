@@ -9,7 +9,7 @@ class a(sys_objects.sysObject):
 
 b = a()
 b.tag["id"] = "o/b"
-b.tag["permissions"].update({"c":"default"})
-b.trd.tsk.current = [["o/b", "c", [], "o/b"]]
+b.tag["permissions"].update({"c": "default", "trd.tsk.debugPrint": "blocked"})
+b.trd.tsk.current = [["o/b.trd.tsk", "debugPrint", ["block me uwu"], "o/b"]]
 d = CGE.CGESession("d", [b], ['c', False])
 d.start()
