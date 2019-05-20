@@ -170,7 +170,9 @@ class CGESession(threading.Thread):
                             subObjReference = ""
                         else:
                             subObjReference = self.extractId(operation)[1] + "."
-                        if obj.tag["permissions"][subObjReference + operation[1]] != "blocked":
+                        if obj.tag["permissions"][subObjReference + operation[1]] != "blocked" or \
+                                self.objList[self.resolveIdToIndex(operation[0])].tag["permissions"][
+                                    subObjReference + operation[1]] != "blocked":
                             try:
                                 if self.permissions[subObjReference + operation[1]] != "blocked":
                                     operationList.append(operation)
