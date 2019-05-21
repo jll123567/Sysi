@@ -13,8 +13,8 @@ e = a()
 b.tag["id"] = "o/b"
 e.tag["id"] = "o/e"
 b.tag["permissions"].update({"c": "default"})
-e.tag["permissions"].update({"c": "default"})
-b.trd.tsk.current = [["o/e", "c", [], "o/b"]]
+e.tag["permissions"].update({"c": "default", "trd.tsk.debugPrint": "default"})
+b.trd.tsk.current = [["o/e", "c", [], "o/b"], ["o/e.trd.tsk", "debugPrint", ["block me uwu"], "o/b"]]
 e.trd.tsk.current = [["o/b", "c", [], "o/e"]]
-d = CGE.CGESession("d", [b], ['c', False], permissions={"c": "allowed"})
+d = CGE.CGESession("d", [b, e], ['c', False], permissions={"trd.tsk.debugPrint": "blocked"})
 d.start()
