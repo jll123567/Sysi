@@ -179,7 +179,7 @@ class CGESession(threading.Thread):
                             except KeyError:
                                 operationList.append(operation)
                     except KeyError:
-                        pass
+                        print("No permissions for, ", operation[1], " found. Skipping!")
             except AttributeError:
                 warnings.warn(
                     "the sysObject " + str(
