@@ -141,8 +141,8 @@ class CGESession(threading.Thread):
             self.objList.pop(self.resolveIdToIndex(objId))
             if self.savedScene is not None:
                 self.savedScene.scp.append(["this", "removeObj", [objId], "this"])
-        except objectNotInObjList:
-            print("objectNotInObjList passed")
+        except ObjectNotInObjList:
+            print("ObjectNotInObjList passed")
 
     def addObj(self, obj):
         """Add obj to self.objList ."""
@@ -179,13 +179,15 @@ class CGESession(threading.Thread):
                             except KeyError:
                                 operationList.append(operation)
                     except KeyError:
-                        print("No permissions for, ", operation[1], " found. Skipping!")
+                        warnings.warn("There is no permissions for {0} at either {1} or {2}.".format(str(operation[1]),
+                                                                                                     str(operation[0]),
+                                                                                                     str(operation[3])),
+                                      PermissionsNotFound)
             except AttributeError:
                 warnings.warn(
-                    "the sysObject " + str(
-                        obj.tag["name"]) + "does not have a thread_modules and/or tasker \n please add one "
-                                           "if you want the sysObject to do something",
-                    objectDoesNotContainTsk)
+                    "the sysObject {0}does not have a thread_modules and/or tasker \n please add one if you want the sysObject to do something".format(
+                        str(obj.tag["name"])),
+                    ObjectDoesNotContainTsk)
             for rul in self.uniRules:
                 if rul[0] is None:
                     operationList.append([obj.tag["id"], rul[1], rul[2], rul[3]])
@@ -202,14 +204,14 @@ class CGESession(threading.Thread):
             if objId == obj.tag["id"]:
                 return ndx
             ndx += 1
-        raise objectNotInObjList(objId)
+        raise ObjectNotInObjList(objId)
 
     def areOperationsPossible(self, operationList):
         """
         Checks if operations in <operationList> are possible by seeing if there is the requested method at the
             requested sysObject.
         Return True if all operations have usable methods.
-        Raise operationNotPossible otherwise.
+        Raise OperationNotPossible otherwise.
         """
         for operation in operationList:
             if operation[0] == "CSH":
@@ -234,19 +236,19 @@ class CGESession(threading.Thread):
                 methods = self.getMethods(
                     self.unpackSubObjFromExtension(self.objList[self.resolveIdToIndex(objId)], ext))
                 if operation[1] not in methods:
-                    raise operationNotPossible(str(operation[1]) + " not in " + str(objId + '.' + ext) + "'s method "
+                    raise OperationNotPossible(str(operation[1]) + " not in " + str(objId + '.' + ext) + "'s method "
                                                                                                          "list")
 
             else:
                 if operation[1] not in self.getMethods(self.objList[self.resolveIdToIndex(operation[0])]):
-                    raise operationNotPossible(str(operation[1]) + " not in " + str(operation[0]) + "'s method list")
+                    raise OperationNotPossible(str(operation[1]) + " not in " + str(operation[0]) + "'s method list")
         return True
 
     def performSelectedOperation(self, objId, method, sourceId, subObjectReference=None, parameters=None):
         """
         Checks if the sysObject with an id of <sourceId> can request <method>.
         If yes, <method>(<parameters>), call to the sysObject in the objList with the id of <objId> or it's subObject.
-        Otherwise raise operationNotPossible.
+        Otherwise raise OperationNotPossible.
         """
         if parameters is None:
             parameters = []
@@ -257,35 +259,35 @@ class CGESession(threading.Thread):
                 try:
                     getattr(self, method)()
                 except:
-                    raise operationNotPossible("this, " + method)
+                    raise OperationNotPossible("this, " + method)
             else:
                 try:
                     getattr(self, method)(*parameters)
                 except:
-                    raise operationNotPossible("this, " + method + ',' + str(parameters))
+                    raise OperationNotPossible("this, " + method + ',' + str(parameters))
         elif subObjectReference is None:
             if parameters.__len__() == 0:
                 try:
                     getattr(self.objList[self.resolveIdToIndex(objId)], method)()
                 except:
-                    raise operationNotPossible(objId + ',' + method + ',' + str(parameters))
+                    raise OperationNotPossible(objId + ',' + method + ',' + str(parameters))
             else:
                 try:
                     getattr(self.objList[self.resolveIdToIndex(objId)], method)(*parameters)
                 except:
-                    raise operationNotPossible(objId + ',' + method + ',' + str(parameters))
+                    raise OperationNotPossible(objId + ',' + method + ',' + str(parameters))
         else:
             subObj = self.unpackSubObjFromExtension(self.objList[self.resolveIdToIndex(objId)], subObjectReference)
             if parameters.__len__() == 0:
                 try:
                     getattr(subObj, method)()
                 except:
-                    raise operationNotPossible(objId + ',' + method)
+                    raise OperationNotPossible(objId + ',' + method)
             else:
                 try:
                     getattr(subObj, method)(*parameters)
                 except:
-                    raise operationNotPossible(objId + ',' + method + ',' + str(parameters))
+                    raise OperationNotPossible(objId + ',' + method + ',' + str(parameters))
             self.objList[self.resolveIdToIndex(objId)] = self.repackSubToFull(
                 self.objList[self.resolveIdToIndex(objId)], subObj, subObjectReference)
 
@@ -553,23 +555,30 @@ class CGESession(threading.Thread):
         return scn.obj
 
 
-class operationNotPossible(Exception):
-    """exception to handle operations where the method listed is invalid for the target sysObject"""
+class OperationNotPossible(Exception):
+    """Exception to handle operations where the method listed is invalid for the target sysObject."""
 
     def __init__(self, expression, message="one or more operations are not available as writen"):
         self.expression = expression
         self.message = message
 
 
-class objectNotInObjList(Exception):
-    """exception to handle targets in operations that don't refer to an sysObject in CGESession.objList"""
+class ObjectNotInObjList(Exception):
+    """Exception to handle targets in operations that don't refer to an sysObject in CGESession.objList ."""
 
     def __init__(self, objId):
         self.objId = objId
         self.message = "the sysObject:" + str(self.objId) + "is not in the objList"
 
 
-class objectDoesNotContainTsk(Warning):
-    """warning for if an sysObject does not have a thread or a tasker
-    its a warning as the session will just skip over the sysObject"""
+class ObjectDoesNotContainTsk(Warning):
+    """
+    Warn for if an sysObject does not have a thread or a tasker.
+    The session will just skip over the sysObject that caused this call.
+    """
+    pass
+
+
+class PermissionsNotFound(Warning):
+    """Warn if a method is found at an object that has no entry in it's tag["permissions"]"""
     pass
