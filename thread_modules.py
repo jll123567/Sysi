@@ -4,13 +4,30 @@ import prog.idGen
 import attribs
 import time
 import socket
+
+# restructure threadmodules to make data passing better
 try:
     from sys_objects import data
+
     a = sys_objects.data()
     del a
 except AttributeError:
     print("thread_modules cant see sys_objects.data")
     print(dir(sys_objects))
+
+
+# Thread modules are small things added to a trd attribute at an object
+# They all have the same structure except for a few special cases
+#
+# class TrdModule:
+#     def __init__(self, i, o, misc, misc1, ...):
+#         ...
+#     class TrdModuleData:
+#         def __init__(self, urData, ...):
+#             ...
+#         ...
+#     ...
+# Data of type TrdModuleData is taken from TrdModule.o, combined with other data by CGE and put back into TrdModule.i
 
 class Complex:
     """Arbitrary resolution."""
