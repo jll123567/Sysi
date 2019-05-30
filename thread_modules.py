@@ -19,15 +19,17 @@ except AttributeError:
 # Thread modules are small things added to a trd attribute at an object
 # They all have the same structure except for a few special cases
 #
+# class TrdModuleData:
+#     def __init__(self, urData, ...):
+#         ...
+#     ...
 # class TrdModule:
 #     def __init__(self, i, o, misc, misc1, ...):
 #         ...
-#     class TrdModuleData:
-#         def __init__(self, urData, ...):
-#             ...
-#         ...
 #     ...
 # Data of type TrdModuleData is taken from TrdModule.o, combined with other data by CGE and put back into TrdModule.i
+# if a module has no i or o its assumed it doesn't output/input
+# Ill describe how CGE does combining
 
 class Complex:
     """Arbitrary resolution."""
@@ -95,18 +97,18 @@ class AudioMono:
 class Language:
     """Hold and manipulate audio."""
 
-    def __init__(self, heard=AudioStereo(), speakQue=AudioMono()):
+    def __init__(self, i=AudioStereo(), o=AudioMono()):
         """
-        :param heard: AudioStereo
-        :param speakQue: AudioMono
+        :param i: AudioStereo
+        :param o: AudioMono
         """
-        self.heard = heard
-        self.speakQue = speakQue
+        self.i = i
+        self.o = o
 
     def listen(self, inputSource):
-        """Get sound from input and append it to heard."""
-        self.heard.left.append(inputSource.l)
-        self.heard.right.append(inputSource.r)
+        """Get sound from input and append it to i."""
+        self.i.left.append(inputSource.l)
+        self.i.right.append(inputSource.r)
 
     def tune(self, minVolume, minPan, maxPan):
         """
@@ -118,38 +120,38 @@ class Language:
         maxPan is the largest pan value.
         """
 
-        for i in self.heard.left:
+        for i in self.i.left:
             if abs(i) < minVolume:
-                self.heard.left[self.heard.left.index(i)] = 0
+                self.i.left[self.i.left.index(i)] = 0
             elif minPan > 0:
-                self.heard.left[self.heard.left.index(i)] = 0
+                self.i.left[self.i.left.index(i)] = 0
             elif abs(i) > minPan * -100:
-                self.heard.left[self.heard.left.index(i)] = 0
+                self.i.left[self.i.left.index(i)] = 0
             else:
                 continue
 
-        for i in self.heard.right:
+        for i in self.i.right:
             if abs(i) < minVolume:
-                self.heard.right[self.heard.right.index(i)] = 0
+                self.i.right[self.i.right.index(i)] = 0
             elif maxPan < 0:
-                self.heard.right[self.heard.right.index(i)] = 0
+                self.i.right[self.i.right.index(i)] = 0
             elif abs(i) < maxPan * 100:
-                self.heard.right[self.heard.right.index(i)] = 0
+                self.i.right[self.i.right.index(i)] = 0
             else:
                 continue
 
     def silence(self):
         """Clear spoken audio."""
-        self.speakQue = []
+        self.o = []
 
     def queueSpeak(self, sounds):
         """Add sounds to the speaking queue."""
-        self.speakQue = sounds
+        self.o = sounds
 
     def package(self):
         """Pack audio data into a data obj and return it."""
-        return sys_objects.data([self.heard, self.speakQue], {"name": "Thread.Language.package", "id": None,
-                                                              "dataType": "Thread.Language.package"})
+        return sys_objects.data([self.i, self.o], {"name": "Thread.Language.package", "id": None,
+                                                   "dataType": "Thread.Language.package"})
 
 
 class Move:
@@ -275,25 +277,45 @@ class Move:
                                 {"name": "Thread.Move.package", "id": None, "dataType": "Thread.Move.package"})
 
 
-class Olfactor:
-    """
-    Hold olfactory input for thread.
-    descriptor is a string
-    strength is a float between and including 0 and 1
-    """
+class OlfactorData:
+    """"""
 
     def __init__(self, descriptor="None", strength=0):
         """
         :param descriptor: str
+            Descriptor is a string.
         :param strength: int
+            Strength is a float between and including 0 and 1.
         """
         self.descriptor = descriptor
         self.strength = strength
 
+
+class Olfactor:
+    """
+    Hold olfactory input for thread.
+    """
+
+    def __init__(self, i=None, o=None):
+        """
+        :param i: list
+            Inputted OlfactorData
+        :param o: list
+            Outputted OlfactorData
+        """
+        if i is None:
+            self.i = None
+        else:
+            self.i = i
+        if o is None:
+            self.o = None
+        else:
+            self.o = o
+
     def package(self):
         """Pack Olfactor data into a data sysObject(it needs an id) and return it."""
-        return sys_objects.data([self.descriptor, self.strength], {"name": "Thread.Olfactor.package", "id": None,
-                                                                   "dataType": "Thread.Olfactor.package"})
+        return sys_objects.data([self.i, self.o], {"name": "Thread.Olfactor.package", "id": None,
+                                                   "dataType": "Thread.Olfactor.package"})
 
 
 class Queue:
@@ -775,8 +797,8 @@ class Tasker:
                                                                "dataType": "Thread.Tasker.package"})
 
 
-class taste:
-    """Handle taste."""
+class TasteData:
+    """Handle an instance of a taste."""
 
     def __init__(self, bit=0.0, swt=0.0, slt=0.0, sor=0.0, pln=0.0):
         """
@@ -794,33 +816,34 @@ class taste:
         self.sor = sor
         self.pln = pln
 
-    def package(self):
-        """pack taste into a data and return it"""
-        return sys_objects.data([self.bit, self.swt, self.slt, self.pln], {"name": "Thread.Olfactor.package",
-                                                                           "id": None,
-                                                                           "dataType": "Thread.Olfactor.package"})
 
+class Taste:
+    """Handle taste."""
 
-class Tactile:
-    """Handle tactile input."""
-
-    def __init__(self, tctSnsNds):
+    def __init__(self, i, o):
         """
-        :param tctSnsNds: list
-            [TactileSensoryNode, ...]
+        :param i: list
+            Inputted TasteData.
+        :param o: list
+            Outputted TasteData.
         """
-        self.tctSnsNds = tctSnsNds
+        if i is None:
+            self.i = []
+        else:
+            self.i = i
+        if o is None:
+            self.o = []
+        else:
+            self.o = o
 
     def package(self):
-        """Package for Ram."""
-        nodeList = []
-        for node in self.tctSnsNds:
-            nodeList.append(node.flatten())
-        return sys_objects.data(nodeList,
-                                {"name": "Thread.Tactile.package", "id": None, "dataType": "Thread.Tactile.package"})
+        """Pack taste into a data and return it."""
+        return sys_objects.data([self.i, self.o], {"name": "Thread.Olfactor.package",
+                                                   "id": None,
+                                                   "dataType": "Thread.Olfactor.package"})
 
 
-class TactileSensoryNode:
+class TactileData:
     """Individual points for Tactile."""
 
     def __init__(self, position=None, pressure=0.0, relTemp=0.0):
@@ -844,6 +867,37 @@ class TactileSensoryNode:
     def flatten(self):
         """Return a list of self.position, self.pressure, and self.relTemp respectively."""
         return [self.position, self.pressure, self.relTemp]
+
+
+class Tactile:
+    """Handle tactile sensory data."""
+
+    def __init__(self, i, o):
+        """
+        :param i: list
+            Inputted TasteData.
+        :param o: list
+            Outputted TasteData.
+        """
+        if i is None:
+            self.i = []
+        else:
+            self.i = i
+        if o is None:
+            self.o = []
+        else:
+            self.o = o
+
+    def package(self):
+        """Package for Ram."""
+        nodeListI = []
+        for node in self.i:
+            nodeListI.append(node.flatten())
+        nodeListO = []
+        for node in self.o:
+            nodeListO.append(node.flatten())
+        return sys_objects.data([nodeListI, nodeListO],
+                                {"name": "Thread.Tactile.package", "id": None, "dataType": "Thread.Tactile.package"})
 
 
 class Transfer:
@@ -918,17 +972,17 @@ class Transfer:
 class Visual:
     """Hold and process visual data."""
 
-    def __init__(self, rawImg=None, pitch=0, yaw=0, roll=0):
+    def __init__(self, i=None, pitch=0, yaw=0, roll=0):
         """
-        :param rawImg: list
+        :param i: list
         :param pitch: float
         :param yaw: float
         :param roll: float
         """
-        if rawImg is None:
-            self.rawImg = []
+        if i is None:
+            self.i = []
         else:
-            self.rawImg = rawImg
+            self.i = i
         self.rx = pitch
         self.ry = yaw
         self.rz = roll
@@ -940,8 +994,8 @@ class Visual:
         self.rz = rz
 
     def clearImg(self):
-        """Set the rawImg attribute to an empty list."""
-        self.rawImg = []
+        """Set the i attribute to an empty list."""
+        self.i = []
 
     def resetPos(self):
         """Set rotation attributes to 0."""
@@ -951,5 +1005,5 @@ class Visual:
 
     def package(self):
         """Package for Ram"""
-        return sys_objects.data([self.rawImg, self.rx, self.ry, self.rz], {"name": "Thread.Visual.package", "id": None,
-                                                                           "dataType": "Thread.Visual.package"})
+        return sys_objects.data([self.i, self.rx, self.ry, self.rz], {"name": "Thread.Visual.package", "id": None,
+                                                                      "dataType": "Thread.Visual.package"})
