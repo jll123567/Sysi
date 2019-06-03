@@ -173,7 +173,7 @@ class Thread:
     """Holds self and public accessible data for computation."""
 
     def __init__(self, ram=None, tsk=None, que=None, somm=None, mov=None, lang=None, cpx=None, vis=None,
-                 transf=None, sub=None):
+                 transf=None, sub=None, olf=None, tst=None):
         """Check each thread_modules class of the same name."""
         if ram is None:
             self.ram = thread_modules.Ram()
@@ -191,6 +191,8 @@ class Thread:
         self.vis = vis
         self.transf = transf
         self.sub = sub
+        self.olf = olf
+        self.tst = tst
 
     def storeHeard(self):
         """Store audio data to Ram."""

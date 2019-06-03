@@ -93,6 +93,9 @@ class AudioMono:
         else:
             self.sound = sound
 
+    def empty(self):
+        self.sound = []
+
 
 class Language:
     """Hold and manipulate audio."""
@@ -838,9 +841,9 @@ class Taste:
 
     def package(self):
         """Pack taste into a data and return it."""
-        return sys_objects.data([self.i, self.o], {"name": "Thread.Olfactor.package",
+        return sys_objects.data([self.i, self.o], {"name": "Thread.Taste.package",
                                                    "id": None,
-                                                   "dataType": "Thread.Olfactor.package"})
+                                                   "dataType": "Thread.Taste.package"})
 
 
 class TactileData:

@@ -557,6 +557,24 @@ class CGESession(threading.Thread):
         self.objList = []
         return scn.obj
 
+    def gatherThreadOuts(self):
+        langOut = []
+        olfOut = []
+        tstOut = []
+        for obj in self.objList:
+            langOut.append(obj.trd.lang.o)
+            obj.trd.lang.o.empty()
+            olfOut.append(obj.trd.olf.o)
+            # no reset for olfactor needed
+            tstOut.append(obj.trd.tst.o)
+            # no reset for taste needed
+            # todo add tactile and continue working
+
+
+
+
+
+
 
 class OperationNotPossible(Exception):
     """Exception to handle operations where the method listed is invalid for the target sysObject."""
