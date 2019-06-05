@@ -558,9 +558,15 @@ class CGESession(threading.Thread):
         return scn.obj
 
     def gatherThreadOuts(self):
+        """
+        Get the .trd.<thing>.o of every object int self.objList .
+        Outs for each <thing> are held in a list.
+        Returns a tuple holding each list of outs.
+        """
         langOut = []
         olfOut = []
         tstOut = []
+        tactOut = []
         for obj in self.objList:
             langOut.append(obj.trd.lang.o)
             obj.trd.lang.o.empty()
@@ -568,12 +574,29 @@ class CGESession(threading.Thread):
             # no reset for olfactor needed
             tstOut.append(obj.trd.tst.o)
             # no reset for taste needed
-            # todo add tactile and continue working
+            tactOut.append(obj.trd.tst.o)
+        return langOut, olfOut, tstOut, tactOut
 
+    def updateThreadIns(self, langIn=None, olfIn=None, tstIn=None, tactIn=None):
+        """Update .trd.<thing>.i with for every object in self.objList ."""
+        if langIn is None:  # update these when you know what they should be
+            pass
+        if olfIn is None:
+            pass
+        if tstIn is None:
+            pass
+        if tactIn is None:
+            pass
+        for obj in self.objList:
+            obj.trd.lang.i = langIn
+            obj.trd.olf.i = olfIn
+            obj.trd.tst.i = tstIn
+            obj.trd.tact.i = tactIn
 
-
-
-
+    def combineOuts(self, langOut, olfOut, tstOut, tactOut):
+        """Combine the outs from each object to make a single in.(Per thread module)"""
+        # reasonably something will go here... until then.
+        pass
 
 
 class OperationNotPossible(Exception):
