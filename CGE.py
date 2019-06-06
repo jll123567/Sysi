@@ -182,10 +182,19 @@ class CGESession(threading.Thread):
                             except KeyError:
                                 operationList.append(operation)
                     except KeyError:
-                        warnings.warn("There is no permissions for {0} at either {1} or {2}.".format(str(operation[1]),
-                                                                                                     str(operation[0]),
-                                                                                                     str(operation[3])),
-                                      PermissionsNotFound)
+                        try:
+                            if self.extractId(operation)[1] == "":
+                                subObjReference = ""
+                            else:
+                                subObjReference = self.extractId(operation)[1] + "."
+                            if self.permissions[subObjReference + operation[1]] != "blocked":
+                                operationList.append(operation)
+                        except KeyError:
+                            operationList.append(operation)
+                        # warnings.warn("There is no permissions for {0} at either {1} or {2}.".format(str(operation[1]),
+                        #                                                                              str(operation[0]),
+                        #                                                                              str(operation[3])),
+                        #               PermissionsNotFound)
             except AttributeError:
                 warnings.warn(
                     "the sysObject {0}does not have a thread_modules and/or tasker \n please add one if you want the sysObject to do something".format(
@@ -287,10 +296,10 @@ class CGESession(threading.Thread):
                 except:
                     raise OperationNotPossible(objId + ',' + method)
             else:
-                try:
+                # try:
                     getattr(subObj, method)(*parameters)
-                except:
-                    raise OperationNotPossible(objId + ',' + method + ',' + str(parameters))
+            # except:
+            #     raise OperationNotPossible(objId + ',' + method + ',' + str(parameters))
             self.objList[self.resolveIdToIndex(objId)] = self.repackSubToFull(
                 self.objList[self.resolveIdToIndex(objId)], subObj, subObjectReference)
 
@@ -450,20 +459,21 @@ class CGESession(threading.Thread):
                     self.performSelectedOperation(idHold[0], op[1], op[3], None, op[2])
                 else:
                     self.performSelectedOperation(idHold[0], op[1], op[3], idHold[1], op[2])
-
+        print(self.gatherThreadOuts())
         self.moveThreadAlong()
         return "Shift Complete"
 
     # use .start() NOT .run()
     def run(self):
         """Obligatory Thread.run. Runs session dependant on self.runBehavior."""
+        # todo: make this more intuitive
         # continued
         if self.runBehavior[0] == 'c':
             # runBehavior: ['c', <saveToScene(bool)>]
             while self.update(self.runBehavior[1]) != "No operations":
                 continue
                 # put this line back if you want to be annoyed
-                # print("1No operations left to preform\n stopping!")
+            print("No operations left to preform\n stopping!")
         # goal
         elif self.runBehavior[0] == 'g':
             # runBehavior: ['g', <objId(str)>, <comparator(str)>, <goal(str)> <subObjReference(str)>, <saveToScene(bool)>
@@ -568,13 +578,21 @@ class CGESession(threading.Thread):
         tstOut = []
         tactOut = []
         for obj in self.objList:
-            langOut.append(obj.trd.lang.o)
-            obj.trd.lang.o.empty()
-            olfOut.append(obj.trd.olf.o)
-            # no reset for olfactor needed
-            tstOut.append(obj.trd.tst.o)
-            # no reset for taste needed
-            tactOut.append(obj.trd.tst.o)
+            try:
+                if obj.trd.lang is not None:
+                    langOut.append(obj.trd.lang.o)
+                    obj.trd.lang.o.empty()
+                if obj.trd.olf is not None:
+                    olfOut.append(obj.trd.olf.o)
+                    # no reset for olfactor needed
+                if obj.trd.tst is not None:
+                    tstOut.append(obj.trd.tst.o)
+                    # no reset for taste needed
+                if obj.trd.tact is not None:
+                    tactOut.append(obj.trd.tst.o)
+                    # no reset for tactile needed
+            except AttributeError:
+                pass
         return langOut, olfOut, tstOut, tactOut
 
     def updateThreadIns(self, langIn=None, olfIn=None, tstIn=None, tactIn=None):

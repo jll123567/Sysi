@@ -287,7 +287,7 @@ class OlfactorData:
         """
         :param descriptor: str
             Descriptor is a string.
-        :param strength: int
+        :param strength: float
             Strength is a float between and including 0 and 1.
         """
         self.descriptor = descriptor
@@ -726,7 +726,7 @@ class Tasker:
                 break
             else:
                 objId += char
-        objId += ".Thread.Tasker"
+        objId += ".trd.tsk"
         self.addShift([operation, [objId, "loopInf", [operation], operation[3]]])
 
     def ifStatement(self, comparator, object0, object1, then, els=None):
