@@ -11,6 +11,7 @@ import warnings
 import prog.idGen as idGen
 import threading
 import types
+import thread_modules
 
 
 class CrossSessionHandler(threading.Thread):
@@ -297,7 +298,7 @@ class CGESession(threading.Thread):
                     raise OperationNotPossible(objId + ',' + method)
             else:
                 # try:
-                    getattr(subObj, method)(*parameters)
+                getattr(subObj, method)(*parameters)
             # except:
             #     raise OperationNotPossible(objId + ',' + method + ',' + str(parameters))
             self.objList[self.resolveIdToIndex(objId)] = self.repackSubToFull(
@@ -611,10 +612,32 @@ class CGESession(threading.Thread):
             obj.trd.tst.i = tstIn
             obj.trd.tact.i = tactIn
 
-    def combineOuts(self, langOut, olfOut, tstOut, tactOut):
+    @staticmethod
+    def combineOuts(langOut, olfOut, tstOut, tactOut):
         """Combine the outs from each object to make a single in.(Per thread module)"""
         # reasonably something will go here... until then.
-        pass
+        langFinal = thread_modules.AudioMono()
+        for soundCount in range(0, langOut.__len__()):
+            for volCount in range(0, langOut[soundCount].sound.__len__()):
+                langFinal.sound[volCount] += langOut[soundCount].sound[volCount]
+
+        olfFinal = []
+
+        def getExistingSmls(olfFnl):
+            f = []
+            for i in olfFnl:
+                f.append(i.descriptor)
+            return f
+
+        for sml in olfOut:
+            if sml.descriptor not in getExistingSmls(olfFinal):
+                olfFinal.append(sml)
+            else:
+                for smlCnt in range(0, olfFinal.__len__()):
+                    olfFinal[smlCnt].strength += sml.strength
+        tstFinal = tstOut
+        tactFinal = tactOut
+        return langFinal, olfFinal, tstFinal, tactFinal
 
 
 class OperationNotPossible(Exception):
