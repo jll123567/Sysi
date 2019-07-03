@@ -11,7 +11,6 @@ import warnings
 import prog.idGen as idGen
 import threading
 import types
-import thread_modules
 
 
 class CrossSessionHandler(threading.Thread):
@@ -607,34 +606,20 @@ class CGESession(threading.Thread):
         if tactIn is None:
             pass
         for obj in self.objList:
-            obj.trd.lang.i = langIn
-            obj.trd.olf.i = olfIn
-            obj.trd.tst.i = tstIn
-            obj.trd.tact.i = tactIn
+            try:
+                obj.trd.lang.i = langIn
+                obj.trd.olf.i = olfIn
+                obj.trd.tst.i = tstIn
+                obj.trd.tact.i = tactIn
+            except AttributeError:
+                pass
 
     @staticmethod
     def combineOuts(langOut, olfOut, tstOut, tactOut):
         """Combine the outs from each object to make a single in.(Per thread module)"""
         # reasonably something will go here... until then.
-        langFinal = thread_modules.AudioMono()
-        for soundCount in range(0, langOut.__len__()):
-            for volCount in range(0, langOut[soundCount].sound.__len__()):
-                langFinal.sound[volCount] += langOut[soundCount].sound[volCount]
-
-        olfFinal = []
-
-        def getExistingSmls(olfFnl):
-            f = []
-            for i in olfFnl:
-                f.append(i.descriptor)
-            return f
-
-        for sml in olfOut:
-            if sml.descriptor not in getExistingSmls(olfFinal):
-                olfFinal.append(sml)
-            else:
-                for smlCnt in range(0, olfFinal.__len__()):
-                    olfFinal[smlCnt].strength += sml.strength
+        langFinal = langOut
+        olfFinal = olfOut
         tstFinal = tstOut
         tactFinal = tactOut
         return langFinal, olfFinal, tstFinal, tactFinal
