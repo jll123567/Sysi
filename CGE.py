@@ -459,7 +459,6 @@ class CGESession(threading.Thread):
                     self.performSelectedOperation(idHold[0], op[1], op[3], None, op[2])
                 else:
                     self.performSelectedOperation(idHold[0], op[1], op[3], idHold[1], op[2])
-        print(self.gatherThreadOuts())
         self.moveThreadAlong()
         return "Shift Complete"
 
@@ -572,6 +571,7 @@ class CGESession(threading.Thread):
         Get the .trd.<thing>.o of every object int self.objList .
         Outs for each <thing> are held in a list.
         Returns a tuple holding each list of outs.
+        (Super Boilerplate. DO NOT IMPLEMENT!!!)
         """
         langOut = []
         olfOut = []
@@ -596,7 +596,7 @@ class CGESession(threading.Thread):
         return langOut, olfOut, tstOut, tactOut
 
     def updateThreadIns(self, langIn=None, olfIn=None, tstIn=None, tactIn=None):
-        """Update .trd.<thing>.i with for every object in self.objList ."""
+        """Update .trd.<thing>.i with for every object in self.objList .(Super Boilerplate. DO NOT IMPLEMENT!!!)"""
         if langIn is None:  # update these when you know what they should be
             pass
         if olfIn is None:
@@ -616,7 +616,7 @@ class CGESession(threading.Thread):
 
     @staticmethod
     def combineOuts(langOut, olfOut, tstOut, tactOut):
-        """Combine the outs from each object to make a single in.(Per thread module)"""
+        """Combine the outs from each object to make a single in.(Per thread module)(Super Boilerplate. DO NOT IMPLEMENT!!!)"""
         # reasonably something will go here... until then.
         langFinal = langOut
         olfFinal = olfOut
