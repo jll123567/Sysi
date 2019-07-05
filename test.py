@@ -2,31 +2,44 @@
 import sys_objects
 import CGE
 import thread_modules
-class a(sys_objects.sysObject):
+
+
+class sendableObj(sys_objects.sysObject):
     def __init__(self, m=None, tr=None, tg=None):
         super().__init__(m, tr, tg)
-    def c(self):
-        print("block me", self.tag["id"])
+        self.trd.transf = thread_modules.Transfer()
 
-b = a()
-d = a()
-e = a()
+    def generateSendRequest(self, dta, targetId):
+        self.trd.transf.send(self.tag["id"], dta)
+        request = [targetId, "acceptSendRequest", [self.trd.transf.interface], self.tag["id"]]
+        self.trd.tsk.current.append(request)
+
+    def acceptSendRequest(self, dta):
+        print("aSR started")
+        willReceve = False
+        if dta.tag["sender"] is not None:
+            willReceve = True
+        if willReceve:
+            acceptOp = [self.tag["id"], "receiveSendData", [dta], self.tag["id"]]
+            self.trd.tsk.addOperation(acceptOp)
+        print("aSR Finished")
+
+    def receiveSendData(self, dta):
+        self.trd.transf.receive(dta)
+
+    def debugInterface(self):
+        print(self.trd.transf.interface.storage)
+
+
+b = sendableObj()
+d = sendableObj()
+dtaA = sys_objects.data("Hi")
+dtaB = sys_objects.data("OverwriteMe")
 b.tag["id"] = "o/b"
 d.tag["id"] = "o/d"
-e.tag["id"] = "o/e"
-aOlf = ["b", "d", "e"]
-num = 0
-for i in [b, d, e]:
-    i.trd.olf = thread_modules.Olfactor()
-    i.trd.olf.o = thread_modules.OlfactorData(aOlf[num], 0.2)
-    i.trd.tsk.appendCurrent([i.tag["id"] + ".trd.tsk", "loopInf", [[
-        i.tag["id"] + ".trd.tsk", "doNothing", [], i.tag["id"]
-    ]], i.tag["id"]])
-    # i.tag["permissions"].update({"trd.tsk.loopInf": "Default"})
-    num += 1
-del i
-del aOlf
-del num
-b.tag["id"]
-f = CGE.CGESession("f", [b, d, e], ["c", False])
-f.start()
+d.trd.transf.interface = dtaB
+b.generateSendRequest(dtaA, "o/d")
+d.trd.tsk.current.append(["o/d.trd.tsk", "loopInf", [["o/d", "debugInterface", [], "o/d"]], "o/d"])
+# d.trd.tsk.profile = [[]]
+session = CGE.CGESession("f", [b, d], ["c", False])
+session.start()

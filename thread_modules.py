@@ -704,9 +704,35 @@ class Tasker:
         """Append <shift> to self.profile ."""
         self.profile.append(shift)
 
+    def addOperation(self, operation, shiftIndex=0):
+        """
+        Append <operation> to the shift in self.profile[<shiftIndex>] .
+        By default shiftIndex is 0.
+        If <shiftIndex> is out of range <operation> will be added to a new shift in self.profile .
+        """
+        try:
+            self.profile[shiftIndex].append(operation)
+        except IndexError:
+            self.profile.append([operation])
+
     def removeShift(self, index):
         """Remove self.profile[<index>]."""
         self.profile.pop(index)
+
+    def removeOperation(self, operationIndex=0, shiftIndex=0, currOrProf="Profile"):
+        """
+        Remove self.profile[<shiftIndex>][<operationIndex>] or self.current[<operationIndex>]
+        Removes from profile by default, set currOrProf to "Current" to remove from current.
+        When removing from current, shiftIndex does nothing since theres only one shift allowed in current.
+
+        :param operationIndex: int
+        :param shiftIndex: int
+        :param currOrProf: str
+        """
+        if currOrProf == "Current":
+            self.current.pop(operationIndex)
+        else:
+            self.profile[shiftIndex].pop(operationIndex)
 
     @staticmethod
     def wait(t):
@@ -918,7 +944,11 @@ class Transfer:
         pkg.tag.update({"sender": sender})
         self.interface = pkg
 
-    def receive(self, sender):
+    def receive(self, dta):
+        """Puts <dta> in self.interface."""
+        self.interface = dta
+
+    def receiveUsingSender(self, sender):
         """Grab data using a copy of the sending object."""
         # Is there a better way to do this? Probably.
         try:

@@ -13,6 +13,9 @@ import threading
 import types
 
 
+# from time import sleep
+
+
 class CrossSessionHandler(threading.Thread):
     """holds all relevant sessions and allows for data and objects to travel across sessions
     may be refereed to as a "session directory"
@@ -281,12 +284,12 @@ class CGESession(threading.Thread):
             if parameters.__len__() == 0:
                 try:
                     getattr(self.objList[self.resolveIdToIndex(objId)], method)()
-                except:
+                except AttributeError:
                     raise OperationNotPossible(objId + ',' + method + ',' + str(parameters))
             else:
                 try:
                     getattr(self.objList[self.resolveIdToIndex(objId)], method)(*parameters)
-                except:
+                except AttributeError:
                     raise OperationNotPossible(objId + ',' + method + ',' + str(parameters))
         else:
             subObj = self.unpackSubObjFromExtension(self.objList[self.resolveIdToIndex(objId)], subObjectReference)
@@ -415,6 +418,7 @@ class CGESession(threading.Thread):
         Specify saving of shifts to a scene using <saveToScene>.
         May return a string if an issue occurred or something unexpected happened.
         """
+        # sleep(0.5)
         if not self.objList:
             return "No objects to process"
         objIdx = 0
