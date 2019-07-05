@@ -723,7 +723,7 @@ class Tasker:
         """
         Remove self.profile[<shiftIndex>][<operationIndex>] or self.current[<operationIndex>]
         Removes from profile by default, set currOrProf to "Current" to remove from current.
-        When removing from current, shiftIndex does nothing since theres only one shift allowed in current.
+        When removing from current, shiftIndex does nothing since there's only one shift allowed in current.
 
         :param operationIndex: int
         :param shiftIndex: int
