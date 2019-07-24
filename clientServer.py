@@ -4,43 +4,94 @@ from time import sleep
 
 
 class sysClient(threading.Thread):
-    def __init__(self, address, port, message, sock=None):
+    def __init__(self, message, sAddress, sPort, rAddress, rPort, sSock=None, rSock=None, rStor=None, sStor=None):
         super().__init__()
-        self.address = address
-        self.port = port
         self.message = message
-        if sock is None:
-            self.sock = socket.socket()
+        self.sAddress = sAddress
+        self.sPort = sPort
+        self.rAddress = rAddress
+        self.rPort = rPort
+        self.rStor = rStor
+        self.sStor = sStor
+        if sSock is None:
+            self.sSock = socket.socket()
         else:
-            self.sock = sock
+            self.sSock = sSock
+        if rSock is None:
+            self.rSock = socket.socket()
+        else:
+            self.rSock = rSock
 
     def run(self):
-        self.sock.connect((self.address, self.port))
-        self.sock.sendall(self.message.encode("ascii"))
-        sleep(1)
-        self.sock.close()
+        print(self.sendAscii(self.message))
+        print(self.receiveAscii())
+
+    def receiveAscii(self):
+        self.rSock.bind((self.rAddress, self.rPort))
+        self.rSock.listen(1)
+        while True:
+            connection, client_address = self.rSock.accept()
+            final = b""
+            try:
+                while True:
+                    partial = connection.recv(16)
+                    if partial:
+                        final += partial
+                    else:
+                        print(final.decode("ascii"))
+                        break
+            finally:
+                self.rStor = final.decode("ascii")
+                connection.close()
+                break
+        self.rSock.close()
+        return "rSock closed on client"
+
+    def sendAscii(self, msg):
+        self.sSock.connect((self.sAddress, self.sPort))
+        self.sSock.sendall(msg.encode("ascii"))
+        sleep(5)
+        self.sSock.close()
+        return "sSock closed on client"
 
 
 class sysServer(threading.Thread):
-    def __init__(self, address, port, sock=None):
+    def __init__(self, sAddress, sPort, rAddress, rPort, sSock=None, rSock=None, rStor=None, sStor=None):
         super().__init__()
-        self.address = address
-        self.port = port
-        if sock is None:
-            self.sock = socket.socket()
+        self.sAddress = sAddress
+        self.sPort = sPort
+        self.rAddress = rAddress
+        self.rPort = rPort
+        self.rStor = rStor
+        self.sStor = sStor
+        if sSock is None:
+            self.sSock = socket.socket()
         else:
-            self.sock = sock
+            self.sSock = sSock
+        if rSock is None:
+            self.rSock = socket.socket()
+        else:
+            self.rSock = rSock
 
     def run(self):
-        self.sock.bind((self.address, self.port))
-        self.sock.listen(1)
-        print(self.awaitConnection())
+        print(self.receiveAscii())
+        sleep(1)
+        print(self.sendAscii(self.rStor))
 
-    def awaitConnection(self):
+    def sendAscii(self, msg):
+        self.sSock.connect((self.sAddress, self.sPort))
+        self.sSock.sendall(msg.encode("ascii"))
+        sleep(1)
+        self.sSock.close()
+        return "sSock closed on client"
+
+    def receiveAscii(self):
+        self.rSock.bind((self.rAddress, self.rPort))
+        self.rSock.listen(1)
         while True:
-            connection, client_address = self.sock.accept()
+            connection, client_address = self.rSock.accept()
+            final = b""
             try:
-                final = b""
                 while True:
                     partial = connection.recv(16)
                     if partial:
@@ -50,12 +101,16 @@ class sysServer(threading.Thread):
                         break
             finally:
                 connection.close()
-                break
-        self.sock.close()
-        return "sock closed on server"
+                self.rStor = final.decode("ascii")
+            break
+        self.rSock.close()
+        return "rSock closed on server"
 
 
-srv = sysServer("localhost", 9998)
-cli = sysClient("localhost", 9998, "hello!")
+srv = sysServer("localhost", 9998, "localhost", 9999)
+cli = sysClient("hello!", "localhost", 9999, "localhost", 9998)
 srv.start()
 cli.start()
+sleep(10)
+del srv
+del cli
