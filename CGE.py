@@ -6,29 +6,31 @@ task > CGE
 CGE > sceneScript
 ["sender","target","operation",[parameters]]"""
 
-import sys_objects
-import warnings
-import prog.idGen as idGen
 import threading
 import types
+import warnings
+
+import prog.idGen as idGen
+import sys_objects
 
 
 # from time import sleep
 
 
-class CrossSessionHandler(threading.Thread):
+class sessionDirectory(threading.Thread):
     """holds all relevant sessions and allows for data and objects to travel across sessions
     may be refereed to as a "session directory"
     sessionList is a list of CGESessions"""
 
-    def __init__(self, CSHId, sessionList=None):
+    def __init__(self, dirId, sessionList=None):
         """sessionList: []"""
         super().__init__()
         if sessionList is None:
             self.sessionList = []
         else:
             self.sessionList = sessionList
-        self.CSHId = CSHId
+        self.dirId = dirId
+        self.live = True
 
     def addSession(self, session):
         """add session to self.sessionList"""
@@ -73,6 +75,10 @@ class CrossSessionHandler(threading.Thread):
                         break
                     self.sessionList[idx].crossPosts.pop(self.sessionList[idx].crossPosts.index(post))
 
+    def giveShift(self, shift, objId):
+        for ses in self.sessionList:
+            ses.giveShift(shift, objId)
+
     def crossWarp(self, idx, operation):
         for idx1 in range(0, self.sessionList.__len__()):
             if self.sessionList[idx1].sessionId == operation[2][0]:
@@ -87,7 +93,7 @@ class CrossSessionHandler(threading.Thread):
         starts all session threads and  indefinitely, continually, calls checkForPost()"""
         for idx in range(0, self.sessionList.__len__()):
             self.sessionList[idx].start()
-        while True:
+        while self.live:
             self.checkForPost()
 
 
@@ -102,7 +108,7 @@ class CGESession(threading.Thread):
         :param objList: List of objects in session.
         :param runBehavior: A list that specifies the run behavior of the session. Check run() for more info.
         :param savedScene: A scene to save the events of the session to.
-        :param crossPosts: Messages to send to the CrossSessionHandler holing this session.
+        :param crossPosts: Messages to send to the sessionDirectory holing this session.
         :param uniRules: A list of operations to run each shift.
         :param permissions: Session wide permissions, unlisted methods are allowed by default.
         :type sessionId: str
@@ -133,6 +139,7 @@ class CGESession(threading.Thread):
             self.permissions = {}
         else:
             self.permissions = permissions
+        self.live = True
 
     def removeObj(self, objId: str):
         """
@@ -152,6 +159,12 @@ class CGESession(threading.Thread):
         self.objList.append(obj)
         if self.savedScene is not None:
             self.savedScene.scp.append(["this", "addObj", [obj], "this"])
+
+    def giveShift(self, shift, objId):
+        for objInd in range(0, self.objList.__len__()):
+            if self.objList[objInd].tag["id"] == objId:
+                for op in shift:
+                    self.objList[objInd].trd.tsk.addOperation(op)
 
     @staticmethod
     def getMethods(obj):
@@ -406,7 +419,7 @@ class CGESession(threading.Thread):
         self.savedScene.obj = self.objList
 
     def exportScene(self, tlInfo, name, universe):
-        """Export self.savedScene with timeline info from <tlInfo>, the scenename from <name>, and an Id generated with <universe>."""
+        """Export self.savedScene with timeline info from <tlInfo>, the scene name from <name>, and an Id generated with <universe>."""
         self.savedScene.tl = tlInfo
         self.savedScene.tag["name"] = name
         self.savedScene.tag["id"] = idGen.generateUniversalId(universe, self.savedScene)
@@ -473,9 +486,11 @@ class CGESession(threading.Thread):
         # continued
         if self.runBehavior[0] == 'c':
             # runBehavior: ['c', <saveToScene(bool)>]
-            while self.update(self.runBehavior[1]) != "No operations":
+
+            # while self.live: # lazy version
+            while self.update(self.runBehavior[1]) != "No operations" \
+                    and self.live:  # uncomment this to end when all threads empty
                 continue
-                # put this line back if you want to be annoyed
             print("No operations left to preform\n stopping!")
         # goal
         elif self.runBehavior[0] == 'g':
@@ -485,7 +500,7 @@ class CGESession(threading.Thread):
         # iterations
         elif self.runBehavior[0] == 'i':
             # runBehavior: ['i', <saveToScene(bool)>, <iterations(int)>
-            while self.runBehavior[2] > 0:
+            while self.runBehavior[2] > 0 and self.live:
                 self.update(self.runBehavior[1])
                 self.runBehavior[2] -= 1
         else:
@@ -498,46 +513,52 @@ class CGESession(threading.Thread):
         """
         if comparator == '==':
             if subObjReference is None:
-                while goal != self.resolveIdToIndex(objId):
+                while self.live and goal != self.resolveIdToIndex(objId):
                     # stop updating if the goal is what you want it to be
                     self.update(saveToScene)
             else:
-                while goal != self.unpackSubObjFromExtension(self.resolveIdToIndex(objId), subObjReference):
+                while self.live and goal != self.unpackSubObjFromExtension(self.resolveIdToIndex(objId),
+                                                                           subObjReference):
                     self.update(saveToScene)
         elif comparator == '!=':
             if subObjReference is None:
-                while goal == self.resolveIdToIndex(objId):
+                while self.live and goal == self.resolveIdToIndex(objId):
                     self.update(saveToScene)
             else:
-                while goal == self.unpackSubObjFromExtension(self.resolveIdToIndex(objId), subObjReference):
+                while self.live and goal == self.unpackSubObjFromExtension(self.resolveIdToIndex(objId),
+                                                                           subObjReference):
                     self.update(saveToScene)
         elif comparator == '>':
             if subObjReference is None:
-                while goal <= self.resolveIdToIndex(objId):
+                while self.live and goal <= self.resolveIdToIndex(objId):
                     self.update(saveToScene)
             else:
-                while goal <= self.unpackSubObjFromExtension(self.resolveIdToIndex(objId), subObjReference):
+                while self.live and goal <= self.unpackSubObjFromExtension(self.resolveIdToIndex(objId),
+                                                                           subObjReference):
                     self.update(saveToScene)
         elif comparator == '<':
             if subObjReference is None:
-                while goal >= self.resolveIdToIndex(objId):
+                while self.live and goal >= self.resolveIdToIndex(objId):
                     self.update(saveToScene)
             else:
-                while goal >= self.unpackSubObjFromExtension(self.resolveIdToIndex(objId), subObjReference):
+                while self.live and goal >= self.unpackSubObjFromExtension(self.resolveIdToIndex(objId),
+                                                                           subObjReference):
                     self.update(saveToScene)
         elif comparator == '>=':
             if subObjReference is None:
-                while goal < self.resolveIdToIndex(objId):
+                while self.live and goal < self.resolveIdToIndex(objId):
                     self.update(saveToScene)
             else:
-                while goal < self.unpackSubObjFromExtension(self.resolveIdToIndex(objId), subObjReference):
+                while self.live and goal < self.unpackSubObjFromExtension(self.resolveIdToIndex(objId),
+                                                                          subObjReference):
                     self.update(saveToScene)
         elif comparator == '<=':
             if subObjReference is None:
-                while goal > self.resolveIdToIndex(objId):
+                while self.live and goal > self.resolveIdToIndex(objId):
                     self.update(saveToScene)
             else:
-                while goal > self.unpackSubObjFromExtension(self.resolveIdToIndex(objId), subObjReference):
+                while self.live and goal > self.unpackSubObjFromExtension(self.resolveIdToIndex(objId),
+                                                                          subObjReference):
                     self.update(saveToScene)
         else:
             print("the comparator inputted is not valid")
@@ -588,7 +609,7 @@ class CGESession(threading.Thread):
                     obj.trd.lang.o.empty()
                 if obj.trd.olf is not None:
                     olfOut.append(obj.trd.olf.o)
-                    # no reset for olfactor needed
+                    # no reset for olfactory needed
                 if obj.trd.tst is not None:
                     tstOut.append(obj.trd.tst.o)
                     # no reset for taste needed

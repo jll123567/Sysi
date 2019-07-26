@@ -1,8 +1,9 @@
 # coding=utf-8
 """Definitions for base sysh objects."""
-from math import sqrt
-import prog.idGen
 import time
+from math import sqrt
+
+import prog.idGen
 
 
 class data:
@@ -25,7 +26,8 @@ class data:
         self.storage = storage
 
 
-import attribs  # Hey, this doesn't belong here! Well it does to fix an error due to shit package management. Bear with it.
+import \
+    attribs  # data object must be defined before attribs is imported or there will be an error. idk
 
 
 # sysh.sysObject.sysObject(oof better name pls) model of sysObject(any), relevant self viewable data(attrib.Thread),
@@ -54,6 +56,16 @@ class sysObject:
         # noinspection PyTypeChecker
         self.tag.update({"oldModel": oldModel})
         self.mod = "assem"
+
+    @staticmethod
+    def sayHi():
+        print("hi")
+
+    def blankTask(self):
+        self.trd.tsk.current = [[self.tag["id"] + ".trd.tsk",
+                                 'loopInf',
+                                 [[self.tag['id'] + ".trd.tsk", "doNothing", [], self.tag["id"]]],
+                                 self.tag["id"]]]
 
     # asks some questions to check if obj is a usr
     # console input

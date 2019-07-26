@@ -48,42 +48,51 @@ class sysSock(threading.Thread):
             self.dataType = "unspecified"
         else:
             self.dataType = dataType
+        self.live = True
 
     def run(self):
-        if self.isSending:
-            self.sock = socket.socket()
-            self.sock.connect((self.address, self.port))
-            toSend = None
-            if self.dataType == "obj":
-                pickledData = self.data
-                pickledData = pickle.dumps(pickledData)
-                toSend = "obj" + ':' + pickledData.hex()
-                toSend = toSend.encode("ascii")
-            self.sock.sendall(toSend)
-            self.sock.close()
-        else:
-            self.sock = socket.socket()
-            self.sock.bind((self.address, self.port))
-            self.sock.listen(1)
-            final = b""
-            while True:
+        while self.live:
+            if self.isSending:
+                self.sock = socket.socket()
+                self.sock.connect((self.address, self.port))
+                if self.dataType == "obj":
+                    pickledData = pickle.dumps(self.data)
+                    toSend = "obj" + ':' + pickledData.hex()
+                elif self.dataType == "shift":
+                    pickledData = pickle.dumps(self.data[0])
+                    toSend = "shift" + ':' + pickledData.hex() + ':' + self.data[1]
+                else:
+                    break
+                toSend = (toSend+":end").encode("ascii")
+                self.sock.sendall(toSend)
+                self.sock.close()
+                self.dataType = "unspecified"
+                self.data = None
+            else:
+                self.sock = socket.socket()
+                self.sock.bind((self.address, self.port))
+                self.sock.listen(1)
+                final = b""
                 connection, clientAddress = self.sock.accept()
                 try:
                     while True:
-                        partial = connection.recv(128)
-                        if partial:
-                            final += partial
-                        else:
+                        partial = connection.recv(16)
+                        final += partial
+                        if re.match(r".*:end", final.decode("ascii")):
+                            final = final[:-4]
                             break
+
                 finally:
                     connection.close()
                     self.sock.close()
-                    break
-            pair = re.split(r":", final.decode("ascii"))
-            self.dataType = pair[0]
-            self.data = pair[1]
-            if self.dataType == "obj":
-                self.data = pickle.loads(bytearray.fromhex(self.data))
+                pair = re.split(r":", final.decode("ascii"))
+                self.dataType = pair[0]
+                pair.pop(0)
+                self.data = pair
+                if self.dataType == "obj":
+                    self.data = pickle.loads(bytearray.fromhex(self.data[0]))
+                elif self.dataType == "shift":
+                    self.data[0] = pickle.loads(bytearray.fromhex(self.data[0]))
 
 
 class sysClient(threading.Thread):
@@ -97,6 +106,7 @@ class sysClient(threading.Thread):
             self.nextShift = nextShift
         self.sSock = None
         self.rSock = None
+        self.live = True
 
     def run(self):
         pass
@@ -127,23 +137,37 @@ class sysServer(threading.Thread):
             self.clientIdLookupTable = {}
         else:
             self.clientIdLookupTable = clientIdLookupTable
+        self.live = True
 
     def run(self):
-        pass
-    # giveShift(objId,shift)
+        for dirr in self.dirs:
+            dirr.start()
+        while self.live:
+            if self.rSock.dataType == "shift":
+                self.giveShift(self.rSock.data[0], self.rSock.data[1])
+                self.rSock.data = None
+                self.rSock.dataType = "unspecified"
+
+    def giveShift(self, shift, objId):
+        for dirr in self.dirs:
+            dirr.giveShift(shift, objId)
     # sendObj(obj,clientId)
     # readReceive()
 
 
 if __name__ == "__main__":
-    class c:
-        def __init__(self, stor):
-            self.stor = stor
+    import sys_objects
+    import CGE
 
-        def read(self):
-            return self.stor
-
-    cli = sysSock("localhost", 9999, True, c("yeet"), "obj")
-    srv = sysSock("localhost", 9999)
+    a = sys_objects.sysObject()
+    a.tag["id"] = "o/a"
+    a.tag["permissions"] = {"sayHi": "allowed"}
+    a.blankTask()
+    b = CGE.CGESession("un/b", [a], ['c', False])
+    c = CGE.sessionDirectory("dr/c", [b])
+    srv = sysServer(dirs=[c])
+    srv.rSock = sysSock("localhost", 9999, False)
+    srv.rSock.start()
     srv.start()
+    cli = sysSock("localhost", 9999, True, [[["o/a", "sayHi", [], "o/a"]], "o/a"], "shift")
     cli.start()

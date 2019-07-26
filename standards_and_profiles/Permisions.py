@@ -1,5 +1,5 @@
 """
-Add a permision system to sysObjects
+Add a permission system to sysObjects
 sysobjects have a permissions entry in tags by default
     all methods allowed by default, must be blocked by uni, obj
         can also be used as a whitelist
