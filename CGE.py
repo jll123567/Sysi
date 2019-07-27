@@ -22,14 +22,18 @@ class sessionDirectory(threading.Thread):
     may be refereed to as a "session directory"
     sessionList is a list of CGESessions"""
 
-    def __init__(self, dirId, sessionList=None):
+    def __init__(self, dirId, sessionList=None, serverPost=None):
         """sessionList: []"""
         super().__init__()
+        self.dirId = dirId
         if sessionList is None:
             self.sessionList = []
         else:
             self.sessionList = sessionList
-        self.dirId = dirId
+        if serverPost is None:
+            self.serverPost = []
+        else:
+            self.serverPost = serverPost
         self.live = True
 
     def addSession(self, session):
@@ -46,13 +50,13 @@ class sessionDirectory(threading.Thread):
 
     def pendSessions(self):
         """put a cross post telling CSH to not process any more cross posts"""
-        for idx in range(0, self.sessionList.__len__()):
+        for idx in range(0, self.sessionList.__len__() - 1):
             self.sessionList[idx].crossPosts.append("pend")
 
     def unpendSessions(self):
         """remove the pending cross post"""
-        for idx in range(0, self.sessionList.__len__()):
-            for idx1 in range(0, self.sessionList[idx].crossPosts.__len__()):
+        for idx in range(0, self.sessionList.__len__() - 1):
+            for idx1 in range(0, self.sessionList[idx].crossPosts.__len__() - 1):
                 if self.sessionList[idx].crossPosts[idx1] == "pend":
                     self.sessionList[idx].crossPosts.pop(idx1)
 
@@ -71,16 +75,26 @@ class sessionDirectory(threading.Thread):
                         if operation[1] == "crossWarp":
                             self.crossWarp(idx, operation)
                         else:
-                            print("operation not supported")
+                            pass
+                            # print("operation not supported")
                         break
+                    if objToRes.tag["networkObject"]:
+                        # print("dir giveObj: {}".format(objToRes.tag["id"]))
+                        self.giveObject(objToRes.tag["id"])
                     self.sessionList[idx].crossPosts.pop(self.sessionList[idx].crossPosts.index(post))
 
     def giveShift(self, shift, objId):
         for ses in self.sessionList:
             ses.giveShift(shift, objId)
 
+    def giveObject(self, objId):
+        for ses in self.sessionList:
+            for obj in ses.objList:
+                if obj.tag["id"] == objId:
+                    self.serverPost.append(obj)
+
     def crossWarp(self, idx, operation):
-        for idx1 in range(0, self.sessionList.__len__()):
+        for idx1 in range(0, self.sessionList.__len__() - 1):
             if self.sessionList[idx1].sessionId == operation[2][0]:
                 self.sessionList[idx1].addObj(self.sessionList[idx].objList[
                                                   self.sessionList[idx].resolveIdToIndex(
@@ -91,8 +105,8 @@ class sessionDirectory(threading.Thread):
     def run(self):
         """obligatory Thread.run
         starts all session threads and  indefinitely, continually, calls checkForPost()"""
-        for idx in range(0, self.sessionList.__len__()):
-            self.sessionList[idx].start()
+        for ses in self.sessionList:
+            ses.start()
         while self.live:
             self.checkForPost()
 
@@ -161,7 +175,7 @@ class CGESession(threading.Thread):
             self.savedScene.scp.append(["this", "addObj", [obj], "this"])
 
     def giveShift(self, shift, objId):
-        for objInd in range(0, self.objList.__len__()):
+        for objInd in range(0, self.objList.__len__() - 1):
             if self.objList[objInd].tag["id"] == objId:
                 for op in shift:
                     self.objList[objInd].trd.tsk.addOperation(op)
@@ -394,7 +408,7 @@ class CGESession(threading.Thread):
             if not self.crossPosts:
                 break
         objsEmpty = 0
-        for idx in range(0, self.objList.__len__()):
+        for idx in range(0, self.objList.__len__() - 1):
             if self.objList[idx].trd.tsk.profile.__len__() == 0:
                 objsEmpty += 1
             try:
@@ -431,7 +445,6 @@ class CGESession(threading.Thread):
         Specify saving of shifts to a scene using <saveToScene>.
         May return a string if an issue occurred or something unexpected happened.
         """
-        # sleep(0.5)
         if not self.objList:
             return "No objects to process"
         objIdx = 0
@@ -446,6 +459,8 @@ class CGESession(threading.Thread):
             if not isinstance(self.objList[objIdx].trd.tsk.current[0], list):
                 # It just fixes crappy Tasker code
                 self.objList[objIdx].trd.tsk.current[0] = [self.objList[objIdx].trd.tsk.current[0]]
+            if self.objList[objIdx].tag["networkObject"]:
+                self.crossPosts.append(self.objList[objIdx].tag["id"])
             objIdx += 1
         operationList = self.getOperations()
         self.areOperationsPossible(operationList)
@@ -466,7 +481,11 @@ class CGESession(threading.Thread):
                     self.performSelectedOperation(idHold[0], op[1], op[3], idHold[1], op[2])
 
                 if "evLog" in self.objList[self.resolveIdToIndex(idHold[0])].tag.keys():
-                    self.objList[self.resolveIdToIndex(idHold[0])].tag["evLog"].append(op[1])
+                    if self.objList[self.resolveIdToIndex(idHold[0])].tag["evLog"].__len__() > 30:
+                        self.objList[self.resolveIdToIndex(idHold[0])].tag["evLog"].pop(0)
+                        self.objList[self.resolveIdToIndex(idHold[0])].tag["evLog"].append(op[1])
+                    else:
+                        self.objList[self.resolveIdToIndex(idHold[0])].tag["evLog"].append(op[1])
                 else:
                     self.objList[self.resolveIdToIndex(idHold[0])].tag.update({"evLog": [op[1]]})
 
