@@ -2,7 +2,7 @@ import pickle
 import re
 import socket
 import threading
-from time import sleep
+import time
 
 
 # cli sShift rObj
@@ -70,11 +70,10 @@ class sysSock(threading.Thread):
                     toSend = "newConnection:{0}:{1}:{2!s}".format(self.data[0], self.data[1], self.data[2])
                 else:
                     break
-                # print(toSend)
                 toSend = (toSend + ":end").encode("ascii")
                 self.sock.sendall(toSend)
                 self.sock.close()
-                self.dataType = "unspecified"
+                self.dataType = "finished"
                 self.data = None
             else:
                 self.sock = socket.socket()
@@ -83,12 +82,13 @@ class sysSock(threading.Thread):
                 final = b""
                 connection, clientAddress = self.sock.accept()
                 try:
-                    while True:
+                    getting = True
+                    while getting:
                         partial = connection.recv(16)
                         final += partial
-                        if re.match(r".*:end", final.decode("ascii")):
+                        if re.match(r".*:end", final.decode("ascii")) or not partial:
                             final = final[:-4]
-                            break
+                            getting = False
                 finally:
                     connection.close()
                 pair = re.split(r":", final.decode("ascii"))
@@ -129,12 +129,13 @@ class sysClient(threading.Thread):
         while self.live:
             if self.rSock.dataType == "obj":
                 self.obj = self.rSock.data
+                self.displayObj()
             self.rSock.dataType = "finished"
             self.rSock.data = None
             if self.nextShift:
-                for shInd in range(0, self.nextShift.__len__() - 1):
-                    self.sendShift(self.nextShift[shInd])
-            for sInd in range(0, self.sSock.__len__() - 1):
+                self.sendShift(self.nextShift[0])
+                self.nextShift.pop(0)
+            for sInd in reversed(range(self.sSock.__len__())):
                 if self.sSock[sInd].dataType == "finished":
                     self.sSock[sInd].live = False
                     self.sSock.pop(sInd)
@@ -145,7 +146,6 @@ class sysClient(threading.Thread):
         sock = sysSock(self.selfAddress, self.selfPort)
         sock.start()
         self.rSock = sock
-        print("trying to newConnect")
         sock = sysSock(self.serverAddress, self.serverPort, True, [self.clientId, self.selfAddress, self.selfPort],
                        "newConnection")
         sock.start()
@@ -159,12 +159,14 @@ class sysClient(threading.Thread):
         sock.start()
         self.sSock.append(sock)
 
-    def setNextShift(self, sh):
-        self.nextShift = sh
+    def addNextShift(self, sh):
+        self.nextShift.append(sh)
 
-    # sendShift(serverAddress, shift, objId)
-    # dispObj(obj)
-    # readReceive()
+    def displayObj(self):
+        if self.obj is not None:
+            print("tsk:{}\n{}\nram:{}\nid:{}\ncliId:{}".format(self.obj.trd.tsk.current, self.obj.trd.tsk.profile,
+                                                               self.obj.trd.ram.storage, self.obj.tag["id"],
+                                                               self.clientId))
 
 
 class sysServer(threading.Thread):
@@ -196,31 +198,33 @@ class sysServer(threading.Thread):
         self.rSock = sock
         del sock
         while self.live:
-            print("server:{}".format(self.sSock.__len__()))
             if self.rSock.dataType == "shift":
                 self.giveShift(self.rSock.data[0], self.rSock.data[1])
+                self.rSock.data = None
+                self.rSock.dataType = "finished"
             elif self.rSock.dataType == "newConnection":
                 self.registerNewConnection()
-            self.rSock.data = None
-            self.rSock.dataType = "finished"
+                self.rSock.data = None
+                self.rSock.dataType = "finished"
+            else:
+                pass
             for dirr in self.dirs:
                 if dirr.serverPost:
-                    if dirr.serverPost.__len__() < 10:
-                        for _ in range(0, dirr.serverPost.__len__() - 1):
-                            self.sendObj(dirr.serverPost[0])
-                            dirr.serverPost.pop(0)
-                    else:
-                        for _ in range(0, 9):
-                            self.sendObj(dirr.serverPost[0])
-                            dirr.serverPost.pop(0)
-            inds = []
-            for sInd in range(0, self.sSock.__len__() - 1):
+                    for postInd in reversed(range(dirr.serverPost.__len__())):
+                        alreadySending = False
+                        for sock in self.sSock:
+                            try:
+                                if sock.data.tag["id"] == dirr.serverPost[postInd].tag["id"]:
+                                    alreadySending = True
+                            except AttributeError:
+                                pass
+                        if not alreadySending:
+                            self.sendObj(dirr.serverPost[postInd])
+                        dirr.serverPost.pop(postInd)
+            for sInd in reversed(range(self.sSock.__len__())):
                 if self.sSock[sInd].dataType == "finished":
-                    inds.append(sInd)
-                inds.sort(reverse=True)
-                for i in inds:
-                    self.sSock[i].live = False
-                    self.sSock.pop(i)
+                    self.sSock[sInd].live = False
+                    self.sSock.pop(sInd)
 
     def giveShift(self, shift, objId):
         for dirr in self.dirs:
@@ -262,6 +266,6 @@ if __name__ == "__main__":
     c = CGE.sessionDirectory("dr/c", [b])
     srv = sysServer("localhost", 9999, dirs=[c])
     srv.start()
-    sleep(1)
+    time.sleep(1)
     cli = sysClient(cliId, a.tag["id"], "localhost", 9999, "localhost", 9998)
     cli.start()

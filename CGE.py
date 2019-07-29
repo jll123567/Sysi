@@ -50,20 +50,20 @@ class sessionDirectory(threading.Thread):
 
     def pendSessions(self):
         """put a cross post telling CSH to not process any more cross posts"""
-        for idx in range(0, self.sessionList.__len__() - 1):
+        for idx in range(self.sessionList.__len__()):
             self.sessionList[idx].crossPosts.append("pend")
 
     def unpendSessions(self):
         """remove the pending cross post"""
-        for idx in range(0, self.sessionList.__len__() - 1):
-            for idx1 in range(0, self.sessionList[idx].crossPosts.__len__() - 1):
+        for idx in range(self.sessionList.__len__()):
+            for idx1 in reversed(range(self.sessionList[idx].crossPosts.__len__())):
                 if self.sessionList[idx].crossPosts[idx1] == "pend":
                     self.sessionList[idx].crossPosts.pop(idx1)
 
     def resolvePosts(self):
         """parse posts for things for CSH to do, then do those things"""
         objToRes = None
-        for idx in range(0, self.sessionList.__len__()):
+        for idx in range(self.sessionList.__len__()):
             for post in self.sessionList[idx].crossPosts:
                 if post == "pend":
                     continue
@@ -79,8 +79,9 @@ class sessionDirectory(threading.Thread):
                             # print("operation not supported")
                         break
                     if objToRes.tag["networkObject"]:
-                        # print("dir giveObj: {}".format(objToRes.tag["id"]))
-                        self.giveObject(objToRes.tag["id"])
+                        if objToRes not in self.serverPost:
+                            # print("added netObj to sp with {} sp's atm".format(self.serverPost.__len__()))
+                            self.giveObject(objToRes.tag["id"])
                     self.sessionList[idx].crossPosts.pop(self.sessionList[idx].crossPosts.index(post))
 
     def giveShift(self, shift, objId):
@@ -94,7 +95,7 @@ class sessionDirectory(threading.Thread):
                     self.serverPost.append(obj)
 
     def crossWarp(self, idx, operation):
-        for idx1 in range(0, self.sessionList.__len__() - 1):
+        for idx1 in range(self.sessionList.__len__()):
             if self.sessionList[idx1].sessionId == operation[2][0]:
                 self.sessionList[idx1].addObj(self.sessionList[idx].objList[
                                                   self.sessionList[idx].resolveIdToIndex(
@@ -175,7 +176,7 @@ class CGESession(threading.Thread):
             self.savedScene.scp.append(["this", "addObj", [obj], "this"])
 
     def giveShift(self, shift, objId):
-        for objInd in range(0, self.objList.__len__() - 1):
+        for objInd in range(self.objList.__len__()):
             if self.objList[objInd].tag["id"] == objId:
                 for op in shift:
                     self.objList[objInd].trd.tsk.addOperation(op)
@@ -408,7 +409,7 @@ class CGESession(threading.Thread):
             if not self.crossPosts:
                 break
         objsEmpty = 0
-        for idx in range(0, self.objList.__len__() - 1):
+        for idx in range(self.objList.__len__()):
             if self.objList[idx].trd.tsk.profile.__len__() == 0:
                 objsEmpty += 1
             try:
@@ -447,9 +448,8 @@ class CGESession(threading.Thread):
         """
         if not self.objList:
             return "No objects to process"
-        objIdx = 0
         # check if sysObject has a Thread and a tasker and the Thread.Tasker.current[0] is a list
-        for _ in self.objList:
+        for objIdx in range(self.objList.__len__()):
             if self.objList[objIdx].trd is None:
                 # replace me to debug
                 continue
@@ -460,8 +460,9 @@ class CGESession(threading.Thread):
                 # It just fixes crappy Tasker code
                 self.objList[objIdx].trd.tsk.current[0] = [self.objList[objIdx].trd.tsk.current[0]]
             if self.objList[objIdx].tag["networkObject"]:
-                self.crossPosts.append(self.objList[objIdx].tag["id"])
-            objIdx += 1
+                if self.objList[objIdx].tag["id"] not in self.crossPosts:
+                    # print("added netObj cp with {} cp's atm".format(self.crossPosts.__len__()))
+                    self.crossPosts.append(self.objList[objIdx].tag["id"])
         operationList = self.getOperations()
         self.areOperationsPossible(operationList)
         if saveToScene:
