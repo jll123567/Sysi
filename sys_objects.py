@@ -2,7 +2,8 @@
 """Definitions for base sysh objects."""
 import time
 from math import sqrt
-
+import re
+import types
 import prog.idGen
 
 
@@ -131,6 +132,22 @@ class sysObject:
                 if stat == dmg:
                     self.tag["stat"][stat] += damage[dmg]
 
+    @staticmethod
+    def dynamicFu(functionString):
+        betterfunctionString = re.search(r"^(def )(.*)(\([\w\W]*)", functionString).groups()
+        betterfunctionString = betterfunctionString[0] + "_name" + betterfunctionString[2]
+        exec("{0}\n".format(betterfunctionString), globals())
+        global _name
+        fu = _name
+        del _name
+        return fu
+
+    def dynamicAttachFu(self, fuObj, attr):
+        setattr(self, attr, fuObj)
+
+    def dynamicBindFu(self, fuAttr):
+        setattr(self, fuAttr, types.MethodType(getattr(self, fuAttr), self))
+
 
 class user(sysObject):
     """A person in sysh."""
@@ -148,14 +165,6 @@ class user(sysObject):
         :param tag: System tracking.
         """
         super().__init__(mod, trd, tag)
-        if mod is None:
-            self.mod = attribs.SysModel()
-        else:
-            self.mod = mod
-        if trd is None:
-            self.trd = attribs.Thread()
-        else:
-            self.trd = trd
         if prs is None:
             self.prs = attribs.Personality()
         else:
