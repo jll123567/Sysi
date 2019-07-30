@@ -134,10 +134,14 @@ class sysObject:
 
     @staticmethod
     def dynamicFu(functionString):
+        _name = None
+        lines = re.split(r"\n", functionString)
+        for line in lines:
+            if not re.match(r"^def.*\(", line) and not re.match(r"^\s", line):
+                raise InsecureFunctionString(functionString)
         betterfunctionString = re.search(r"^(def )(.*)(\([\w\W]*)", functionString).groups()
-        betterfunctionString = betterfunctionString[0] + "_name" + betterfunctionString[2]
-        exec("{0}\n".format(betterfunctionString), globals())
-        global _name
+        betterfunctionString = "global _name\n" + betterfunctionString[0] + "_name" + betterfunctionString[2]
+        exec("{0}\n".format(betterfunctionString))
         fu = _name
         del _name
         return fu
@@ -486,6 +490,15 @@ class sysErr:
                 print("int only")
             else:
                 resolving = False
+
+
+class InsecureFunctionString(Exception):
+    def __init__(self, expression):
+        """
+        Raised if the functionString given could be malicious.
+        functionString must start with a function definition and all lines must begin with whitespace or function definitions
+        """
+        self.expression = expression
 
 
 # info at run
