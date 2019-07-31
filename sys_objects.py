@@ -134,14 +134,16 @@ class sysObject:
 
     @staticmethod
     def dynamicFu(functionString):
+        global _name
         _name = None
-        lines = re.split(r"\n", functionString)
+        lines = re.split(r"[\n\r]", functionString)
         for line in lines:
-            if not re.match(r"^def.*\(", line) and not re.match(r"^\s", line):
+            if not re.match(r"^def.*\(", line) and not (re.match(r"^\s", line) or line == ''):
+
                 raise InsecureFunctionString(functionString)
         betterfunctionString = re.search(r"^(def )(.*)(\([\w\W]*)", functionString).groups()
         betterfunctionString = "global _name\n" + betterfunctionString[0] + "_name" + betterfunctionString[2]
-        exec("{0}\n".format(betterfunctionString))
+        exec(betterfunctionString, globals())
         fu = _name
         del _name
         return fu
