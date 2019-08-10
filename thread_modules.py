@@ -739,11 +739,6 @@ class Tasker:
         """Time.sleep() for <t> seconds."""
         time.sleep(t)
 
-    @staticmethod
-    def doNothing():
-        """Do LITERALLY NOTHING."""
-        pass
-
     def loopInf(self, operation):  # todo extend the functionality of this a tad?
         """Add a shift that runs <operation> and this method(<operation>)."""
         objId = ""

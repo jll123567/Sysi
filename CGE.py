@@ -85,16 +85,33 @@ class sessionDirectory(threading.Thread):
                     self.sessionList[idx].crossPosts.pop(self.sessionList[idx].crossPosts.index(post))
 
     def giveShift(self, shift, objId):
+        """
+        Give <shift> to the object with <objId>.
+        :param shift: list
+        :param objId: str
+        :return: None
+        """
         for ses in self.sessionList:
             ses.giveShift(shift, objId)
 
     def giveObject(self, objId):
+        """
+        Give the obj with <objId> to the server.
+        :param objId: str
+        :return: None
+        """
         for ses in self.sessionList:
             for obj in ses.objList:
                 if obj.tag["id"] == objId:
                     self.serverPost.append(obj)
 
     def crossWarp(self, idx, operation):
+        """
+        Using idx and operation, move an object from one session to another.
+        :param idx: int
+        :param operation: list
+        :return: None
+        """
         for idx1 in range(self.sessionList.__len__()):
             if self.sessionList[idx1].sessionId == operation[2][0]:
                 self.sessionList[idx1].addObj(self.sessionList[idx].objList[
@@ -114,25 +131,27 @@ class sessionDirectory(threading.Thread):
 
 # todo: Figure out why this randomly dies.
 class CGESession(threading.Thread):
-    """An instance of CGE; used to simulate object interactions."""
+    """
+    An instance of CGE; used to simulate object interactions.
 
+    Sessions need a unique id. Preface it with "un/" if you so desire.
+    objList: hold all the objects the session will run.
+    runBehavior: instructions on how the session should run. Check run() for details.
+    savedScene: a scene to save the session's history to.
+    crossPosts: details to be given to the directory.
+    uniRunes: operations to run every shift on all objects.
+    permissions: permissions to override obj permissions.
+    """
     def __init__(self, sessionId, objList, runBehavior, savedScene=None, crossPosts=None, uniRules=None,
                  permissions=None):
         """
-        :param sessionId: Session identification.
-        :param objList: List of objects in session.
-        :param runBehavior: A list that specifies the run behavior of the session. Check run() for more info.
-        :param savedScene: A scene to save the events of the session to.
-        :param crossPosts: Messages to send to the sessionDirectory holing this session.
-        :param uniRules: A list of operations to run each shift.
-        :param permissions: Session wide permissions, unlisted methods are allowed by default.
-        :type sessionId: str
-        :type objList: list
-        :type runBehavior: list
-        :type savedScene: sys_objects.Scene
-        :type crossPosts: list
-        :type uniRules: list
-        :type permissions: dict
+        :param sessionId: str
+        :param objList: list
+        :param runBehavior: list
+        :param savedScene: sys_objects.Scene
+        :param crossPosts: list
+        :param uniRules: list
+        :param permissions: dict
         """
         super().__init__()
         self.sessionId = sessionId
@@ -176,6 +195,7 @@ class CGESession(threading.Thread):
             self.savedScene.scp.append(["this", "addObj", [obj], "this"])
 
     def giveShift(self, shift, objId):
+        """Put the shift in the object with objId"""
         for objInd in range(self.objList.__len__()):
             if self.objList[objInd].tag["id"] == objId:
                 for op in shift:

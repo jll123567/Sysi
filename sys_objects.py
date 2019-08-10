@@ -1,5 +1,5 @@
-# coding=utf-8
 """Definitions for base sysh objects."""
+# coding=utf-8
 import time
 from math import sqrt
 import re
@@ -24,18 +24,29 @@ class data:
         self.storage = storage
 
     def update(self, storage):
+        """Overwrite the storage."""
         self.storage = storage
 
 
 import \
-    attribs  # data object must be defined before attribs is imported or there will be an error. idk
+    attribs  # data object is used by thread modules and thus is used by attribs so it has to be defined first.
 
 
-# sysh.sysObject.sysObject(oof better name pls) model of sysObject(any), relevant self viewable data(attrib.Thread),
-# tags and data for system/admin({tag:(str),...}) noinspection PyShadowingBuiltins
-# noinspection PyShadowingBuiltins
 class sysObject:
+    """
+    The base class for things in sys.
+
+    mod: The what you see of the object.
+    trd: The things the object knows and defines it behavior.
+    tag: Tracking data. The object can't see this.
+    """
+
     def __init__(self, mod=None, trd=None, tag=None):
+        """
+        :param mod: any
+        :param trd: attribs.Thread
+        :param tag: dict
+        """
         if mod is None:
             self.mod = attribs.SysModel()
         else:
@@ -49,71 +60,81 @@ class sysObject:
         else:
             self.tag = tag
 
-    # make an sysObject's model dependant of sub objects
-    # none
-    # none
     def makeModelAssembly(self):
+        """
+        Make an sysObject's model dependant of sub objects.
+        Check thread_modules -> sub object manager for more details.
+        """
         oldModel = self.mod
-        # noinspection PyTypeChecker
         self.tag.update({"oldModel": oldModel})
         self.mod = "assem"
 
     @staticmethod
     def sayHi():
+        """
+        Um... Hi.
+        This is for debugging mostly.
+        """
         print("hi")
 
     def blankTask(self):
-        self.trd.tsk.current = [[self.tag["id"] + ".trd.tsk",
+        """Create and assign a tasker current that loops doNothing()"""
+        self.trd.tsk.current = [[self.tag["id"],
                                  'loopInf',
-                                 [[self.tag['id'] + ".trd.tsk", "doNothing", [], self.tag["id"]]],
+                                 [[self.tag['id'], "doNothing", [], self.tag["id"]]],
                                  self.tag["id"]]]
 
-    # asks some questions to check if obj is a usr
-    # console input
-    # console output/ obj/ usr
-    def usershipQuery(self):
-        print("can get info from and modify $HostUni")
-        rww = input("y/n")
-        print("can get and store objects in memory")
-        rwi = input("y/n")
-        print("attempts to add reason to previous current and future actions")
-        rea = input("y/n")
-        print("can add new functions to tasker")
-        lrn = input("y/n")
-        print("attempts to reserve or increase the integrity and freewill of objects or users")
-        mor = input("y/n")
-        print("does not == another obj")
-        unq = input("y/n")
-        total = [rww, rwi, rea, lrn, unq, mor]
-        fail = False
-        for i in total:
-            if i != 'y' or i != 'n':
-                fail = True
-                print("form incorrectly filled")
-                break
-            if i == 'n':
-                fail = True
-                if isinstance(self, user):
-                    oldUsrDta = [self.prs, self.mem]
-                    objActual = sysObject(self.mod, self.trd, self.tag)
-                    # noinspection PyTypeChecker
-                    self.tag.update({"oldUsrDta": oldUsrDta})
-                    print(self.tag["name"], "is Now Object")
-                    return objActual
-                else:
-                    print(self.tag["name"], "is Object")
-        if not fail:
-            if isinstance(self, sysObject):
-                usr = user(self.mod, self.trd, self.tag["notes"][0], self.tag["notes"][1], self.tag)
-                print(self.tag["name"], "is Now User")
-                return usr
-            else:
-                print(self.tag["name"], "is User")
+    @staticmethod
+    def doNothing():
+        """Do LITERALLY NOTHING."""
+        pass
 
-    # remove a parent from a child obj
-    # parent(obj)*
-    # none
+    # def usershipQuery(self):
+    #     """Out of date."""
+    #     print("can get info from and modify $HostUni")
+    #     rww = input("y/n")
+    #     print("can get and store objects in memory")
+    #     rwi = input("y/n")
+    #     print("attempts to add reason to previous current and future actions")
+    #     rea = input("y/n")
+    #     print("can add new functions to tasker")
+    #     lrn = input("y/n")
+    #     print("attempts to reserve or increase the integrity and freewill of objects or users")
+    #     mor = input("y/n")
+    #     print("does not == another obj")
+    #     unq = input("y/n")
+    #     total = [rww, rwi, rea, lrn, unq, mor]
+    #     fail = False
+    #     for i in total:
+    #         if i != 'y' or i != 'n':
+    #             fail = True
+    #             print("form incorrectly filled")
+    #             break
+    #         if i == 'n':
+    #             fail = True
+    #             if isinstance(self, user):
+    #                 oldUsrDta = [self.prs, self.mem]
+    #                 objActual = sysObject(self.mod, self.trd, self.tag)
+    #                 # noinspection PyTypeChecker
+    #                 self.tag.update({"oldUsrDta": oldUsrDta})
+    #                 print(self.tag["name"], "is Now Object")
+    #                 return objActual
+    #             else:
+    #                 print(self.tag["name"], "is Object")
+    #     if not fail:
+    #         if isinstance(self, sysObject):
+    #             usr = user(self.mod, self.trd, self.tag["notes"][0], self.tag["notes"][1], self.tag)
+    #             print(self.tag["name"], "is Now User")
+    #             return usr
+    #         else:
+    #             print(self.tag["name"], "is User")
+
     def removeParent(self, parent):
+        """
+        Make this sub-object its own object and un-parent it.
+        :param parent: sysObject
+        :return: None
+        """
         parentMov = [parent.trd.mov.x, parent.trd.mov.y, parent.trd.mov.z, parent.trd.mov.a, parent.trd.mov.b,
                      parent.trd.mov.c]
         offset = self.trd.sub.parent[1]
@@ -126,49 +147,68 @@ class sysObject:
         self.trd.sub.parent = None
 
     def receiveDamage(self, damage):
-        """Apply changes described in damage to stat tag"""
+        """
+        Apply changes described in damage to stat tag.
+        :param damage: list
+        :return: None
+        """
         for stat in self.tag["stat"].keys():
             for dmg in damage.keys():
                 if stat == dmg:
                     self.tag["stat"][stat] += damage[dmg]
 
     @staticmethod
-    def dynamicFu(functionString):
+    def dynamicFunction(functionString):
+        """
+        Make a function object from <functionString>.
+        :param functionString: str
+        :return: function
+        """
         global _name
         _name = None
         lines = re.split(r"[\n\r]", functionString)
         for line in lines:
             if not re.match(r"^def.*\(", line) and not (re.match(r"^\s", line) or line == ''):
-
                 raise InsecureFunctionString(functionString)
-        betterfunctionString = re.search(r"^(def )(.*)(\([\w\W]*)", functionString).groups()
-        betterfunctionString = "global _name\n" + betterfunctionString[0] + "_name" + betterfunctionString[2]
-        exec(betterfunctionString, globals())
+        betterFunctionString = re.search(r"^(def )(.*)(\([\w\W]*)", functionString).groups()
+        betterFunctionString = "global _name\n" + betterFunctionString[0] + "_name" + betterFunctionString[2]
+        exec(betterFunctionString, globals())
         fu = _name
         del _name
         return fu
 
     def dynamicAttachFu(self, fuObj, attr):
+        """
+        Set <fuObj> to self.<attr> .
+        :param fuObj: str
+        :param attr: attr
+        :return: None
+        """
         setattr(self, attr, fuObj)
 
     def dynamicBindFu(self, fuAttr):
+        """
+        Make the function in self.<fuAttr> a bound method.
+        :param fuAttr: str
+        :return: None
+        """
         setattr(self, fuAttr, types.MethodType(getattr(self, fuAttr), self))
 
 
 class user(sysObject):
-    """A person in sysh."""
+    """
+    A person in sysh. Based on sysObject.
+    prs: Stores goals and limits to dynamically generate new tasker shifts.
+    mem: Memory for the user. Long term compared to short term ram.
+    """
 
     def __init__(self, mod=None, trd=None, prs=None, mem=None, tag=None):
         """
-        :type trd: attribs.Thread
-        :type prs: attribs.Personality
-        :type mem: attribs.UsrMemory
-        :type tag: dict
-        :param mod: Model.
-        :param trd: Thread.
-        :param prs: Personality.
-        :param mem: Memory.
-        :param tag: System tracking.
+        :param mod: any
+        :param trd: attribs.Thread
+        :param prs: attribs.Personality
+        :param mem: attribs.UsrMemory
+        :param tag: dict
         """
         super().__init__(mod, trd, tag)
         if prs is None:
@@ -188,10 +228,8 @@ class user(sysObject):
         """
         Save a copy of self.trd.ram to memory.
 
-        :type storedRamName: str
-        :type storedRamImportance: int
-        :param storedRamName: A string to identify the object by.
-        :param storedRamImportance:  A value for relevancy importance.
+        :param storedRamName: str
+        :param storedRamImportance: int
         """
         dta = data([self.trd.ram.storage],
                    {"id": None, "name": storedRamName, "relevancy": [0, 0, storedRamImportance]})
@@ -202,10 +240,8 @@ class user(sysObject):
         """
         Load an obj from self.mem to self.trd.ram .
 
-        :type block: int
-        :type idx: int
-        :param block: Memory block to load from.
-        :param idx: Index from block to load from
+        :param block: int
+        :param idx: int
         """
         if block == 0:
             self.trd.ram.load(self.mem.internal[idx])
@@ -217,11 +253,9 @@ class user(sysObject):
         """
         Check the integrity of a sysObject.
 
-        :type objPast: sysObject
-        :type objCurrent: sysObject
-        :param objPast: Old version of object.
-        :param objCurrent: New version of object.
-        :return: Reduced or maintained.
+        :param objPast: sysObject
+        :param objCurrent: sysObject
+        :return: "reduced" or "maintained".
         """
         if objPast.tag["health"] > objCurrent.tag["health"]:
             return "reduced"
@@ -233,11 +267,9 @@ class user(sysObject):
         """
         Check the will of a sysObject.
 
-        :type objPast: sysObject
-        :type objCurrent: sysObject
-        :param objPast: Old version of object.
-        :param objCurrent: New version of object.
-        :return: Reduced or maintained.
+        :param objPast: sysObject
+        :param objCurrent: sysObject
+        :return: "reduced" or "maintained".
         """
         if objPast.tag["functlist"].__len__() > objCurrent.tag["functlist"].__len__():
             return "reduced"
@@ -249,9 +281,8 @@ class user(sysObject):
         """
         Calculate the relevancy of an object.
 
-        :type obj: sysObject
-        :param obj: Object to calculate relevancy of.
-        :return: Relevancy
+        :param obj: sysObject
+        :return: int
         """
         if obj.tag["relevancy"][1] == 0:
             return 100 + (sqrt(obj.tag["relevancy"][1]) * 10) + 25 + (obj.tag["relevancy"][2])
@@ -263,8 +294,7 @@ class user(sysObject):
         """
         Load a queue from self.mem.external .
 
-        :type idx: int
-        :param idx: Index of self.mem.external .
+        :param idx: int
         """
         self.trd.que = self.mem.external[idx].storage
 
@@ -272,18 +302,30 @@ class user(sysObject):
         """
         Save a queue to self.mem.external .
 
-        :type tags: dict
-        :param tags: Tags for the queue's enclosing data object.
+        :param tags: dict
         """
         lastQueue = data(self.trd.que, tags)  # todo: make a package for queue and use it here.
         self.mem.addMemory(1, lastQueue)
 
 
 # spaces
-# origin in relation to supercont([supercont,x,y,z]), bounds[["h/s,x,y,z-x,y,z"], ...], tag({"id":(str), ...})
+
+
 class container:
+    """
+    Defines a space.
+    org: Its origin in relation to supercont.
+    bnd: Bounds and shape container.
+    tag: System tracking.
+    """
+
     def __init__(self, org=None, bnd=None, tag=None):
-        if org is None:
+        """
+        :param org: list
+        :param bnd: list
+        :param tag: dict
+        """
+        if org is None:  # ([supercont,x,y,z]), bounds[["h/s,x,y,z-x,y,z"], ...], tag({"id":(str), ...})
             self.org = [None, 0, 0, 0]
         else:
             self.org = org
@@ -300,15 +342,22 @@ class container:
 
 
 class scene:
-    """Describes objects calling methods in an container for a time."""
+    """
+    Describes objects calling methods in an container for a time.
+    tl: List with lineName and startTime in that order. None for both if un-plotted.
+    scpL List of shifts to run.
+    obj: List of objects in scene.
+    cont: Container that encapsulates the scene.
+    tag: system tracking.
+    """
 
     def __init__(self, tl=None, scp=None, obj=None, cont=None, tag=None):
         """
-        :param tl: List with lineName and startTime in that order. None for both if un-plotted.
-        :param scp: List of shifts to run.
-        :param obj: List of objects in scene.
-        :param cont: Container that encapsulates the scene.
-        :param tag: Dict for system tracking.
+        :param tl: list
+        :param scp: list
+        :param obj: list
+        :param cont: container
+        :param tag: dict
         """
         if tl is None:
             self.tl = [None, None]
@@ -336,22 +385,39 @@ class scene:
         self.tl = [None, None]
 
     def tlPlot(self, line, startOffset):
-        """Plot the scene to a time line."""
+        """
+        Plot the scene to a time line.
+        :param line: str
+        :param startOffset: int
+        """
         self.tl = [line, startOffset]
 
     def raiseSyshError(self, objListIdx, errType, sev, mes, res, sel):
-        """Add an error to the scene."""
+        """
+        Add an error to the scene.
+        :param objListIdx: int
+        :param errType: int
+        :param sev: int
+        :param mes: str
+        :param res: list
+        :param sel: None/int
+        """
         e = sysErr(errType, sev, mes, res, sel, self.obj[objListIdx], self.cont, {"id": ""})
         e.tag["id"] = prog.idGen.generateGenericId(self.obj, e)
         self.obj.append(e)
 
     def raiseRequest(self, request, objListIdx):
-        """Add a request to the scene."""
+        """
+        Add a request to the scene.
+        :param request: I don't know actually. Write your docs sooner than later kids!
+        :param objListIdx: int
+        """
         d = data([request, self.cont, self.obj[objListIdx]], {"id": "", "dataType": "request"})
         d.tag["id"] = prog.idGen.generateGenericId(self.obj, d)
         self.obj.append(d)
 
 
+# Stopped docing here. Doc this better.
 class universe:
     """Describes a collection of scenes and relevant information."""
 
