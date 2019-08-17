@@ -417,18 +417,25 @@ class scene:
         self.obj.append(d)
 
 
-# Stopped docing here. Doc this better.
 class universe:
-    """Describes a collection of scenes and relevant information."""
+    """
+    Describes a collection of scenes and relevant information for objects therein.
+    scn: List of scenes.
+    obj: List of objects.
+    cont: List of containers.
+    funct: List of functions.
+    rule: List of operations to be run each shift in applicable scenes.
+    tag: System tracking.
+    """
 
     def __init__(self, scn=None, obj=None, cont=None, funct=None, rule=None, tag=None):
         """
-        :param scn: List of scenes.
-        :param obj: List of objects.
-        :param cont: List of containers.
-        :param funct: List of functions.
-        :param rule: List of operations to be run each shift in applicable scenes.
-        :param tag: Dict for system tracking.
+        :param scn: list
+        :param obj: list
+        :param cont: list
+        :param funct: list
+        :param rule: list
+        :param tag: dict
         """
         if scn is None:
             self.scn = []
@@ -456,7 +463,7 @@ class universe:
             self.tag = tag
 
     def tlGetEndOfLine(self, line):
-        """Find the time in shifts that a lines and return it."""
+        """Find the time in shifts that a line ends and return it."""
         tempScnList = []
         for scnLn in self.scn:
             if scnLn.tl[0] == line:
@@ -473,32 +480,30 @@ class universe:
 
 
 class sysErr:
-    """Deprecated"""
+    """
+    Deprecated
+    A format for holding errors. This isn't too helpful.
+    errType: Type of error
+    severity: severity from 0 - 5
+    message: description of issue
+    resolutions: list of possible resolutions
+    selected: index of resolution selected
+    obj: the object where the error came from
+    cont: container where the error came from
+    tag: system tracking
+    """
 
     def __init__(self, errType=None, severity=None, message=None, resolutions=None, selected=None, obj=None, cont=None,
                  tag=None):
         """
         :param errType: int:
-            0 resolved
-            1 warn
-            2 error
         :param severity: int:
-            0 resolved
-            1 low
-            2 medium
-            3 high
-            4 critical
-            5 fatal
         :param message: str
         :param resolutions: list
-            [str, ...]
         :param selected: None/int
         :param obj: str
-            obj Id
         :param cont: str
-            cont Id
         :param tag: dict
-            system tracking
         """
         if resolutions is None:
             self.resolutions = []
@@ -529,9 +534,6 @@ class sysErr:
         self.resolutions = resolutions
         self.selected = selected
 
-    # clear the error
-    # none
-    # none
     def clearError(self):
         """Clear error attributes."""
         self.resolutions = None
@@ -567,8 +569,3 @@ class InsecureFunctionString(Exception):
         functionString must start with a function definition and all lines must begin with whitespace or function definitions
         """
         self.expression = expression
-
-
-# info at run
-if __name__ == "__main__":
-    print("sysObject type definitions\nmodule type: def")
