@@ -79,7 +79,7 @@ class sysObject:
 
     def blankTask(self):
         """Create and assign a tasker current that loops doNothing()"""
-        self.trd.tsk.current = [[self.tag["id"],
+        self.trd.tsk.current = [[self.tag["id"] + ".trd.tsk",
                                  'loopInf',
                                  [[self.tag['id'], "doNothing", [], self.tag["id"]]],
                                  self.tag["id"]]]

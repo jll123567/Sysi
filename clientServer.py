@@ -112,6 +112,7 @@ class sysClient(threading.Thread):
     obj: a copy of the object from the server.
     nextShift: holds queued shifts to send to the server.
     """
+
     def __init__(self, clientId, objId, serverAddress, serverPort, selfAddress, selfPort, obj=None, nextShift=None):
         """
         :param clientId: str
@@ -186,6 +187,14 @@ class sysClient(threading.Thread):
         """
         self.nextShift.append(sh)
 
+    def sendObject(self, dirId, sessionId, obj):
+        """Send a <obj> to a session and overwrite self.obj ."""
+        self.obj = obj  # save previous obj somewhere
+        dt = [dirId, sessionId, obj]
+        sock = sysSock(self.serverAddress, self.selfPort, True, dt, "cliObject")
+        sock.start()
+        self.sSock.append(sock)
+
     def displayObj(self):
         """Print various pieces of self.obj ."""
         if self.obj is not None:
@@ -236,6 +245,10 @@ class sysServer(threading.Thread):
                 self.rSock.dataType = "finished"
             elif self.rSock.dataType == "newConnection":  # Deal with new connections.
                 self.registerNewConnection()
+                self.rSock.data = None
+                self.rSock.dataType = "finished"
+            elif self.rSock.dataType == "cliObject":
+                self.handleCliObject()
                 self.rSock.data = None
                 self.rSock.dataType = "finished"
             else:
@@ -298,6 +311,23 @@ class sysServer(threading.Thread):
             self.sSock.append(sock)
         except KeyError:
             pass
+
+    def handleCliObject(self):
+        """Remove an existing object with the id of the client sent object and add the client sent object to the specified dir and session."""
+        dirId, sess, obj = self.rSock.data[0], self.rSock.data[1], self.rSock.data[2]  # Assigning values
+        for dirr in self.dirs:  # Begin looking for obj in sessions to remove it.
+            for session in dirr.sessionList:
+                for srvObjIdx in range(0, session.objList__len__()):
+                    if session.objList[srvObjIdx].tag["id"] == obj.tag["id"]:
+                        session.objList.pop(srvObjIdx)
+                        break  # Breaks prevent weird errors from happening. This function only removes one object.
+                break  # There should only be one object with a particular id at any given time anyway.
+            break  # If this breaks horribly feel free to let me know.
+        for dirr in self.dirs:
+            if dirr.dirId == dirId:
+                for session in dirr.sessionList:
+                    if session.sessionId == sess:
+                        session.addObj(obj)
 
 
 if __name__ == "__main__":
