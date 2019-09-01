@@ -164,17 +164,20 @@ class sysObject:
         :param functionString: str
         :return: function
         """
-        global _name
+        # noinspection PyGlobalUndefined
+        global _name  # Its weird but trust me on this one.
         _name = None
         lines = re.split(r"[\n\r]", functionString)
         for line in lines:
             if not re.match(r"^def.*\(", line) and not (re.match(r"^\s", line) or line == ''):
                 raise InsecureFunctionString(functionString)
         betterFunctionString = re.search(r"^(def )(.*)(\([\w\W]*)", functionString).groups()
+        fuName = betterFunctionString[1]
         betterFunctionString = "global _name\n" + betterFunctionString[0] + "_name" + betterFunctionString[2]
         exec(betterFunctionString, globals())
         fu = _name
         del _name
+        fu.__name__ = fuName
         return fu
 
     def dynamicAttachFu(self, fuObj, attr):
