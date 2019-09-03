@@ -63,6 +63,9 @@ class sysSock(threading.Thread):
                     toSend = "shift:{0}:{1}".format(pickledData.hex(), self.data[1])
                 elif self.dataType == "newConnection":
                     toSend = "newConnection:{0}:{1}:{2!s}".format(self.data[0], self.data[1], self.data[2])
+                elif self.dataType == "cliObject":
+                    toSend = "cliObject:{0}:{1}:{2}".format(self.data[0], self.data[1],
+                                                            pickle.dumps(self.data[2]).hex())
                 else:
                     break
                 toSend = (toSend + ":end").encode("ascii")
@@ -94,6 +97,8 @@ class sysSock(threading.Thread):
                     self.data = pickle.loads(bytearray.fromhex(self.data[0]))
                 elif self.dataType == "shift":
                     self.data[0] = pickle.loads(bytearray.fromhex(self.data[0]))
+                elif self.dataType == "cliObject":
+                    self.data[2] = pickle.loads(bytearray.fromhex(self.data[2]))
                 elif self.dataType == "newConnection":
                     # noinspection PyTypeChecker
                     self.data[2] = int(self.data[2])
@@ -147,7 +152,7 @@ class sysClient(threading.Thread):
         while self.live:  # Let me kill the client.
             if self.rSock.dataType == "obj":  # Look for a sysObject in the receiving sock.
                 self.obj = self.rSock.data
-                self.displayObj()  # Lets see that object.
+                # self.displayObj()  # Lets see that object.
             self.rSock.dataType = "finished"
             self.rSock.data = None
             if self.nextShift:  # If available, send the next shift to the networked object.
@@ -189,9 +194,10 @@ class sysClient(threading.Thread):
 
     def sendObject(self, dirId, sessionId, obj):
         """Send a <obj> to a session and overwrite self.obj ."""
+        print("send cliObj")
         self.obj = obj  # save previous obj somewhere
         dt = [dirId, sessionId, obj]
-        sock = sysSock(self.serverAddress, self.selfPort, True, dt, "cliObject")
+        sock = sysSock(self.serverAddress, self.serverPort, True, dt, "cliObject")
         sock.start()
         self.sSock.append(sock)
 
@@ -298,7 +304,6 @@ class sysServer(threading.Thread):
         """
         Send a copy of <obj> to its corresponding client.
         :param obj: sys_objects.sysObject
-        :return: None
         """
         # obj:<pickle dump as hex>:end
         # noinspection PyShadowingNames
@@ -314,10 +319,11 @@ class sysServer(threading.Thread):
 
     def handleCliObject(self):
         """Remove an existing object with the id of the client sent object and add the client sent object to the specified dir and session."""
+        print("handle cliObj")
         dirId, sess, obj = self.rSock.data[0], self.rSock.data[1], self.rSock.data[2]  # Assigning values
         for dirr in self.dirs:  # Begin looking for obj in sessions to remove it.
             for session in dirr.sessionList:
-                for srvObjIdx in range(0, session.objList__len__()):
+                for srvObjIdx in range(0, session.objList.__len__()):
                     if session.objList[srvObjIdx].tag["id"] == obj.tag["id"]:
                         session.objList.pop(srvObjIdx)
                         break  # Breaks prevent weird errors from happening. This function only removes one object.
@@ -335,21 +341,20 @@ if __name__ == "__main__":
     import sys_objects
     import CGE
 
-    cli0Id = "cli/0"
-    cli1Id = "cli/1"
     objA = sys_objects.sysObject()
-    objA.tag.update({"id": "o/a", "permissions": {"sayHi": "allowed"}, "networkObject": cli0Id})
+    objA.tag.update({"id": "o/a", "networkObject": "cli/0"})
     objA.blankTask()
-    objB = sys_objects.sysObject()
-    objB.tag.update({"id": "o/b", "permissions": {"sayHi": "allowed"}, "networkObject": cli1Id})
-    objB.blankTask()
-    ses0 = CGE.CGESession("un/ses0", [objA, objB], ['c', False])
-    dir0 = CGE.sessionDirectory("dr/dir0", [ses0])
-    srv = sysServer("localhost", 9999, dirs=[dir0])
+    dummy = sys_objects.sysObject()
+    dummy.tag.update({"id": "o/dumb"})
+    dummy.blankTask()
+    sesA = CGE.CGESession("ses/0", [dummy], ['c', False])
+    dirA = CGE.sessionDirectory("dir/0", [sesA])
+    cli = sysClient("cli/0", "o/a", "localhost", 9999, "localhost", 9998, objA)
+    srv = sysServer("localhost", 9999, [dirA])
     srv.start()
+    cli.start()
+    print(sesA.objList.__len__())
     time.sleep(1)
-    cli0 = sysClient(cli0Id, objA.tag["id"], "localhost", 9999, "localhost", 9998)
-    cli0.start()
-    time.sleep(.2)
-    cli1 = sysClient(cli1Id, objB.tag["id"], "localhost", 9999, "localhost", 9997)
-    cli1.start()
+    cli.sendObject("dir/0", "ses/0", cli.obj)
+    time.sleep(5)
+    print(sesA.objList.__len__())

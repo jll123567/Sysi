@@ -479,10 +479,13 @@ class CGESession(threading.Thread):
             if not isinstance(self.objList[objIdx].trd.tsk.current[0], list):
                 # It just fixes crappy Tasker code
                 self.objList[objIdx].trd.tsk.current[0] = [self.objList[objIdx].trd.tsk.current[0]]
-            if self.objList[objIdx].tag["networkObject"]:
-                if self.objList[objIdx].tag["id"] not in self.crossPosts:
-                    # print("added netObj cp with {} cp's atm".format(self.crossPosts.__len__()))
-                    self.crossPosts.append(self.objList[objIdx].tag["id"])
+            try:
+                if self.objList[objIdx].tag["networkObject"]:
+                    if self.objList[objIdx].tag["id"] not in self.crossPosts:
+                        # print("added netObj cp with {} cp's atm".format(self.crossPosts.__len__()))
+                        self.crossPosts.append(self.objList[objIdx].tag["id"])
+            except KeyError:
+                pass
         operationList = self.getOperations()
         self.areOperationsPossible(operationList)
         if saveToScene:

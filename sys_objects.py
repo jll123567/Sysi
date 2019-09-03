@@ -133,7 +133,6 @@ class sysObject:
         """
         Make this sub-object its own object and un-parent it.
         :param parent: sysObject
-        :return: None
         """
         parentMov = [parent.trd.mov.x, parent.trd.mov.y, parent.trd.mov.z, parent.trd.mov.a, parent.trd.mov.b,
                      parent.trd.mov.c]
@@ -150,7 +149,6 @@ class sysObject:
         """
         Apply changes described in damage to stat tag.
         :param damage: list
-        :return: None
         """
         for stat in self.tag["stat"].keys():
             for dmg in damage.keys():
@@ -185,7 +183,6 @@ class sysObject:
         Set <fuObj> to self.<attr> .
         :param fuObj: str
         :param attr: attr
-        :return: None
         """
         setattr(self, attr, fuObj)
 
@@ -193,7 +190,6 @@ class sysObject:
         """
         Make the function in self.<fuAttr> a bound method.
         :param fuAttr: str
-        :return: None
         """
         setattr(self, fuAttr, types.MethodType(getattr(self, fuAttr), self))
 
