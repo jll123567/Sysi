@@ -1,7 +1,30 @@
 # id generation for objects
 # module type: prog
 import sys_objects
+import re
 import warnings
+
+
+# new universal id
+def universalId(session, obj):
+    sessionId = session.sessionId  # get sessionId
+    objList = session.objList  # get objList
+    if isinstance(obj, sys_objects.user):  # find if the id-less object is obj or usr
+        objTypeLetter = 'u'
+    else:
+        objTypeLetter = 'o'
+    maxCount = 0
+    for extObj in objList:  # look through the object list for objects whos origin is the session and find the biggest id
+        full = re.match(r"un/(.*)/[uo]/([0-9]*)[0-9]", extObj.tag["id"])
+        uni = full.group(1)
+        count = full.group(2)
+        if sessionId[3:] == uni and count > maxCount:
+            maxCount = count  # save that biggest id for later
+    maxCount += 1  # add one to make the id's unique
+    maxCount = str(maxCount)
+    finalId = "un/{}/{}/{}{}".format(session[3:], objTypeLetter, maxCount,
+                                     maxCount[-1])  # put together the componets of the new id
+    return finalId
 
 
 # generate an sysObject id with its uni as a base

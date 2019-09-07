@@ -190,6 +190,7 @@ class CGESession(threading.Thread):
 
     def addObj(self, obj):
         """Add obj to self.objList ."""
+
         self.objList.append(obj)
         if self.savedScene is not None:
             self.savedScene.scp.append(["this", "addObj", [obj], "this"])
