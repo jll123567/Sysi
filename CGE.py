@@ -40,6 +40,12 @@ class sessionDirectory(threading.Thread):
         """add session to self.sessionList"""
         self.sessionList.append(session)
 
+    def addObj(self, obj, sessionId):
+        print("is user: ", isinstance(obj, sys_objects.user))
+        for ses in self.sessionList:
+            if ses.sessionId == sessionId:
+                ses.addObj(obj, idGen.universalId(self, sessionId, obj))
+
     def checkForPost(self):
         """look for cross session posts(cross post) in each session"""
         for session in self.sessionList:
@@ -188,9 +194,9 @@ class CGESession(threading.Thread):
         except ObjectNotInObjList:
             print("ObjectNotInObjList passed")
 
-    def addObj(self, obj):
+    def addObj(self, obj, id):
         """Add obj to self.objList ."""
-
+        obj.tag["id"] = id
         self.objList.append(obj)
         if self.savedScene is not None:
             self.savedScene.scp.append(["this", "addObj", [obj], "this"])

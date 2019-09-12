@@ -9,8 +9,9 @@ import warnings
 def universalId(directory, sessionId, obj):
     objList = []
     for ses in directory.sessionList:  # Grab all objects from all sessions in directory
-        for obj in ses.objList:
-            objList.append(obj)
+        for otherObj in ses.objList:
+            objList.append(otherObj)
+
     if isinstance(obj, sys_objects.user):  # find if the id-less object is obj or usr
         objTypeLetter = 'u'
     else:

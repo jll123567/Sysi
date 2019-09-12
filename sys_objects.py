@@ -56,7 +56,7 @@ class sysObject:
         else:
             self.trd = trd
         if tag is None:
-            self.tag = {"id": None, "name": None, "stat": {"hp": 100}, "permissions": {}, }
+            self.tag = {"id": None, "name": None, "stat": {"hp": 100}, "permissions": {}}
         else:
             self.tag = tag
 
@@ -219,7 +219,7 @@ class user(sysObject):
         else:
             self.mem = mem
         if tag is None:
-            self.tag = {"id": None, "name": None, "alias": [], "stat": {"hp": 100}}
+            self.tag = {"id": None, "name": None, "alias": [], "stat": {"hp": 100}, "permissions": {}}
         else:
             self.tag = tag
 
