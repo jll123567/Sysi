@@ -41,10 +41,11 @@ class sessionDirectory(threading.Thread):
         self.sessionList.append(session)
 
     def addObj(self, obj, sessionId):
+        """Add <obj> to the session with <sessionId>."""
         print("is user: ", isinstance(obj, sys_objects.user))
         for ses in self.sessionList:
             if ses.sessionId == sessionId:
-                ses.addObj(obj, idGen.universalId(self, sessionId, obj))
+                ses.addObj(obj, idGen.dynamicUniversalId(self, sessionId, obj))
 
     def checkForPost(self):
         """look for cross session posts(cross post) in each session"""
@@ -195,11 +196,12 @@ class CGESession(threading.Thread):
             print("ObjectNotInObjList passed")
 
     def addObj(self, obj, id):
-        """Add obj to self.objList ."""
-        obj.tag["id"] = id
+        """Add <obj> to self.objList and set it's id with <id>."""
+        obj.tag["id"] = id  # Set the object's id
         self.objList.append(obj)
-        if self.savedScene is not None:
-            self.savedScene.scp.append(["this", "addObj", [obj], "this"])
+        if self.savedScene is not None:  # If saving session actions to a scene, list the object's (creation)
+            self.savedScene.scp.append(["this", "addObj", [obj, id],
+                                        "this"])  # TODO: make this an acutal copy of the object not just a pointer
 
     def giveShift(self, shift, objId):
         """Put the shift in the object with objId"""
@@ -464,7 +466,7 @@ class CGESession(threading.Thread):
         """Export self.savedScene with timeline info from <tlInfo>, the scene name from <name>, and an Id generated with <universe>."""
         self.savedScene.tl = tlInfo
         self.savedScene.tag["name"] = name
-        self.savedScene.tag["id"] = idGen.generateUniversalId(universe, self.savedScene)
+        self.savedScene.tag["id"] = idGen.staticUniversalId(universe, self.savedScene)
         return self.savedScene
 
     def update(self, saveToScene=False):

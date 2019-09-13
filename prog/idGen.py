@@ -6,7 +6,11 @@ import warnings
 
 
 # new universal id
-def universalId(directory, sessionId, obj):
+def dynamicUniversalId(directory, sessionId, obj):
+    """
+    Generate an id for <obj> based on <directory> and <sessionId>.
+    Use when giving an id for objects currently running in sessions.
+    """
     objList = []
     for ses in directory.sessionList:  # Grab all objects from all sessions in directory
         for otherObj in ses.objList:
@@ -17,7 +21,7 @@ def universalId(directory, sessionId, obj):
     else:
         objTypeLetter = 'o'
     maxCount = 0
-    for extObj in objList:  # look through the object list for objects whos origin is the session and find the biggest id
+    for extObj in objList:  # look through the object list for objects who's origin is the session and find the biggest id
         full = re.match(r"un/(.*)/[uo]/([0-9]*)[0-9]", extObj.tag["id"])
         uni = full.group(1)
         count = int(full.group(2))
@@ -26,14 +30,17 @@ def universalId(directory, sessionId, obj):
     maxCount = maxCount + 1  # add one to make the id's unique
     maxCount = str(maxCount)
     finalId = "un/{}/{}/{}{}".format(sessionId[3:], objTypeLetter, maxCount,
-                                     maxCount[-1])  # put together the componets of the new id
+                                     maxCount[-1])  # put together the components of the new id
     return finalId
 
 
-# generate an sysObject id with its uni as a base
-# uni(uni)*, obj(obj)*
-# objId(str)
-def generateUniversalId(uni, obj):
+def staticUniversalId(uni, obj):  # TODO: optimize this function. Its soooooo bad. Use unit tests(of a sort).
+    """
+    Use <uni> to generate an id for <obj>.
+    Used to generate id's for stored objects.
+    For objects currently running in sessions please use dynamicUniversalId().
+    This also assumes all objects created by a particular uni are in the uni at time of id generation.
+    """
     genIdPreChk = 0
     objList = []
     for subList in [uni.obj, uni.scn, uni.cont]:
