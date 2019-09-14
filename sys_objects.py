@@ -4,7 +4,7 @@ import time
 from math import sqrt
 import re
 import types
-import prog.idGen
+from prog import idGen
 
 
 class data:
@@ -232,7 +232,7 @@ class user(sysObject):
         """
         dta = data([self.trd.ram.storage],
                    {"id": None, "name": storedRamName, "relevancy": [0, 0, storedRamImportance]})
-        dta.tag["id"] = prog.idGen.generateGenericId(self.mem.external, dta)
+        dta.tag["id"] = idGen.generateGenericId(self.mem.external, dta)
         self.mem.addMemory(1, dta)
 
     def loadToRam(self, block, idx):
@@ -402,7 +402,7 @@ class scene:
         :param sel: None/int
         """
         e = sysErr(errType, sev, mes, res, sel, self.obj[objListIdx], self.cont, {"id": ""})
-        e.tag["id"] = prog.idGen.generateGenericId(self.obj, e)
+        e.tag["id"] = idGen.generateGenericId(self.obj, e)
         self.obj.append(e)
 
     def raiseRequest(self, request, objListIdx):
@@ -412,7 +412,7 @@ class scene:
         :param objListIdx: int
         """
         d = data([request, self.cont, self.obj[objListIdx]], {"id": "", "dataType": "request"})
-        d.tag["id"] = prog.idGen.generateGenericId(self.obj, d)
+        d.tag["id"] = idGen.generateGenericId(self.obj, d)
         self.obj.append(d)
 
 
@@ -476,6 +476,14 @@ class universe:
                 largestStartTime = scnChk.tl[1]
             currentScnIdx += 1
         return tempScnList[scnIdx].__len__() - 1
+
+    def addObj(self, obj, genId=True):
+        if genId:
+            obj.tag["id"] = idGen.staticUniversalId(self, obj)
+        self.obj.append(obj)
+
+    def generateIdsForObjects(self):
+        idGen.staticUniversalId(self)
 
 
 class sysErr:

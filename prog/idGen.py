@@ -27,45 +27,45 @@ def dynamicUniversalId(directory, sessionId, obj):
         count = int(full.group(2))
         if sessionId[3:] == uni and count > maxCount:
             maxCount = count  # save that biggest id for later
-    maxCount = maxCount + 1  # add one to make the id's unique
+    maxCount += 1  # add one to make the id's unique
     maxCount = str(maxCount)
     finalId = "un/{}/{}/{}{}".format(sessionId[3:], objTypeLetter, maxCount,
                                      maxCount[-1])  # put together the components of the new id
     return finalId
 
 
-def staticUniversalId(uni, obj):  # TODO: optimize this function. Its soooooo bad. Use unit tests(of a sort).
+def staticUniversalId(uni, obj=None):
     """
     Use <uni> to generate an id for <obj>.
     Used to generate id's for stored objects.
     For objects currently running in sessions please use dynamicUniversalId().
     This also assumes all objects created by a particular uni are in the uni at time of id generation.
     """
-    genIdPreChk = 0
-    objList = []
-    for subList in [uni.obj, uni.scn, uni.cont]:
-        for objS in subList:
-            objList.append(objS)
-    for uniObj in uni.obj:
+    if obj is None:
+        for o in uni.obj:
+            if o.tag["id"] is None:
+                o.tag["id"] = staticUniversalId(uni, o)
+        return None
+    maxCount = 0  # init shit
+
+    for uniObj in uni.obj:  # get the number from the object
         if uniObj.tag["id"] is None:
             pass
         else:
-            idFromObj = str(uniObj.tag["id"])
-            slashCnt = 0
-            idFromObjProcessed = ""
-            for character in idFromObj:
-                if slashCnt == 2:
-                    idFromObjProcessed += character
-                if character == '/':
-                    slashCnt += 1
-            idFromObjProcessed = int(idFromObjProcessed[:-1])
-            if idFromObjProcessed >= genIdPreChk:
-                genIdPreChk = idFromObjProcessed + 1
-    chkSumRes = genIdPreChk % 10
-    if isinstance(obj, sys_objects.sysObject):
-        objTypeLetter = 'o'
-    elif isinstance(obj, sys_objects.user):
+            try:
+                full = re.match(r"un/(.*)/[uodcs][n]*/([0-9]*)[0-9]", uniObj.tag["id"])
+                count = int(full.group(2))
+                if count > maxCount:
+                    maxCount = count  # save that biggest id for later
+            except AttributeError:
+                raise badId
+
+    maxCount += 1  # add one to make the id's unique
+
+    if isinstance(obj, sys_objects.user):  # get the type letter
         objTypeLetter = 'u'
+    elif isinstance(obj, sys_objects.sysObject):
+        objTypeLetter = 'o'
     elif isinstance(obj, sys_objects.data):
         objTypeLetter = 'd'
     elif isinstance(obj, sys_objects.container):
@@ -76,7 +76,8 @@ def staticUniversalId(uni, obj):  # TODO: optimize this function. Its soooooo ba
         objTypeLetter = 'un'
     else:
         objTypeLetter = 'ol'
-    genId = uni.tag["name"] + '/' + objTypeLetter + "/" + str(genIdPreChk) + str(chkSumRes)
+
+    genId = "{}/{}/{}{}".format(uni.tag["id"], objTypeLetter, str(maxCount), str(maxCount)[-1])  # Put together id.
     return genId
 
 
@@ -168,6 +169,10 @@ def generateCaseId(caseList):
 # a warning in case an sysObject doesnt have an id
 # No attributes
 class listObjDoesNotHaveAnId(Warning):
+    pass
+
+
+class badId(Exception):
     pass
 
 
