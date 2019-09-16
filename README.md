@@ -1,2 +1,4 @@
 # Sysh
-A personal project that you can figure out your self.
+A personal project that acts as a simulator.
+
+Hope is to vertualize and simulate arbitrary objects.
