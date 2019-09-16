@@ -5,4 +5,6 @@ Ideally this file will be removed in any sort of "real release".
 import sys_objects
 import CGE
 
-"d"
+"ddeadbeef"
+sedcxfwaesdfasjdkfaslksda;
+lksalkzj
