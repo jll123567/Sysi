@@ -1,7 +1,6 @@
-"""don't mind me, just being dumb"""
+"""
+Don't mind me, just being testing thisngs here.
+Ideally this file will be removed in any sort of "real release".
+"""
 import sys_objects
-import re
-a = sys_objects.sysObject()
-b = a.dynamicFunction("def b():\n    print(\"a\")\n    print(\"c\")\n\n")
-a.dynamicAttachFu(b, "b")
-a.b()
+import CGE

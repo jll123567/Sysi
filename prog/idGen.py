@@ -1,38 +1,67 @@
 # id generation for objects
 # module type: prog
 import sys_objects
+import re
 import warnings
 
 
-# generate an sysObject id with its uni as a base
-# uni(uni)*, obj(obj)*
-# objId(str)
-def generateUniversalId(uni, obj):
-    genIdPreChk = 0
+# new universal id
+def dynamicUniversalId(directory, sessionId, obj):
+    """
+    Generate an id for <obj> based on <directory> and <sessionId>.
+    Use when giving an id for objects currently running in sessions.
+    """
     objList = []
-    for subList in [uni.obj, uni.scn, uni.cont]:
-        for objS in subList:
-            objList.append(objS)
-    for uniObj in uni.obj:
+    for ses in directory.sessionList:  # Grab all objects from all sessions in directory
+        for otherObj in ses.objList:
+            objList.append(otherObj)
+    if isinstance(obj, sys_objects.user):  # find if the id-less object is obj or usr
+        objTypeLetter = 'u'
+    else:
+        objTypeLetter = 'o'
+    maxCount = 0
+    for extObj in objList:  # look through the object list for objects who's origin is the session and find the biggest id
+        full = re.match(r"un/(.*)/[uo]/([0-9]*)[0-9]", extObj.tag["id"])
+        uni = full.group(1)
+        count = int(full.group(2))
+        if sessionId[3:] == uni and count > maxCount:
+            maxCount = count  # save that biggest id for later
+    maxCount += 1  # add one to make the id's unique
+    maxCount = str(maxCount)
+    finalId = "un/{}/{}/{}{}".format(sessionId[3:], objTypeLetter, maxCount,
+                                     maxCount[-1])  # put together the components of the new id
+    return finalId
+
+
+def staticUniversalId(uni, obj=None):
+    """
+    Use <uni> to generate an id for <obj>.
+    Used to generate id's for stored objects.
+    For objects currently running in sessions please use dynamicUniversalId().
+    This also assumes all objects created by a particular uni are in the uni at time of id generation.
+    """
+    if obj is None:
+        for o in uni.obj:
+            if o.tag["id"] is None:
+                o.tag["id"] = staticUniversalId(uni, o)
+        return None
+    maxCount = 0  # init shit
+    for uniObj in uni.obj:  # get the number from the object
         if uniObj.tag["id"] is None:
             pass
         else:
-            idFromObj = str(uniObj.tag["id"])
-            slashCnt = 0
-            idFromObjProcessed = ""
-            for character in idFromObj:
-                if slashCnt == 2:
-                    idFromObjProcessed += character
-                if character == '/':
-                    slashCnt += 1
-            idFromObjProcessed = int(idFromObjProcessed[:-1])
-            if idFromObjProcessed >= genIdPreChk:
-                genIdPreChk = idFromObjProcessed + 1
-    chkSumRes = genIdPreChk % 10
-    if isinstance(obj, sys_objects.sysObject):
-        objTypeLetter = 'o'
-    elif isinstance(obj, sys_objects.user):
+            try:
+                full = re.match(r"un/(.*)/[uodcs][n]*/([0-9]*)[0-9]", uniObj.tag["id"])
+                count = int(full.group(2))
+                if count > maxCount:
+                    maxCount = count  # save that biggest id for later
+            except AttributeError:
+                raise badId
+    maxCount += 1  # add one to make the id's unique
+    if isinstance(obj, sys_objects.user):  # get the type letter
         objTypeLetter = 'u'
+    elif isinstance(obj, sys_objects.sysObject):
+        objTypeLetter = 'o'
     elif isinstance(obj, sys_objects.data):
         objTypeLetter = 'd'
     elif isinstance(obj, sys_objects.container):
@@ -43,49 +72,34 @@ def generateUniversalId(uni, obj):
         objTypeLetter = 'un'
     else:
         objTypeLetter = 'ol'
-    genId = uni.tag["name"] + '/' + objTypeLetter + "/" + str(genIdPreChk) + str(chkSumRes)
+    genId = "{}/{}/{}{}".format(uni.tag["id"], objTypeLetter, str(maxCount), str(maxCount)[-1])  # Put together id.
     return genId
 
 
-# generates am id for obj using ovjList as a base
-# objList([obj])*, obj(obj)*
-# objId(str)
 def generateGenericId(objList, obj):
-    genIdPreChk = 0
-    if objList is None:
+    """Generate an id with an objList and an object."""
+    if objList is None:  # Make sure objList is initialized.
         objList = []
-    for listObj in objList:
+    count = 0  # Initialize count.
+    for listObj in objList:  # Iterate though objList.
         try:
-            _ = listObj.tag["id"]
+            _ = listObj.tag["id"]  # Make sure there is an id tag.
         except AttributeError:
-            warnings.warn(print(
-                "while assigning a generic ID, an sysObject in the list given was found without an ID\n does it have a "
-                "tag?",
-                listObjDoesNotHaveAnId))
+            pass
         except KeyError:
-            warnings.warn(print(
-                "while assigning a generic ID, an sysObject in the list given was found without an ID\n does it have a "
-                "tag?",
-                listObjDoesNotHaveAnId))
-        if listObj.tag["id"] is None:
+            pass
+        if isinstance(listObj.tag["id"], str):
             pass
         else:
-            idFromObj = str(listObj.tag["id"])
-            slashCnt = 0
-            idFromObjProcessed = ""
-            for character in idFromObj:
-                if slashCnt == 1:
-                    idFromObjProcessed += character
-                if character == '/':
-                    slashCnt += 1
-            idFromObjProcessed = int(idFromObjProcessed[:-1])
-            if idFromObjProcessed >= genIdPreChk:
-                genIdPreChk = idFromObjProcessed + 1
-    chkSumRes = genIdPreChk % 10
-    if isinstance(obj, sys_objects.sysObject):
-        objTypeLetter = 'o'
-    elif isinstance(obj, sys_objects.user):
+            full = re.match(r"[uodcs][n]*/([0-9]*)[0-9]", listObj.tag["id"])  # Get the count.
+            if count < full.group(1):
+                count = full.group(1)
+    count += 1  # Increment and prep count.
+    count = str(count)
+    if isinstance(obj, sys_objects.user):  # Get the object letter
         objTypeLetter = 'u'
+    elif isinstance(obj, sys_objects.sysObject):
+        objTypeLetter = 'o'
     elif isinstance(obj, sys_objects.data):
         objTypeLetter = 'd'
     elif isinstance(obj, sys_objects.container):
@@ -95,15 +109,13 @@ def generateGenericId(objList, obj):
     elif isinstance(obj, sys_objects.universe):
         objTypeLetter = 'un'
     else:
-        objTypeLetter = 'o'
-    genId = objTypeLetter + "/" + str(genIdPreChk) + str(chkSumRes)
+        objTypeLetter = 'ol'
+    genId = "{}/{}{}".format(objTypeLetter, count, count[-1])
     return genId
 
 
-# get an id for cases(super generic)
-# caseList([dta])*
-# id(str)
 def generateCaseId(caseList):
+    """Generate a case id."""
     genIdPreChk = 0
     if caseList is None:
         caseList = []
@@ -132,12 +144,10 @@ def generateCaseId(caseList):
     return genId
 
 
-# a warning in case an sysObject doesnt have an id
-# No attributes
 class listObjDoesNotHaveAnId(Warning):
+    """A warning in case an sysObject doesnt have an id."""
     pass
 
 
-# info at run
-if __name__ == "__main__":
-    print("id generation for objects\nmodule type: prog")
+class badId(Exception):
+    pass
