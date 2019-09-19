@@ -1,9 +1,9 @@
 """Definitions for base sysh objects."""
-# coding=utf-8
-import time
-from math import sqrt
 import re
 import types
+# coding=utf-8
+from math import sqrt
+
 from prog import idGen
 
 
