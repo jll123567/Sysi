@@ -89,46 +89,6 @@ class sysObject:
         """Do LITERALLY NOTHING."""
         pass
 
-    # def usershipQuery(self):
-    #     """Out of date."""
-    #     print("can get info from and modify $HostUni")
-    #     rww = input("y/n")
-    #     print("can get and store objects in memory")
-    #     rwi = input("y/n")
-    #     print("attempts to add reason to previous current and future actions")
-    #     rea = input("y/n")
-    #     print("can add new functions to tasker")
-    #     lrn = input("y/n")
-    #     print("attempts to reserve or increase the integrity and freewill of objects or users")
-    #     mor = input("y/n")
-    #     print("does not == another obj")
-    #     unq = input("y/n")
-    #     total = [rww, rwi, rea, lrn, unq, mor]
-    #     fail = False
-    #     for i in total:
-    #         if i != 'y' or i != 'n':
-    #             fail = True
-    #             print("form incorrectly filled")
-    #             break
-    #         if i == 'n':
-    #             fail = True
-    #             if isinstance(self, user):
-    #                 oldUsrDta = [self.prs, self.mem]
-    #                 objActual = sysObject(self.mod, self.trd, self.tag)
-    #                 # noinspection PyTypeChecker
-    #                 self.tag.update({"oldUsrDta": oldUsrDta})
-    #                 print(self.tag["name"], "is Now Object")
-    #                 return objActual
-    #             else:
-    #                 print(self.tag["name"], "is Object")
-    #     if not fail:
-    #         if isinstance(self, sysObject):
-    #             usr = user(self.mod, self.trd, self.tag["notes"][0], self.tag["notes"][1], self.tag)
-    #             print(self.tag["name"], "is Now User")
-    #             return usr
-    #         else:
-    #             print(self.tag["name"], "is User")
-
     def removeParent(self, parent):
         """
         Make this sub-object its own object and un-parent it.
@@ -156,7 +116,7 @@ class sysObject:
                     self.tag["stat"][stat] += damage[dmg]
 
     @staticmethod
-    def dynamicFunction(functionString):
+    def dynamicFunctionCreate(functionString):
         """
         Make a function object from <functionString>.
         :param functionString: str
@@ -178,7 +138,7 @@ class sysObject:
         fu.__name__ = fuName
         return fu
 
-    def dynamicAttachFu(self, fuObj, attr):
+    def dynamicFunctionAttach(self, fuObj, attr):
         """
         Set <fuObj> to self.<attr> .
         :param fuObj: str
@@ -186,7 +146,7 @@ class sysObject:
         """
         setattr(self, attr, fuObj)
 
-    def dynamicBindFu(self, fuAttr):
+    def dynamicFunctionBind(self, fuAttr):
         """
         Make the function in self.<fuAttr> a bound method.
         :param fuAttr: str
@@ -256,7 +216,7 @@ class user(sysObject):
         :param objCurrent: sysObject
         :return: "reduced" or "maintained".
         """
-        if objPast.tag["health"] > objCurrent.tag["health"]:
+        if objPast.tag["stat"]["hp"] > objCurrent.tag["stat"]["hp"]:
             return "reduced"
         else:
             return "maintained"
@@ -270,7 +230,7 @@ class user(sysObject):
         :param objCurrent: sysObject
         :return: "reduced" or "maintained".
         """
-        if objPast.tag["functlist"].__len__() > objCurrent.tag["functlist"].__len__():
+        if dir(objPast) > dir(objCurrent):
             return "reduced"
         else:
             return "maintained"
@@ -391,19 +351,19 @@ class scene:
         """
         self.tl = [line, startOffset]
 
-    def raiseSyshError(self, objListIdx, errType, sev, mes, res, sel):
-        """
-        Add an error to the scene.
-        :param objListIdx: int
-        :param errType: int
-        :param sev: int
-        :param mes: str
-        :param res: list
-        :param sel: None/int
-        """
-        e = sysErr(errType, sev, mes, res, sel, self.obj[objListIdx], self.cont, {"id": ""})
-        e.tag["id"] = idGen.generateGenericId(self.obj, e)
-        self.obj.append(e)
+    # def raiseSyshError(self, objListIdx, errType, sev, mes, res, sel):
+    #     """
+    #     Add an error to the scene.
+    #     :param objListIdx: int
+    #     :param errType: int
+    #     :param sev: int
+    #     :param mes: str
+    #     :param res: list
+    #     :param sel: None/int
+    #     """
+    #     e = sysErr(errType, sev, mes, res, sel, self.obj[objListIdx], self.cont, {"id": ""})
+    #     e.tag["id"] = idGen.generateGenericId(self.obj, e)
+    #     self.obj.append(e)
 
     def raiseRequest(self, request, objListIdx):
         """
@@ -461,7 +421,7 @@ class universe:
         else:
             self.tag = tag
 
-    def tlGetEndOfLine(self, line):
+    def tlGetEndOfLine(self, line):  # TODO can it be optimized?
         """Find the time in shifts that a line ends and return it."""
         tempScnList = []
         for scnLn in self.scn:
@@ -486,87 +446,87 @@ class universe:
         idGen.staticUniversalId(self)
 
 
-class sysErr:
-    """
-    Deprecated
-    A format for holding errors. This isn't too helpful.
-    errType: Type of error
-    severity: severity from 0 - 5
-    message: description of issue
-    resolutions: list of possible resolutions
-    selected: index of resolution selected
-    obj: the object where the error came from
-    cont: container where the error came from
-    tag: system tracking
-    """
-
-    def __init__(self, errType=None, severity=None, message=None, resolutions=None, selected=None, obj=None, cont=None,
-                 tag=None):
-        """
-        :param errType: int:
-        :param severity: int:
-        :param message: str
-        :param resolutions: list
-        :param selected: None/int
-        :param obj: str
-        :param cont: str
-        :param tag: dict
-        """
-        if resolutions is None:
-            self.resolutions = []
-        else:
-            self.resolutions = resolutions
-        if selected is None:
-            self.selected = []
-        else:
-            self.selected = selected
-        if tag is None:
-            self.tag = {"name": None, "id": None}
-        else:
-            self.tag = tag
-        self.errType = errType
-        self.severity = severity
-        self.message = message
-        self.obj = obj
-        self.cont = cont
-        self.timeRaised = time.clock()
-
-    def setError(self, errType, severity, message, resolutions, selected, obj, cont):
-        """Set error attributes."""
-        self.errType = errType
-        self.severity = severity
-        self.message = message
-        self.obj = obj
-        self.cont = cont
-        self.resolutions = resolutions
-        self.selected = selected
-
-    def clearError(self):
-        """Clear error attributes."""
-        self.resolutions = None
-        self.selected = None
-        self.errType = None
-        self.severity = None
-        self.message = None
-        self.obj = None
-        self.cont = None
-
-    def resolveError(self):
-        """Console thing to do resolution."""
-        resolving = True
-        print(self.errType + ',' + self.severity + ':' + self.message)
-        count = 0
-        for resolution in self.resolutions:
-            print(str(count) + ":" + resolution)
-            count += 1
-        while resolving:
-            try:
-                selected = input("resolution?:")
-                self.selected = int(selected)
-            except ValueError:
-                print("int only")
-            else:
-                resolving = False
+# class sysErr:
+#     """
+#     Deprecated
+#     A format for holding errors. This isn't too helpful.
+#     errType: Type of error
+#     severity: severity from 0 - 5
+#     message: description of issue
+#     resolutions: list of possible resolutions
+#     selected: index of resolution selected
+#     obj: the object where the error came from
+#     cont: container where the error came from
+#     tag: system tracking
+#     """
+#
+#     def __init__(self, errType=None, severity=None, message=None, resolutions=None, selected=None, obj=None, cont=None,
+#                  tag=None):
+#         """
+#         :param errType: int:
+#         :param severity: int:
+#         :param message: str
+#         :param resolutions: list
+#         :param selected: None/int
+#         :param obj: str
+#         :param cont: str
+#         :param tag: dict
+#         """
+#         if resolutions is None:
+#             self.resolutions = []
+#         else:
+#             self.resolutions = resolutions
+#         if selected is None:
+#             self.selected = []
+#         else:
+#             self.selected = selected
+#         if tag is None:
+#             self.tag = {"name": None, "id": None}
+#         else:
+#             self.tag = tag
+#         self.errType = errType
+#         self.severity = severity
+#         self.message = message
+#         self.obj = obj
+#         self.cont = cont
+#         self.timeRaised = time.clock()
+#
+#     def setError(self, errType, severity, message, resolutions, selected, obj, cont):
+#         """Set error attributes."""
+#         self.errType = errType
+#         self.severity = severity
+#         self.message = message
+#         self.obj = obj
+#         self.cont = cont
+#         self.resolutions = resolutions
+#         self.selected = selected
+#
+#     def clearError(self):
+#         """Clear error attributes."""
+#         self.resolutions = None
+#         self.selected = None
+#         self.errType = None
+#         self.severity = None
+#         self.message = None
+#         self.obj = None
+#         self.cont = None
+#
+#     def resolveError(self):
+#         """Console thing to do resolution."""
+#         resolving = True
+#         print(self.errType + ',' + self.severity + ':' + self.message)
+#         count = 0
+#         for resolution in self.resolutions:
+#             print(str(count) + ":" + resolution)
+#             count += 1
+#         while resolving:
+#             try:
+#                 selected = input("resolution?:")
+#                 self.selected = int(selected)
+#             except ValueError:
+#                 print("int only")
+#             else:
+#                 resolving = False
 
 
 class InsecureFunctionString(Exception):

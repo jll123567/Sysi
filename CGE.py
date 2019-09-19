@@ -67,7 +67,7 @@ class sessionDirectory(threading.Thread):
                 if self.sessionList[idx].crossPosts[idx1] == "pend":
                     self.sessionList[idx].crossPosts.pop(idx1)
 
-    def resolvePosts(self):
+    def resolvePosts(self):  # TODO: consider rewriting this so it's cleaner.
         """parse posts for things for CSH to do, then do those things"""
         objToRes = None
         for idx in range(self.sessionList.__len__()):
@@ -276,7 +276,7 @@ class CGESession(threading.Thread):
             if objId == obj.tag["id"]:
                 return ndx
             ndx += 1
-        raise ObjectNotInObjList(objId)
+        raise ObjectNotInObjList(objId)  # Raise objNotFound if no match for id in entire objList
 
     def areOperationsPossible(self, operationList):
         """
@@ -291,7 +291,7 @@ class CGESession(threading.Thread):
                     continue
                 else:
                     return False
-            if '.' in operation[0]:
+            if '.' in operation[0]:  # TODO: Throw some regex in here.
                 objId = ""
                 ext = ""
                 mode = 'n'
@@ -316,7 +316,8 @@ class CGESession(threading.Thread):
                     raise OperationNotPossible(str(operation[1]) + " not in " + str(operation[0]) + "'s method list")
         return True
 
-    def performSelectedOperation(self, objId, method, sourceId, subObjectReference=None, parameters=None):
+    def performSelectedOperation(self, objId, method, sourceId, subObjectReference=None,
+                                 parameters=None):  # TODO: COMMENT THIS MESS
         """
         Checks if the sysObject with an id of <sourceId> can request <method>.
         If yes, <method>(<parameters>), call to the sysObject in the objList with the id of <objId> or it's subObject.
@@ -432,7 +433,7 @@ class CGESession(threading.Thread):
         setattr(fullObj, currentSub, subObj)
         return fullObj
 
-    def moveThreadAlong(self):
+    def progressThread(self):
         """Move Thread of all objects in self.objList to next shift."""
         while True:
             if not self.crossPosts:
@@ -469,7 +470,7 @@ class CGESession(threading.Thread):
         self.savedScene.tag["id"] = idGen.staticUniversalId(universe, self.savedScene)
         return self.savedScene
 
-    def update(self, saveToScene=False):
+    def update(self, saveToScene=False):  # TODO: COMMENT ME
         """
         Extract and operate on objects in self.objectList using the operations from the threads of said objects
         Specify saving of shifts to a scene using <saveToScene>.
@@ -528,7 +529,7 @@ class CGESession(threading.Thread):
                     self.performSelectedOperation(idHold[0], op[1], op[3], None, op[2])
                 else:
                     self.performSelectedOperation(idHold[0], op[1], op[3], idHold[1], op[2])
-        self.moveThreadAlong()
+        self.progressThread()
         return "Shift Complete"
 
     # use .start() NOT .run()
@@ -615,7 +616,7 @@ class CGESession(threading.Thread):
         else:
             print("the comparator inputted is not valid")
 
-    def replayScene(self, scn, lastShift=None):
+    def replayScene(self, scn, lastShift=None):  # TODO: See if this works
         """use a scene's script rather than an sysObject's tasker to update the sysObject
         acts to playback a scene
         may return a string if something goes wrong"""
