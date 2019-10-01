@@ -605,13 +605,11 @@ class SubObjManager:
     def __init__(self, parent=None, children=None):
         """
         :param parent: list
-            [reference, offset]
+            reference
         :param children: list
             [reference, ...]
 
-        reference = object's id
-
-        offset = [x,y,z]
+        reference = object pointer
 
         If a sysObject has no children but a parent leave "children" set to an empty list ([])
 
@@ -627,9 +625,9 @@ class SubObjManager:
         else:
             self.children = children
 
-    def setParent(self, parent, offset):
+    def setParent(self, parent):
         """Set the parent and offset."""
-        self.parent = [parent, offset]
+        self.parent = parent
 
     def setChildren(self, children):
         """Set children."""
@@ -639,9 +637,21 @@ class SubObjManager:
         """Append self.children with <child>."""
         self.children.append(child)
 
-    def removeChild(self, index):
+    def removeChildByIndex(self, index):
         """Remove the child at <index>."""
         self.children.pop(index)
+
+    def removeChildByPointer(self, pointer):
+        """"""
+        for childIdx in range(self.children.__len__()):
+            if self.children[childIdx] is pointer:
+                self.children.pop(childIdx)
+
+    def removeChildById(self, childId):
+        """"""
+        for childIdx in range(self.children.__len__()):
+            if self.children[childIdx].tag["id"] == childId:
+                self.children.pop(childIdx)
 
     def package(self):
         """Package for Ram."""

@@ -89,20 +89,33 @@ class sysObject:
         """Do LITERALLY NOTHING."""
         pass
 
+    def addParent(self, parent):
+        """"""
+        self.trd.sub.setParent(parent)
+        self.trd.mov.x = self.trd.mov.x - parent.trd.mov.x
+        self.trd.mov.y = self.trd.mov.y - parent.trd.mov.y
+        self.trd.mov.z = self.trd.mov.z - parent.trd.mov.z
+        self.trd.mov.rx = self.trd.mov.rx - parent.trd.mov.rx
+        self.trd.mov.ry = self.trd.mov.ry - parent.trd.mov.ry
+        self.trd.mov.rz = self.trd.mov.rz - parent.trd.mov.rz
+
     def removeParent(self, parent):
         """
         Make this sub-object its own object and un-parent it.
         :param parent: sysObject
         """
-        parentMov = [parent.trd.mov.x, parent.trd.mov.y, parent.trd.mov.z, parent.trd.mov.a, parent.trd.mov.b,
-                     parent.trd.mov.c]
-        offset = self.trd.sub.parent[1]
-        self.trd.mov.x = parentMov[0] + offset[0]
-        self.trd.mov.y = parentMov[1] + offset[1]
-        self.trd.mov.z = parentMov[2] + offset[2]
-        self.trd.mov.a = parentMov[3]
-        self.trd.mov.b = parentMov[4]
-        self.trd.mov.c = parentMov[5]
+        self.trd.mov.x = parent.trd.mov.x + self.trd.mov.x
+        self.trd.mov.y = parent.trd.mov.y + self.trd.mov.y
+        self.trd.mov.z = parent.trd.mov.z + self.trd.mov.z
+        self.trd.mov.vx = parent.trd.mov.vx
+        self.trd.mov.vy = parent.trd.mov.vy
+        self.trd.mov.vz = parent.trd.mov.vz
+        self.trd.mov.rx = parent.trd.mov.rx + self.trd.mov.rx
+        self.trd.mov.ry = parent.trd.mov.ry + self.trd.mov.ry
+        self.trd.mov.rz = parent.trd.mov.rz + self.trd.mov.rz
+        self.trd.mov.rvx = parent.trd.mov.rvx
+        self.trd.mov.rvy = parent.trd.mov.rvy
+        self.trd.mov.rvz = parent.trd.mov.rvz
         self.trd.sub.parent = None
 
     def receiveDamage(self, damage):
