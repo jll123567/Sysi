@@ -90,7 +90,7 @@ class sysObject:
         pass
 
     def addParent(self, parent):
-        """"""
+        """Set <parent> as the parent of self."""
         self.trd.sub.setParent(parent)
         self.trd.mov.x = self.trd.mov.x - parent.trd.mov.x
         self.trd.mov.y = self.trd.mov.y - parent.trd.mov.y

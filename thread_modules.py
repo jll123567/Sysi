@@ -642,13 +642,13 @@ class SubObjManager:
         self.children.pop(index)
 
     def removeChildByPointer(self, pointer):
-        """"""
+        """Remove a child by its pointer."""
         for childIdx in range(self.children.__len__()):
             if self.children[childIdx] is pointer:
                 self.children.pop(childIdx)
 
     def removeChildById(self, childId):
-        """"""
+        """Remove a child by its id."""
         for childIdx in range(self.children.__len__()):
             if self.children[childIdx].tag["id"] == childId:
                 self.children.pop(childIdx)
