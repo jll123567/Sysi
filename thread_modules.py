@@ -281,7 +281,7 @@ class Move:
 
 
 class OlfactorData:
-    """"""
+    """Hold data for smell."""
 
     def __init__(self, descriptor="None", strength=0):
         """
