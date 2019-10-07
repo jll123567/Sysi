@@ -273,6 +273,12 @@ class Move:
             self.vz = 0
         self.move()
 
+    def debugMov(self):
+        """"""
+        print("x:{}\ny:{}\nz:{}\nvx:{}\nvy:{}\nvz:{}\nrx:{}\nry:{}\nrz:{}\nrvx:{}\nrvy:{}\nrvz:{}\n".format(
+            self.x, self.y, self.z, self.vx, self.vy, self.vz, self.rx, self.ry, self.rz, self.rvx, self.rvy, self.rvz
+        ))
+
     def package(self):
         """pack attributes into a data sysObject and return it"""
         return sys_objects.data([self.x, self.y, self.z, self.vx, self.vy, self.vz, self.rx,

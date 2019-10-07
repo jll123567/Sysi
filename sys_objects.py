@@ -29,7 +29,8 @@ class data:
 
 
 import \
-    attribs  # data object is used by thread modules and thus is used by attribs so it has to be defined first.
+    attribs, \
+    thread_modules  # data object is used by thread modules and thus is used by attribs so it has to be defined first.
 
 
 class sysObject:
@@ -95,9 +96,15 @@ class sysObject:
         self.trd.mov.x = self.trd.mov.x - parent.trd.mov.x
         self.trd.mov.y = self.trd.mov.y - parent.trd.mov.y
         self.trd.mov.z = self.trd.mov.z - parent.trd.mov.z
+        self.trd.mov.vx = self.trd.mov.vx - parent.trd.mov.vx
+        self.trd.mov.vy = self.trd.mov.vy - parent.trd.mov.vy
+        self.trd.mov.vz = self.trd.mov.vz - parent.trd.mov.vz
         self.trd.mov.rx = self.trd.mov.rx - parent.trd.mov.rx
         self.trd.mov.ry = self.trd.mov.ry - parent.trd.mov.ry
         self.trd.mov.rz = self.trd.mov.rz - parent.trd.mov.rz
+        self.trd.mov.rvx = self.trd.mov.rvx - parent.trd.mov.rvx
+        self.trd.mov.rvy = self.trd.mov.rvy - parent.trd.mov.rvy
+        self.trd.mov.rvz = self.trd.mov.rvz - parent.trd.mov.rvz
 
     def removeParent(self, parent):
         """
@@ -107,16 +114,34 @@ class sysObject:
         self.trd.mov.x = parent.trd.mov.x + self.trd.mov.x
         self.trd.mov.y = parent.trd.mov.y + self.trd.mov.y
         self.trd.mov.z = parent.trd.mov.z + self.trd.mov.z
-        self.trd.mov.vx = parent.trd.mov.vx
-        self.trd.mov.vy = parent.trd.mov.vy
-        self.trd.mov.vz = parent.trd.mov.vz
+        self.trd.mov.vx = parent.trd.mov.vx + self.trd.mov.vx
+        self.trd.mov.vy = parent.trd.mov.vy + self.trd.mov.vy
+        self.trd.mov.vz = parent.trd.mov.vz + self.trd.mov.vz
         self.trd.mov.rx = parent.trd.mov.rx + self.trd.mov.rx
         self.trd.mov.ry = parent.trd.mov.ry + self.trd.mov.ry
         self.trd.mov.rz = parent.trd.mov.rz + self.trd.mov.rz
-        self.trd.mov.rvx = parent.trd.mov.rvx
-        self.trd.mov.rvy = parent.trd.mov.rvy
-        self.trd.mov.rvz = parent.trd.mov.rvz
+        self.trd.mov.rvx = parent.trd.mov.rvx + self.trd.mov.rvx
+        self.trd.mov.rvy = parent.trd.mov.rvy + self.trd.mov.rvy
+        self.trd.mov.rvz = parent.trd.mov.rvz + self.trd.mov.rvz
         self.trd.sub.parent = None
+
+    def getActualChildMov(self):
+        """"""
+        actualMov = thread_modules.Move()
+        parentMov = self.trd.sub.parent.trd.mov
+        actualMov.x = parentMov.x + self.trd.mov.x
+        actualMov.y = parentMov.y + self.trd.mov.y
+        actualMov.z = parentMov.z + self.trd.mov.z
+        actualMov.vx = parentMov.vx + self.trd.mov.vx
+        actualMov.vy = parentMov.vy + self.trd.mov.vy
+        actualMov.vz = parentMov.vz + self.trd.mov.vz
+        actualMov.rx = parentMov.rx + self.trd.mov.rx
+        actualMov.ry = parentMov.ry + self.trd.mov.ry
+        actualMov.rz = parentMov.rz + self.trd.mov.rz
+        actualMov.rvx = parentMov.rvx + self.trd.mov.rvx
+        actualMov.rvy = parentMov.rvy + self.trd.mov.rvy
+        actualMov.rvz = parentMov.rvz + self.trd.mov.rvz
+        return actualMov
 
     def receiveDamage(self, damage):
         """
