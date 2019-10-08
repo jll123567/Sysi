@@ -274,7 +274,7 @@ class Move:
         self.move()
 
     def debugMov(self):
-        """"""
+        """Print the properties of self in an easy to read format."""
         print("x:{}\ny:{}\nz:{}\nvx:{}\nvy:{}\nvz:{}\nrx:{}\nry:{}\nrz:{}\nrvx:{}\nrvy:{}\nrvz:{}\n".format(
             self.x, self.y, self.z, self.vx, self.vy, self.vz, self.rx, self.ry, self.rz, self.rvx, self.rvy, self.rvz
         ))

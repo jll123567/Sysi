@@ -126,7 +126,7 @@ class sysObject:
         self.trd.sub.parent = None
 
     def getActualChildMov(self):
-        """"""
+        """Return a thread_modules.Move containing the the position of this object."""
         actualMov = thread_modules.Move()
         parentMov = self.trd.sub.parent.trd.mov
         actualMov.x = parentMov.x + self.trd.mov.x
