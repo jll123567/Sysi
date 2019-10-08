@@ -28,9 +28,8 @@ class data:
         self.storage = storage
 
 
-import \
-    attribs, \
-    thread_modules  # data object is used by thread modules and thus is used by attribs so it has to be defined first.
+import attribs  # data object is used by thread modules and thus is used by attribs so it has to be defined first.
+import thread_modules
 
 
 class sysObject:
