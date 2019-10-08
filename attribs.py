@@ -183,6 +183,10 @@ class Thread:
             self.tsk = thread_modules.Tasker()
         else:
             self.tsk = tsk
+        if sub is None:
+            self.sub = thread_modules.SubObjManager()
+        else:
+            self.sub = sub
         self.que = que
         self.somm = somm
         self.mov = mov

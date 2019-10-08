@@ -273,6 +273,12 @@ class Move:
             self.vz = 0
         self.move()
 
+    def debugMov(self):
+        """Print the properties of self in an easy to read format."""
+        print("x:{}\ny:{}\nz:{}\nvx:{}\nvy:{}\nvz:{}\nrx:{}\nry:{}\nrz:{}\nrvx:{}\nrvy:{}\nrvz:{}\n".format(
+            self.x, self.y, self.z, self.vx, self.vy, self.vz, self.rx, self.ry, self.rz, self.rvx, self.rvy, self.rvz
+        ))
+
     def package(self):
         """pack attributes into a data sysObject and return it"""
         return sys_objects.data([self.x, self.y, self.z, self.vx, self.vy, self.vz, self.rx,
@@ -605,13 +611,11 @@ class SubObjManager:
     def __init__(self, parent=None, children=None):
         """
         :param parent: list
-            [reference, offset]
+            reference
         :param children: list
             [reference, ...]
 
-        reference = object's id
-
-        offset = [x,y,z]
+        reference = object pointer
 
         If a sysObject has no children but a parent leave "children" set to an empty list ([])
 
@@ -627,9 +631,9 @@ class SubObjManager:
         else:
             self.children = children
 
-    def setParent(self, parent, offset):
+    def setParent(self, parent):
         """Set the parent and offset."""
-        self.parent = [parent, offset]
+        self.parent = parent
 
     def setChildren(self, children):
         """Set children."""
@@ -639,9 +643,21 @@ class SubObjManager:
         """Append self.children with <child>."""
         self.children.append(child)
 
-    def removeChild(self, index):
+    def removeChildByIndex(self, index):
         """Remove the child at <index>."""
         self.children.pop(index)
+
+    def removeChildByPointer(self, pointer):
+        """Remove a child by its pointer."""
+        for childIdx in range(self.children.__len__()):
+            if self.children[childIdx] is pointer:
+                self.children.pop(childIdx)
+
+    def removeChildById(self, childId):
+        """Remove a child by its id."""
+        for childIdx in range(self.children.__len__()):
+            if self.children[childIdx].tag["id"] == childId:
+                self.children.pop(childIdx)
 
     def package(self):
         """Package for Ram."""
