@@ -7,6 +7,6 @@ import CGE
 a = sys_objects.sysObject()
 a.tag['id'] = "un/o/0"
 a.blankTask()
-a.trd.tsk.appendCurrent(["un/o/0", "sayHi", [], "un/o/0"])
+a.trd.tsk.appendCurrent(["un/o/0.trd.tsk", "debugCurrentOp", [], "un/o/0"])
 ses = CGE.CGESession("un/0", [a], ['c', False])
 ses.start()

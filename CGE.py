@@ -9,6 +9,7 @@ CGE > sceneScript
 import threading
 import types
 import warnings
+import re
 
 import prog.idGen as idGen
 import sys_objects
@@ -149,6 +150,7 @@ class CGESession(threading.Thread):
     uniRunes: operations to run every shift on all objects.
     permissions: permissions to override obj permissions.
     """
+
     def __init__(self, sessionId, objList, runBehavior, savedScene=None, crossPosts=None, uniRules=None,
                  permissions=None):
         """
@@ -291,20 +293,23 @@ class CGESession(threading.Thread):
                     continue
                 else:
                     return False
-            if '.' in operation[0]:  # TODO: Throw some regex in here.
-                objId = ""
-                ext = ""
-                mode = 'n'
-                for char in operation[0]:
-                    if char == '.' and mode == 'n':
-                        mode = '.'
-                    if char == '.' and mode == '.':
-                        mode = 'e'
-                    if mode == 'n':
-                        objId += char
-                    if mode == 'e':
-                        ext += char
-                ext = ext[1:]
+            if '.' in operation[0]:  # id format: dr/0/un/1/u/2.trd.tsk
+                # objId = ""  # this should become "dr/0/un/1/u/2", "trd.tsk"
+                # ext = ""    # regex: {.*}\.{.*}
+                # mode = 'n'  # e      id^    ^ext
+                # for char in operation[0]:
+                #     if char == '.' and mode == 'n':
+                #         mode = '.'
+                #     if char == '.' and mode == '.':
+                #         mode = 'e'
+                #     if mode == 'n':
+                #         objId += char
+                #     if mode == 'e':
+                #         ext += char
+                # ext = ext[1:]
+                rg = re.match(r"(.*)\.(.*)", operation[0])  # currently does "dr/0/un/1/u/2.trd", "tsk"
+                objId = rg.group(1)
+                ext = rg.group(2)
                 methods = self.getMethods(
                     self.unpackSubObjFromExtension(self.objList[self.resolveIdToIndex(objId)], ext))
                 if operation[1] not in methods:
