@@ -9,7 +9,6 @@ CGE > sceneScript
 import threading
 import types
 import warnings
-import re
 
 import prog.idGen as idGen
 import sys_objects
@@ -293,23 +292,10 @@ class CGESession(threading.Thread):
                     continue
                 else:
                     return False
-            if '.' in operation[0]:  # id format: dr/0/un/1/u/2.trd.tsk
-                # objId = ""  # this should become "dr/0/un/1/u/2", "trd.tsk"
-                # ext = ""    # regex: {.*}\.{.*}
-                # mode = 'n'  # e      id^    ^ext
-                # for char in operation[0]:
-                #     if char == '.' and mode == 'n':
-                #         mode = '.'
-                #     if char == '.' and mode == '.':
-                #         mode = 'e'
-                #     if mode == 'n':
-                #         objId += char
-                #     if mode == 'e':
-                #         ext += char
-                # ext = ext[1:]
-                rg = re.match(r"(.*)\.(.*)", operation[0])  # currently does "dr/0/un/1/u/2.trd", "tsk"
-                objId = rg.group(1)
-                ext = rg.group(2)
+            if '.' in operation[0]:
+                spl = operation[0].split(".")
+                objId = spl[0]
+                ext = ".".join(spl[1:])
                 methods = self.getMethods(
                     self.unpackSubObjFromExtension(self.objList[self.resolveIdToIndex(objId)], ext))
                 if operation[1] not in methods:
@@ -389,22 +375,11 @@ class CGESession(threading.Thread):
     @staticmethod
     def extractId(operation):
         """Takes an operation and gives back a tuple with the target sysObject id and the sub-sysObject reference if any."""
-        objId = ""
         ext = ""
-        mode = 'n'
         if '.' in operation[0]:
-            for char in operation[0]:
-                if char == '.' and mode == 'n':
-                    mode = '.'
-                if char == '.' and mode == '.':
-                    mode = 'e'
-                if mode == 'n':
-                    objId += char
-                if mode == 'e':
-                    ext += char
-            if ext != "":
-                ext = ext[1:]
-            pass
+            spl = operation[0].split(".")
+            objId = spl[0]
+            ext = ".".join(spl[1:])
         else:
             objId = operation[0]
         return objId, ext
