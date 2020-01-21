@@ -9,6 +9,7 @@ CGE > sceneScript
 import threading
 import types
 import warnings
+import copy
 
 import prog.idGen as idGen
 import sys_objects
@@ -150,7 +151,7 @@ class CGESession(threading.Thread):
     permissions: permissions to override obj permissions.
     """
 
-    def __init__(self, sessionId, objList, runBehavior, savedScene=None, crossPosts=None, uniRules=None,
+    def __init__(self, sessionId, objList, runBehavior=None, savedScene=None, crossPosts=None, uniRules=None,
                  permissions=None):
         """
         :param sessionId: str
@@ -164,7 +165,10 @@ class CGESession(threading.Thread):
         super().__init__()
         self.sessionId = sessionId
         self.objList = objList
-        self.runBehavior = runBehavior
+        if runBehavior is None:
+            self.runBehavior = []
+        else:
+            self.runBehavior = runBehavior
         if savedScene is None:
             self.savedScene = sys_objects.scene()
         else:
@@ -196,13 +200,12 @@ class CGESession(threading.Thread):
         except ObjectNotInObjList:
             print("ObjectNotInObjList passed")
 
-    def addObj(self, obj, id):
-        """Add <obj> to self.objList and set it's id with <id>."""
-        obj.tag["id"] = id  # Set the object's id
-        self.objList.append(obj)
+    def addObj(self, obj):
+        """Add a copy of <obj> to self.objList."""
+        newObj = copy.deepcopy(obj)  # Create a full copy of the original object.
+        self.objList.append(newObj)
         if self.savedScene is not None:  # If saving session actions to a scene, list the object's (creation)
-            self.savedScene.scp.append(["this", "addObj", [obj, id],
-                                        "this"])  # TODO: make this an acutal copy of the object not just a pointer
+            self.savedScene.scp.append(["this", "addObj", [obj], "this"])
 
     def giveShift(self, shift, objId):
         """Put the shift in the object with objId"""
@@ -512,10 +515,29 @@ class CGESession(threading.Thread):
         self.progressThread()
         return "Shift Complete"
 
+    def setup(self, runType='c', saveToScene=False, iterations=0, goalObjId="", goalComparator="", goalValue="",
+              goalSubObjReference=""):
+        """
+        Call this method before self.run to define the Session's run behavior.
+
+        :param runType: 'c' for continuous, 'i' for iterations, 'g' for goal.
+        :param saveToScene: Determines weather session events will be save to a scene.
+        :param iterations: If runType is 'i', number of iterations before session closes.
+        :param goalObjId: If runType is 'g', object id of object to check(str).
+        :param goalComparator: If runType is 'g', comparator to use when checking goal(str).
+        :param goalValue: If runType is 'g', value to reach(str).
+        :param goalSubObjReference: If runType is 'g', optional argument if pointing to a sub-object, "" indicates none(str).
+        """
+        if runType == 'c':
+            self.runBehavior = ['c', saveToScene]
+        elif runType == 'i':
+            self.runBehavior = ['i', saveToScene, iterations]
+        elif runType == 'g':
+            self.runBehavior = ['g', goalObjId, goalComparator, goalValue, goalSubObjReference, saveToScene]
+
     # use .start() NOT .run()
     def run(self):
         """Obligatory Thread.run. Runs session dependant on self.runBehavior."""
-        # todo: make this more intuitive
         # continued
         if self.runBehavior[0] == 'c':
             # runBehavior: ['c', <saveToScene(bool)>]

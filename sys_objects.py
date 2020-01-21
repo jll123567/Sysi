@@ -3,6 +3,7 @@ import re
 import types
 # coding=utf-8
 from math import sqrt
+from copy import deepcopy
 
 from prog import idGen
 
@@ -59,6 +60,24 @@ class sysObject:
             self.tag = {"id": None, "name": None, "stat": {"hp": 100}, "permissions": {}}
         else:
             self.tag = tag
+
+    def __deepcopy__(self, memo):
+        """
+        Mostly copy pasted from SO(https://stackoverflow.com/questions/4794244/how-can-i-create-a-copy-of-an-object-in-python).
+        Allows sys_objects to be fully copied using copy.deepcopy() .
+        :param memo: A dict of id's to copies.
+        :return: A copy.
+        """
+        # memo is
+        id_self = id(self)  # memoization avoids unnecesary recursion
+        _copy = memo.get(id_self)
+        if _copy is None:
+            _copy = type(self)(
+                deepcopy(self.mod, memo),
+                deepcopy(self.trd, memo),
+                deepcopy(self.tag, memo))
+            memo[id_self] = _copy
+        return _copy
 
     def makeModelAssembly(self):
         """
