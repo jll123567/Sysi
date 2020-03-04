@@ -104,3 +104,6 @@ ENV/
 /idea
 .idea
 /.idea
+
+# the test file
+test.py
