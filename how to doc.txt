@@ -1,0 +1,95 @@
+Single line doc(methods)
+------------------------------------
+"""<One line summary of method>."""
+
+methods(multi-line)
+------------------------------------
+"""
+<One line description>
+
+<More description>
+
+Parameters
+    <name><type>: <description>
+        <additional description>
+    ...
+
+Returns
+    <name(not always aplicable)><type>: <description>
+        <additional description>
+"""
+
+classes
+------------------------------------
+"""
+<One line description>
+
+<More description>
+
+Attributes
+    <name>(<type>): <description>
+        <additional description>
+    ...
+
+Methods
+    <name>(<paramaters(<type> <name>)>): <One line summary>
+    ...
+"""
+
+Modules
+------------------------------------
+"""
+<One line description>
+
+<more description>
+
+Classes
+    <name>
+    ...
+
+Functions
+    <name>(<parameters(<type>)>) -> <return type>
+    <name>(<parameters(<type>)>)(if no return)
+    ...
+
+Variables:
+    <name>
+    ...
+"""
+
+Packages
+------------------------------------
+"""
+<One line description>
+
+<more description>
+
+Modules
+    <name>
+    ...
+
+Variables:
+    <name>
+    ...
+"""
+
+Scripts
+------------------------------------
+"""
+<One line descriptopn>
+
+<Aditional descripton>
+
+<command line arg>: <useage>
+    <additional info>
+...
+"""
+
+Notes:
+    <blah> in docs refers to a parameter of a function/method
+    Only one or two sentences per line.
+    Things should be sentences in the form of "Do this return that."
+
+Helpful stuff:
+    object.__doc__ -> the doc of the method/object/module
+    help(object) -> the doc of the method/object/module for reading in console
