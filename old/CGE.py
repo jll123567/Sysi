@@ -11,8 +11,8 @@ import types
 import warnings
 import copy
 
-import prog.idGen as idGen
-import sys_objects
+import old.prog.idGen as idGen
+from old import sys_objects
 
 
 # from time import sleep

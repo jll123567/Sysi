@@ -1,4 +1,4 @@
-# Sysh
+# Sys-I
 A personal project that acts as a simulator.
 
-Hope is to vertualize and simulate arbitrary objects.
+Yeah I don't know either.

@@ -1,6 +1,6 @@
 # id generation for objects
 # module type: prog
-import sys_objects
+from old import sys_objects
 import re
 import warnings
 

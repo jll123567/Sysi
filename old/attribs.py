@@ -1,8 +1,7 @@
 """Common attributes for sysObjects."""
 import re
 import hashlib
-import sys_objects
-import thread_modules
+from old import sys_objects, thread_modules
 
 
 class UsrMemory:

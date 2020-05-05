@@ -1,13 +1,12 @@
 """Modules for attribs.Thread"""
-import sys_objects
-import prog.idGen
-import attribs
+import old.prog.idGen
+from old import attribs, sys_objects
 import time
 import socket
 
 # restructure threadmodules to make data passing better
 try:
-    from sys_objects import data
+    from old.sys_objects import data
 
     a = sys_objects.data()
     del a
@@ -413,7 +412,7 @@ class Ram:
 
     def loadTrdDta(self, dta):
         """Generate a generic id for dta and load() it."""
-        dta.tag["id"] = prog.idGen.generateGenericId(self.storage, dta)
+        dta.tag["id"] = old.prog.idGen.generateGenericId(self.storage, dta)
         self.load(dta)
 
     def read(self):
