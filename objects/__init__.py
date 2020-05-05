@@ -1,14 +1,9 @@
 """
-<One line description>
+Package containing objects that sysi uses.
 
-<more description>
+Mainly for classes users should inheit from/use when making universes/sessions.
 
 Modules
-    <name>
-    ...
-
-Variables:
-    <name>
-    ...
+    Tagable
+    Taskable
 """
-# TODO: DOC ME
