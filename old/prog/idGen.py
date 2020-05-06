@@ -1,4 +1,4 @@
-# id generation for objects
+# id generation for sysObjects
 # module type: prog
 from old import sys_objects
 import re
@@ -9,10 +9,10 @@ import warnings
 def dynamicUniversalId(directory, sessionId, obj):
     """
     Generate an id for <obj> based on <directory> and <sessionId>.
-    Use when giving an id for objects currently running in sessions.
+    Use when giving an id for sysObjects currently running in sessions.
     """
     objList = []
-    for ses in directory.sessionList:  # Grab all objects from all sessions in directory
+    for ses in directory.sessionList:  # Grab all sysObjects from all sessions in directory
         for otherObj in ses.objList:
             objList.append(otherObj)
     if isinstance(obj, sys_objects.user):  # find if the id-less object is obj or usr
@@ -20,7 +20,7 @@ def dynamicUniversalId(directory, sessionId, obj):
     else:
         objTypeLetter = 'o'
     maxCount = 0
-    for extObj in objList:  # look through the object list for objects who's origin is the session and find the biggest id
+    for extObj in objList:  # look through the object list for sysObjects who's origin is the session and find the biggest id
         full = re.match(r"un/(.*)/[uo]/([0-9]*)[0-9]", extObj.tag["id"])
         uni = full.group(1)
         count = int(full.group(2))
@@ -36,9 +36,9 @@ def dynamicUniversalId(directory, sessionId, obj):
 def staticUniversalId(uni, obj=None):
     """
     Use <uni> to generate an id for <obj>.
-    Used to generate id's for stored objects.
-    For objects currently running in sessions please use dynamicUniversalId().
-    This also assumes all objects created by a particular uni are in the uni at time of id generation.
+    Used to generate id's for stored sysObjects.
+    For sysObjects currently running in sessions please use dynamicUniversalId().
+    This also assumes all sysObjects created by a particular uni are in the uni at time of id generation.
     """
     if obj is None:
         for o in uni.obj:

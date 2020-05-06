@@ -604,7 +604,7 @@ class SubObjManager:
     Data for SysObjects that are/have subObjects.
 
     Objects can be like groups without being groups.
-    Parent and child objects have a "SubObjManager" section in their Thread.
+    Parent and child sysObjects have a "SubObjManager" section in their Thread.
     """
 
     def __init__(self, parent=None, children=None):

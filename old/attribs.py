@@ -6,7 +6,7 @@ from old import sys_objects, thread_modules
 
 class UsrMemory:
     """
-    Hold arbitrary copies of objects.
+    Hold arbitrary copies of sysObjects.
         Functions requesting a block want an int.
             0 is for internal, 1 is for external.
     """
@@ -50,7 +50,7 @@ class UsrMemory:
 
     def find(self, query=""):
         """
-        Print objects in UsrMemory that match query.
+        Print sysObjects in UsrMemory that match query.
         If nothing is found None is printed.
         """
         for d in self.__dict__:

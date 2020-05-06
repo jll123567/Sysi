@@ -1,5 +1,5 @@
 """The Content Generation engine
-objects in objList are simulated and run based on the instructions in Thread.Tasker
+sysObjects in objList are simulated and run based on the instructions in Thread.Tasker
 Module type: prog
 task > CGE
 ["target(obj name)", "operation", [parameters]]
@@ -19,7 +19,7 @@ from old import sys_objects
 
 
 class sessionDirectory(threading.Thread):
-    """holds all relevant sessions and allows for data and objects to travel across sessions
+    """holds all relevant sessions and allows for data and sysObjects to travel across sessions
     may be refereed to as a "session directory"
     sessionList is a list of CGESessions"""
 
@@ -143,11 +143,11 @@ class CGESession(threading.Thread):
     An instance of CGE; used to simulate object interactions.
 
     Sessions need a unique id. Preface it with "un/" if you so desire.
-    objList: hold all the objects the session will run.
+    objList: hold all the sysObjects the session will run.
     runBehavior: instructions on how the session should run. Check run() for details.
     savedScene: a scene to save the session's history to.
     crossPosts: details to be given to the directory.
-    uniRunes: operations to run every shift on all objects.
+    uniRunes: operations to run every shift on all sysObjects.
     permissions: permissions to override obj permissions.
     """
 
@@ -224,7 +224,7 @@ class CGESession(threading.Thread):
         return methodsList
 
     def getOperations(self):
-        """Get all operations from Thread.Tasker of all objects in self.objectList ."""
+        """Get all operations from Thread.Tasker of all sysObjects in self.objectList ."""
         operationList = []
         for obj in self.objList:
             try:
@@ -417,7 +417,7 @@ class CGESession(threading.Thread):
         return fullObj
 
     def progressThread(self):
-        """Move Thread of all objects in self.objList to next shift."""
+        """Move Thread of all sysObjects in self.objList to next shift."""
         while True:
             if not self.crossPosts:
                 break
@@ -455,12 +455,12 @@ class CGESession(threading.Thread):
 
     def update(self, saveToScene=False):  # TODO: COMMENT ME
         """
-        Extract and operate on objects in self.objectList using the operations from the threads of said objects
+        Extract and operate on sysObjects in self.objectList using the operations from the threads of said sysObjects
         Specify saving of shifts to a scene using <saveToScene>.
         May return a string if an issue occurred or something unexpected happened.
         """
         if not self.objList:
-            return "No objects to process"
+            return "No sysObjects to process"
         # check if sysObject has a Thread and a tasker and the Thread.Tasker.current[0] is a list
         for objIdx in range(self.objList.__len__()):
             if self.objList[objIdx].trd is None:
@@ -629,7 +629,7 @@ class CGESession(threading.Thread):
             script = scn.scp[1:lastShift]
         for shift in script:
             if not self.objList:
-                return "No objects to process"
+                return "No sysObjects to process"
             self.areOperationsPossible(shift)
             for operation in shift:
                 idHold = self.extractId(operation)

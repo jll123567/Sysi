@@ -1,4 +1,4 @@
-"""Definitions for base sysh objects."""
+"""Definitions for base sysh sysObjects."""
 import re
 import types
 # coding=utf-8
@@ -80,7 +80,7 @@ class sysObject:
 
     def makeModelAssembly(self):
         """
-        Make an sysObject's model dependant of sub objects.
+        Make an sysObject's model dependant of sub sysObjects.
         Check thread_modules -> sub object manager for more details.
         """
         oldModel = self.mod
@@ -357,10 +357,10 @@ class container:
 
 class scene:
     """
-    Describes objects calling methods in an container for a time.
+    Describes sysObjects calling methods in an container for a time.
     tl: List with lineName and startTime in that order. None for both if un-plotted.
     scpL List of shifts to run.
-    obj: List of objects in scene.
+    obj: List of sysObjects in scene.
     cont: Container that encapsulates the scene.
     tag: system tracking.
     """
@@ -433,9 +433,9 @@ class scene:
 
 class universe:
     """
-    Describes a collection of scenes and relevant information for objects therein.
+    Describes a collection of scenes and relevant information for sysObjects therein.
     scn: List of scenes.
-    obj: List of objects.
+    obj: List of sysObjects.
     cont: List of containers.
     funct: List of functions.
     rule: List of operations to be run each shift in applicable scenes.

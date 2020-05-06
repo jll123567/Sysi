@@ -257,7 +257,7 @@ class sysServer(threading.Thread):
                 self.rSock.dataType = "finished"
             else:
                 pass
-            for dirr in self.dirs:  # Handle server posts (networked objects)
+            for dirr in self.dirs:  # Handle server posts (networked sysObjects)
                 if dirr.serverPost:
                     for postInd in reversed(range(dirr.serverPost.__len__())):
                         alreadySending = False
