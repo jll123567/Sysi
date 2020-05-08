@@ -7,4 +7,5 @@ Modules
     Tasker
     Model
     Memory
+    Sensory
 """

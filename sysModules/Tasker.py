@@ -13,10 +13,10 @@ class Operation:
     Represents one action that is requested to the session.
 
     Attributes
-        function(str): Identifier for the function to call.
-        parameters(list): List of parameters to pass to function.
-        target(str, Taskable): The Taskable object(or its id) to call the function of.
-        source(str, Taskable): The Taskable object(or its id) that requested this.
+        function str: Identifier for the function to call.
+        parameters list: List of parameters to pass to function.
+        target str/Taskable: The Taskable object(or its id) to call the function of.
+        source str/Taskable: The Taskable object(or its id) that requested this.
     """
 
     def __init__(self, funct, param, trg, src):  # Consider Enable/Disable for ops.

@@ -10,7 +10,7 @@ methods(multi-line)
 <More description>
 
 Parameters
-    <name><type>: <description>
+    <name> <type>: <description>
         <additional description>
     ...
 
@@ -27,7 +27,7 @@ classes
 <More description>
 
 Attributes
-    <name>(<type>): <description>
+    <name> <type>: <description>
         <additional description>
     ...
 

@@ -16,8 +16,8 @@ class Taskable(Tagable):
     Inherits from Tagable.
 
     Attributes
-        tasker(Tasker): The tasker for this object.
-        tags(dict): The tags for this object.
+        tasker Tasker: The tasker for this object.
+        tags dict: The tags for this object.
     """
 
     def __init__(self, tsk=Tasker(), tags=None):
@@ -33,3 +33,4 @@ class Taskable(Tagable):
         """
         super().__init__(tags)
         self.tasker = tsk
+# TODO: Implement Dynamic function stuff.

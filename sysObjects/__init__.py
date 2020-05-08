@@ -7,4 +7,5 @@ Modules
     Tagable
     Taskable
     Objects
+    Data
 """

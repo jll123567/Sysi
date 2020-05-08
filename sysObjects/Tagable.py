@@ -13,7 +13,7 @@ class Tagable:
     All sysObjects in sysi should inherit from this class.
 
     Attributes
-        tags(Dict): The tags for the object.
+        tags Dict: The tags for the object.
             Each tag is a key value pair and thus the dictionary.
             All sysObjects should have an 'id' tag.({'id': '...'} at minimum.)
     """
