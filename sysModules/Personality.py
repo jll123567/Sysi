@@ -54,13 +54,17 @@ class Conditional:
 
     Attributes
         a any: Thing one.
+        aAttribute str: The part of a to check.
         b any: Thing two.
+        bAttribute str: The part of b to check.
         evalType str: How Conditional compares a and b.
     """
 
-    def __init__(self, a, b, evalType):
+    def __init__(self, a, aatr, b, batr, evalType):
         self.a = a
+        self.aAttribute = aatr
         self.b = b
+        self.bAttribute = batr
         self.evalType = evalType
 
     def __bool__(self):
@@ -68,8 +72,15 @@ class Conditional:
         Returns true or false depending on a, b, and evalType. Defaults to false if bad evalType.
         """
         e = self.evalType
-        a = self.a
-        b = self.b
+        if self.aAttribute is None:
+            a = self.a
+        else:
+            a = self.a.__getattribute__(self.aAttribute)
+        if self.bAttribute is None:
+            b = self.b
+        else:
+            b = self.b.__getattribute__(self.bAttribute)
+
         if e == '=':
             return a == b
         elif e == '!':
@@ -95,22 +106,30 @@ class Conditional:
         For booleans this returns 0 for matching values.
         For lists, strings, and a being a tuple return how many matches there are between a and b.
         """
-        if isinstance(self.a, (int, float)) and isinstance(self.b, (int, float)):
-            return abs(self.a - self.b)
-        elif isinstance(self.a, bool) and isinstance(self.b, bool):
-            if self.a == self.b:
+        if self.aAttribute is None:
+            a = self.a
+        else:
+            a = self.a.__getattribute__(self.aAttribute)
+        if self.bAttribute is None:
+            b = self.b
+        else:
+            b = self.b.__getattribute__(self.bAttribute)
+        if isinstance(a, (int, float)) and isinstance(b, (int, float)):
+            return abs(a - b)
+        elif isinstance(a, bool) and isinstance(b, bool):
+            if a == b:
                 return 0
             else:
                 return 1
-        elif isinstance(self.a, (list, str, tuple)) and isinstance(self.b, (list, str)):
+        elif isinstance(a, (list, str, tuple)) and isinstance(b, (list, str)):
             matches = 0
-            b = list(self.b)
-            for i in self.a:
+            b = list(b)
+            for i in a:
                 for f in b:
                     if i == f:
                         matches += 1
                         b.remove(f)
                         break
-            return abs(self.a.__len__() - matches)
+            return abs(a.__len__() - matches)
         else:
             return None
