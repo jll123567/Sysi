@@ -61,6 +61,20 @@ class DynamicObject(StaticObject):
 
 
 class User(DynamicObject):
+    """
+    An object with arbitrary tasker construction and segmented long term memory.
+
+    ???
+
+    Attributes
+        personality Personality: User's personality.
+        sensory Sensory: User's sensory module.
+        model Model: User's model.
+        memory Memory: User's memory.
+        tasker Tasker: User's tasker.
+        tags dict: User's tags.
+    """
+
     def __init__(self, id, prs=Personality(), sns=Sensory(), mod=Model(),
                  mem=Memory.Memory([], Memory.SegmentedMemory(), True),
                  tsk=Tasker(), tags=None):
