@@ -76,6 +76,13 @@ class Memory:
         self.ltsEnable = False
         self.lts = None
 
+    def getLts(self):
+        """Get and return lts or lts.mem if lts is a SegmentedMemory object."""
+        if isinstance(self.lts, SegmentedMemory):
+            return self.lts.mem
+        else:
+            return self.lts
+
     def sortSts(self):
         """Unimplemented."""
         pass
