@@ -89,6 +89,9 @@ class Visual(SensoryModule):
     Attributes
         i (some visual input format): Visual input from session.
         o None: Unused.
+
+    Methods
+        package(bool inOrOut=True): Package visual input as a data object.
     """
 
     def __init__(self, i=None):
@@ -98,7 +101,14 @@ class Visual(SensoryModule):
         return "image?:{}".format(self.i is not None)
 
     def package(self, inOrOut=True):
-        """Package visual input as a data object."""
+        """
+        Package visual input as a data object.
+
+        if <inOrOut> is false this function returns None.
+
+        Parameters
+            inOrOut bool: Weather to return self.in or self.out.
+        """
         if inOrOut:
             d = Data(None, self.i)
             d.setDataType("visual")

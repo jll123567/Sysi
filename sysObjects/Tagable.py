@@ -2,7 +2,7 @@
 The file for the tagable class.
 
 Classes:
-    tagable
+    Tagable
 """
 
 

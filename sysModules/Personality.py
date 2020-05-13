@@ -58,6 +58,9 @@ class Conditional:
         b any: Thing two.
         bAttribute str: The part of b to check.
         evalType str: How Conditional compares a and b.
+
+    Methods
+        distance(): Calculate how far apart a and b are.
     """
 
     def __init__(self, a, aatr, b, batr, evalType):

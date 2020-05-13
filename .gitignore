@@ -107,3 +107,6 @@ ENV/
 
 # the test file
 test.py
+
+# Integrated Universes List
+uniList.txt

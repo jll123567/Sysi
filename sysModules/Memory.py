@@ -21,6 +21,7 @@ class Memory:
     Methods
         enableLts(list/SegmentedMemory/None memory=None): Enable long term storage and set it to <memory>.
         disableLts(): Disable long term storage.
+        getLts(): Get and return lts or lts.mem if lts is a SegmentedMemory object.
     """
 
     def __init__(self, sts=None, lts=None, ltsEnable=False):

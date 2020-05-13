@@ -19,6 +19,12 @@ class Taskable(Tagable):
     Attributes
         tasker Tasker: The tasker for this object.
         tags dict: The tags for this object.
+
+    Methods
+        makeFunctions(str code_string): Take a string with only function definitions and return a list of functions.
+        attachFunction(function funct, str attr): Set <funct> to self.<attr>.
+        bindFunction(str fuAttr): Make the function in self.<fuAttr> a bound method.
+        installFunctionSuite(str code_string): Make, attach, and possibly bind a set of functions from <code_string>.
     """
 
     def __init__(self, tsk=Tasker(), tags=None):
