@@ -9,9 +9,7 @@ from sysObjects.Tagable import Tagable
 from sysObjects.Taskable import Taskable
 import sysObjects.Objects as Objects
 from sysObjects.Data import Data
-
-
-# from sysObjects.Scene import Scene
+from sysObjects.Scene import Scene
 # from sysObjects.Container import Container
 
 
@@ -23,7 +21,7 @@ class Universe(Tagable):
         _lastId dict: Dictionary for id generation.
         timeline int: Sets the current timeline(which scenes describe the current state of the object list).
         sceneList [Scene]: List of all scenes relating to this uni.
-        objectList [Taskable/Data]: List of all objects that can interact with each-other.
+        objectList [object]: List of all objects that can interact with each-other.
         containerList [Container]: All containers relevant to this universe.
         requiredFunctionSuite str/None: A string with all functions that need to be installed in taskable objects to work in
             this uni. None if unused
@@ -31,8 +29,9 @@ class Universe(Tagable):
         tags dict: Tags for this uni.
 
     Methods
-        generateId(object obj): Generate and set the id of <obj>.
-        generateAllIds(): Generate ids for all objects in the universe.
+        assignId(object obj): Generate and set the id of <obj>.
+        assignAllIds(): Assign ids for all objects in the universe.
+        generateId(str objType): Generate an id.
         addObject(object obj): Add an object to the object list and generate an id for it.
         addScene(Scene scn): Add a scene to the scene list and generate an id for it.
         addContainer(Container cont): Add a container to the container list and generate an id for it.
@@ -88,7 +87,7 @@ class Universe(Tagable):
                                                                                        self.rules.__len__(),
                                                                                        self.tags)
 
-    def generateId(self, obj):
+    def assignId(self, obj):
         """
         Generate and set the id of <obj>.
 
@@ -135,12 +134,12 @@ class Universe(Tagable):
             self._lastId["d"] = lastId
             check = str(lastId)[-1]
             obj.tags["id"] = "{}/d/{}{}".format(idStub, lastId, check)
-        # elif isinstance(obj, Scene):
-        #     lastId = self._lastId["sn"]
-        #     lastId += 1
-        #     self._lastId["sn"] = lastId
-        #     check = str(lastId)[-1]
-        #     obj.tags["id"] = "{}/sn/{}{}".format(idStub, lastId, check)
+        elif isinstance(obj, Scene):
+            lastId = self._lastId["sn"]
+            lastId += 1
+            self._lastId["sn"] = lastId
+            check = str(lastId)[-1]
+            obj.tags["id"] = "{}/sn/{}{}".format(idStub, lastId, check)
         # elif isinstance(obj, Container):
         #     lastId = self._lastId["c"]
         #     lastId += 1
@@ -150,7 +149,7 @@ class Universe(Tagable):
         else:
             print("Object type not supported.\nNo changes where made.")
 
-    def generateAllIds(self):
+    def assignAllIds(self):
         """
         Generate ids for all objects in the universe.
 
@@ -158,25 +157,88 @@ class Universe(Tagable):
         """
         self._lastId = {"u": -1, "so": -1, "do": -1, "t": -1, "d": -1, "sn": -1, "c": -1}
         for i in self.sceneList:
-            self.generateId(i)
+            self.assignId(i)
         for i in self.objectList:
-            self.generateId(i)
+            self.assignId(i)
         for i in self.containerList:
-            self.generateId(i)
+            self.assignId(i)
+
+    def generateId(self, objType):
+        """
+        Generate an id.
+
+        Ids are formatted as <srv or cli>/dr/<directoryId>/un/<universeId>/<object type>/<objectId><check character>
+        This method will set _lastId.
+        User -> u
+        DynamicObject -> do
+        StaticObject -> so
+        Taskable -> t
+        Data -> d
+        Scene -> sn
+        Container -> c
+
+        Parameters
+            objType str: The type of the object you want to generate an id for.
+        """
+        idStub = self.tags["id"]  # <srv>/dr/<directory>/un/<uni>
+        if objType == "u":
+            lastId = self._lastId["u"]  # Get, increment, and update the last id.
+            lastId += 1
+            self._lastId["u"] = lastId
+            check = str(lastId)[-1]  # Generate check character.
+            return "{}/u/{}{}".format(idStub, lastId, check)  # Aaaaaand set.
+        elif objType == "do":  # You get the gist...
+            lastId = self._lastId["do"]
+            lastId += 1
+            self._lastId["do"] = lastId
+            check = str(lastId)[-1]
+            return "{}/do/{}{}".format(idStub, lastId, check)
+        elif objType == "so":
+            lastId = self._lastId["so"]
+            lastId += 1
+            self._lastId["so"] = lastId
+            check = str(lastId)[-1]
+            return "{}/so/{}{}".format(idStub, lastId, check)
+        elif objType == "t":
+            lastId = self._lastId["t"]
+            lastId += 1
+            self._lastId["t"] = lastId
+            check = str(lastId)[-1]
+            return "{}/t/{}{}".format(idStub, lastId, check)
+        elif objType == "d":
+            lastId = self._lastId["d"]
+            lastId += 1
+            self._lastId["d"] = lastId
+            check = str(lastId)[-1]
+            return "{}/d/{}{}".format(idStub, lastId, check)
+        elif objType == "sn":
+            lastId = self._lastId["sn"]
+            lastId += 1
+            self._lastId["sn"] = lastId
+            check = str(lastId)[-1]
+            return "{}/sn/{}{}".format(idStub, lastId, check)
+        # elif objType == "c":
+        #     lastId = self._lastId["c"]
+        #     lastId += 1
+        #     self._lastId["c"] = lastId
+        #     check = str(lastId)[-1]
+        #     return "{}/c/{}{}".format(idStub, lastId, check)
+        else:
+            print("Object type not supported.\nNo changes where made.")
 
     def addObject(self, obj):
         """Add an object to the object list and generate an id for it."""
-        self.generateId(obj)
+        self.assignId(obj)
         self.objectList.append(obj)
 
     def addScene(self, scn):
         """Add a scene to the scene list and generate an id for it."""
-        self.generateId(scn)
+        self.assignId(scn)
         self.sceneList.append(scn)
 
     def addContainer(self, cont):
         """Add a container to the container list and generate an id for it."""
-        self.generateId(cont)
+        self.assignId(cont)
         self.containerList.append(cont)
 
     def installRequiredFunctions(self):

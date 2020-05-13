@@ -9,4 +9,5 @@ Modules
     Objects
     Data
     Universe
+    Scene
 """
