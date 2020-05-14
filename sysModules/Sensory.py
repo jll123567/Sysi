@@ -72,7 +72,7 @@ class SensoryModule:
         """You should implement this."""
         pass
 
-    def package(self, inOrOut):
+    def package(self, inOrOut: bool):
         """Implement this as to return useful data object."""
         if inOrOut:  # True for in, False for out.
             return None

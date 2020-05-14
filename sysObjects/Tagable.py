@@ -24,6 +24,9 @@ class Tagable:
 
         If no 'id' tag is provided in <tags> a blank one is added.
 
+        Defaults
+            tags = {"id": None}
+
         Parameters
             tags(dict): Initial dictionary.
 

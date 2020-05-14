@@ -3,11 +3,14 @@ The module for Scenes
 
 Classes
     Scene
+
+Variables
+    defaultContainer Container: A default container with no id, parent, or bounds.
 """
 from sysObjects.Tagable import Tagable
+from sysObjects.Container import Container
 
-
-# defaultContainer = Container()
+defaultContainer = Container(None)
 
 
 class Scene(Tagable):

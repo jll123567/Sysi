@@ -27,19 +27,23 @@ class Taskable(Tagable):
         installFunctionSuite(str code_string): Make, attach, and possibly bind a set of functions from <code_string>.
     """
 
-    def __init__(self, tsk=Tasker(), tags=None):
+    def __init__(self, tsk=None, tags=None):
         """
         Constructor
 
-        tasker defaults to a new Tasker.
-        Check Tagable for how to format tags.
+        Defaults
+            tasker = Tasker()
+            tags = {"id": None}
 
         Parameters
             tsk Tasker: The tasker this object will use.
             tags dict: The tags this object will use.
         """
         super().__init__(tags)
-        self.tasker = tsk
+        if tsk is None:
+            self.tasker = Tasker()
+        else:
+            self.tasker = tsk
 
     @staticmethod
     def makeFunctions(code_string):
@@ -75,11 +79,11 @@ class Taskable(Tagable):
         else:
             return fUs
 
-    def attachFunction(self, funct, attr):
+    def attachFunction(self, funct: types.FunctionType, attr: str):
         """Set <funct> to self.<attr>."""
         setattr(self, attr, funct)
 
-    def bindFunction(self, fuAttr):
+    def bindFunction(self, fuAttr: str):
         """Make the function in self.<fuAttr> a bound method."""
         mtd = types.MethodType(getattr(self, fuAttr), self)  # Make a bound method from the function at <fuAttr>.
         setattr(self, fuAttr, mtd)  # Reattach

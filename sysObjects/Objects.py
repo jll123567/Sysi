@@ -9,7 +9,6 @@ Classes
 from sysObjects.Taskable import Taskable
 import sysModules.Memory as Memory
 from sysModules.Model import Model
-from sysModules.Tasker import Tasker
 from sysModules.Sensory import Sensory
 from sysModules.Personality import Personality
 
@@ -27,11 +26,33 @@ class StaticObject(Taskable):
         tags dict: Object's tags.
     """
 
-    def __init__(self, id, mod=Model(), mem=Memory.Memory(), tsk=Tasker(), tags=None):
+    def __init__(self, id, mod=None, mem=None, tsk=None, tags=None):
+        """
+        Constructor
+
+        Defaults
+            model = Model()
+            memory = Memory()
+            tasker = Tasker()
+            tags = {"id": <id>}
+
+        Parameters
+            id str: Id
+            mod Model: model
+            mem Memory: memory
+            tsk Tasker: tasker
+            tags dict: tags
+        """
         super().__init__(tsk, tags)
         self.tags["id"] = id
-        self.model = mod
-        self.memory = mem
+        if mod is None:
+            self.model = Model()
+        else:
+            self.model = mod
+        if mem is None:
+            self.memory = Memory.Memory()
+        else:
+            self.memory = mem
 
     def __str__(self):
         return "{}:[\n{},\n{},\n{},\n{}\n]".format(self.tags['id'], self.model, self.memory, self.tasker, self.tags)
@@ -51,9 +72,32 @@ class DynamicObject(StaticObject):
         tags dict: Object's tags.
     """
 
-    def __init__(self, id, sns=Sensory(), mod=Model(), mem=Memory.Memory([], [], True), tsk=Tasker(), tags=None):
+    def __init__(self, id, sns=None, mod=None, mem=None, tsk=None, tags=None):
+        """
+        Constructor
+
+        Defaults
+            sensory = Sensory()
+            model = Model()
+            memory = Memory([], [], True)
+            tasker = Tasker()
+            tags = {"id": <id>}
+
+        Parameters
+            id str: Id
+            sns Sensory: sensory
+            mod Model: model
+            mem Memory: memory
+            tsk Tasker: tasker
+            tags dict: tags
+        """
+        if mem is None:
+            mem = Memory.Memory([], [], True)
         super().__init__(id, mod, mem, tsk, tags)
-        self.sensory = sns
+        if sns is None:
+            self.sensory = Sensory()
+        else:
+            self.sensory = sns
 
     def __str__(self):
         return "{}:[\n{},\n{},\n{},\n{},\n{}\n]".format(self.tags['id'], self.model, self.memory, self.sensory,
@@ -75,11 +119,33 @@ class User(DynamicObject):
         tags dict: User's tags.
     """
 
-    def __init__(self, id, prs=Personality(), sns=Sensory(), mod=Model(),
-                 mem=Memory.Memory([], Memory.SegmentedMemory(), True),
-                 tsk=Tasker(), tags=None):
+    def __init__(self, id, prs=None, sns=None, mod=None, mem=None, tsk=None, tags=None):
+        """
+        Constructor
+
+        Defaults
+            personality = Personality()
+            sensory = Sensory()
+            model = Model()
+            memory = Memory([], Memory.SegmentedMemory(), True)
+            tasker = Tasker()
+            tags = {"id": <id>}
+
+        Parameters
+            id str: Id
+            sns Sensory: sensory
+            mod Model: model
+            mem Memory: memory
+            tsk Tasker: tasker
+            tags dict: tags
+        """
+        if mem is None:
+            mem = Memory.Memory([], Memory.SegmentedMemory(), True)
         super().__init__(id, sns, mod, mem, tsk, tags)
-        self.personality = prs
+        if prs is None:
+            self.personality = Personality()
+        else:
+            self.personality = prs
 
     def __str__(self):
         return "{}:[\n{},\n{},\n{},\n{},\n{},\n{}\n]".format(self.tags['id'], self.model, self.memory, self.personality,
