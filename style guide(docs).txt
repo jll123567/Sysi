@@ -19,6 +19,22 @@ Returns
         <additional description>
 """
 
+constructors
+------------------------------------
+"""
+Constructor
+
+<More description>
+
+Defaults
+    <name> = <default value>
+
+Parameters
+    <name> <type>: <description>
+    ...
+
+"""
+
 classes
 ------------------------------------
 """
