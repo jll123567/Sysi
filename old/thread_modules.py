@@ -754,7 +754,7 @@ class Tasker:
         """Time.sleep() for <t> seconds."""
         time.sleep(t)
 
-    def loopInf(self, operation):  # todo extend the functionality of this a tad?
+    def loopInf(self, operation):
         """Add a shift that runs <operation> and this method(<operation>)."""
         objId = ""
         for char in operation[0]:

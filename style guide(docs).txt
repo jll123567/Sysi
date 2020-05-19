@@ -9,14 +9,14 @@ methods(multi-line)
 
 <More description>
 
-Parameters
-    <name> <type>: <description>
-        <additional description>
-    ...
-
-Returns
-    <name(not always aplicable)><type>: <description>
-        <additional description>
+:param <type> <name>: <description>
+:type <name>: <type>
+:var <type> <name>: <description>
+:vartype <name>: <type>
+:return: <description>
+:rtype: <type>
+:raises <type>: <description>
+:meta:
 """
 
 constructors
@@ -28,11 +28,6 @@ Constructor
 
 Defaults
     <name> = <default value>
-
-Parameters
-    <name> <type>: <description>
-    ...
-
 """
 
 classes
@@ -44,12 +39,12 @@ classes
 
 Attributes
     <name> <type>: <description>
-        <additional description>
-    ...
+
+Tags
+    <name> <type>: <description>
 
 Methods
-    <name>(<paramaters(<type> <name>)>): <One line summary>
-    ...
+    <name>(<paramaters(<type> <name>)>)-><return type>: <One line summary>
 """
 
 Modules
@@ -61,16 +56,12 @@ Modules
 
 Classes
     <name>
-    ...
 
 Functions
-    <name>(<parameters(<type>)>) -> <return type>
-    <name>(<parameters(<type>)>)(if no return)
-    ...
+    <name>(<paramaters(<type> <name>)>) -> <return type>
 
 Variables:
     <name>
-    ...
 """
 
 Packages
@@ -82,11 +73,9 @@ Packages
 
 Modules
     <name>
-    ...
 
 Variables:
     <name>
-    ...
 """
 
 Scripts
@@ -98,7 +87,6 @@ Scripts
 
 <command line arg>: <useage>
     <additional info>
-...
 """
 
 Notes:

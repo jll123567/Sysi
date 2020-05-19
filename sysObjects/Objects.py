@@ -55,7 +55,7 @@ class StaticObject(Taskable):
             self.memory = mem
 
     def __str__(self):
-        return "{}:[\n{},\n{},\n{},\n{}\n]".format(self.tags['id'], self.model, self.memory, self.tasker, self.tags)
+        return self.tags['id']
 
 
 class DynamicObject(StaticObject):
@@ -98,10 +98,6 @@ class DynamicObject(StaticObject):
             self.sensory = Sensory()
         else:
             self.sensory = sns
-
-    def __str__(self):
-        return "{}:[\n{},\n{},\n{},\n{},\n{}\n]".format(self.tags['id'], self.model, self.memory, self.sensory,
-                                                        self.tasker, self.tags)
 
 
 class User(DynamicObject):
@@ -146,7 +142,3 @@ class User(DynamicObject):
             self.personality = Personality()
         else:
             self.personality = prs
-
-    def __str__(self):
-        return "{}:[\n{},\n{},\n{},\n{},\n{},\n{}\n]".format(self.tags['id'], self.model, self.memory, self.personality,
-                                                             self.sensory, self.tasker, self.tags)

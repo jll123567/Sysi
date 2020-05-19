@@ -68,7 +68,7 @@ class sessionDirectory(threading.Thread):
                 if self.sessionList[idx].crossPosts[idx1] == "pend":
                     self.sessionList[idx].crossPosts.pop(idx1)
 
-    def resolvePosts(self):  # TODO: consider rewriting this so it's cleaner.
+    def resolvePosts(self):
         """parse posts for things for CSH to do, then do those things"""
         objToRes = None
         for idx in range(self.sessionList.__len__()):
@@ -137,7 +137,6 @@ class sessionDirectory(threading.Thread):
             self.checkForPost()
 
 
-# todo: Figure out why this randomly dies.
 class CGESession(threading.Thread):
     """
     An instance of CGE; used to simulate object interactions.
@@ -311,7 +310,7 @@ class CGESession(threading.Thread):
         return True
 
     def performSelectedOperation(self, objId, method, sourceId, subObjectReference=None,
-                                 parameters=None):  # TODO: COMMENT THIS MESS
+                                 parameters=None):
         """
         Checks if the sysObject with an id of <sourceId> can request <method>.
         If yes, <method>(<parameters>), call to the sysObject in the objList with the id of <objId> or it's subObject.
@@ -453,7 +452,7 @@ class CGESession(threading.Thread):
         self.savedScene.tag["id"] = idGen.staticUniversalId(universe, self.savedScene)
         return self.savedScene
 
-    def update(self, saveToScene=False):  # TODO: COMMENT ME
+    def update(self, saveToScene=False):
         """
         Extract and operate on sysObjects in self.objectList using the operations from the threads of said sysObjects
         Specify saving of shifts to a scene using <saveToScene>.
@@ -618,7 +617,7 @@ class CGESession(threading.Thread):
         else:
             print("the comparator inputted is not valid")
 
-    def replayScene(self, scn, lastShift=None):  # TODO: See if this works
+    def replayScene(self, scn, lastShift=None):
         """use a scene's script rather than an sysObject's tasker to update the sysObject
         acts to playback a scene
         may return a string if something goes wrong"""

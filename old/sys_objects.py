@@ -318,7 +318,7 @@ class user(sysObject):
 
         :param tags: dict
         """
-        lastQueue = data(self.trd.que, tags)  # todo: make a package for queue and use it here.
+        lastQueue = data(self.trd.que, tags)
         self.mem.addMemory(1, lastQueue)
 
 
@@ -476,7 +476,7 @@ class universe:
         else:
             self.tag = tag
 
-    def tlGetEndOfLine(self, line):  # TODO can it be optimized?
+    def tlGetEndOfLine(self, line):
         """Find the time in shifts that a line ends and return it."""
         tempScnList = []
         for scnLn in self.scn:
