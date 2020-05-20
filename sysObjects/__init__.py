@@ -11,4 +11,6 @@ Modules
     Universe
     Scene
     Container
+    Session
+    SessionDirectory
 """

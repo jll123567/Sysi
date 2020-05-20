@@ -17,6 +17,10 @@ class Session(Thread, Tagable):
 
     Attributes
         _ops [Operation]: Operations to execute in current shift.
+        _deleteOnEmptyTasker bool: Toggle to remove objects with empty Taskers from objectList.
+        _killOnEmptySession bool: Toggle to kill thread if objectList is empty.
+        pendRequest bool: Holds weather the Session has been told to pend shifts by directory.
+        pended bool: Holds if the Session is currently pending stuff from the directory.
         directory Directory: The Directory that this session is within.
         objectList [object]: The objects in the session.
             Preferably they are all Taskable.
@@ -51,18 +55,25 @@ class Session(Thread, Tagable):
     def __init__(self, sesId, parentDir, obj, scn=None, rul=None, tags=None):
         super().__init__()  # Init thread
         self._ops = []
+        self.deleteOnEmptyTasker = False
+        self.killOnEmptySession = True
+        self.pendRequest = False
+        self.pended = False
+        self.live = True
         if tags is None:
             self.tags = {}
         else:
             self.tags = tags
+        if rul is None:
+            self.rules = []
+        else:
+            self.rules = rul
         self.directory = parentDir
         self.objectList = obj
         self.scene = scn
-        self.rules = rul
         self.tags["id"] = sesId
         self.tags["errs"] = []
         self.tags["opLog"] = []
-        self.live = True
 
     def __str__(self):
         aliveOrDead = "Dead"
@@ -148,18 +159,29 @@ class Session(Thread, Tagable):
         """
         if op.target is None:  # target should never be none. Use "none" as a keyword instead.
             return False
+        # TODO Permisions checks here.
         return True
 
     def resolve(self):
-        """Change keywords and ids in Operations to references to the actual objects."""
+        """
+        Change keywords and ids in Operations to references to the actual objects.
+
+        Please note that due to how this method handles keyword parameters, "\trg", "\src", "\ses", and "\dir" cannot be
+        parameters as they will be replaced with "trg", "src", "ses", and "dir" respectively.
+        """
         for op in self._ops:
             if op.target == "none":  # Skip ops that wont run.(none is trg)
                 continue
             for o in self.objectList:
-                if op.target == o.tags["id"]:  # Replace the object's id with a reference to the object itself.
-                    op.target = o
-                if op.source == o.tags["id"]:
-                    op.source = o
+                try:
+                    if op.target == o.tags["id"]:  # Replace the object's id with a reference to the object itself.
+                        op.target = o
+                    if op.source == o.tags["id"]:
+                        op.source = o
+                except AttributeError:  # pass if o is not tagable or has no id
+                    pass
+                except KeyError:
+                    pass
 
             if op.source == "ses":  # Not sure if this resolution is the best idea yet.
                 op.source = self
@@ -180,7 +202,7 @@ class Session(Thread, Tagable):
                 elif op.parameters[pIdx] == "dir":
                     op.parameters[pIdx] = self.directory
                 elif op.parameters[pIdx] in ("\\trg", "\\src", "\\ses", "\\dir"):  # Replace escaped versions of
-                    # keywords with the intended string(consume a \).
+                    # keywords with the intended string.
                     op.parameters[pIdx] = op.parameters[pIdx][1:]
 
     def execute(self, op):
@@ -189,22 +211,27 @@ class Session(Thread, Tagable):
 
         :param Operation op: Operation to use for execution.
         """
-        try:
-            if op.target == "none":
-                return
-            elif op.target == "all":
-                for o in self.objectList:
+        if op.target == "none":  # do nothing for none target
+            return
+        elif op.target == "all":  # Handle all keyword.
+            for o in self.objectList:
+                try:
                     if op.parameters:
                         getattr(o, op.function)(*op.parameters)
                     else:
                         getattr(o, op.function)()
-            else:
+                except BaseException as e:  # Handle errors as they come.
+                    self.tags["errs"].append(e)
+        elif op.target == self.directory:
+            self.directory.takePost([op.function, op.parameters, self])
+        else:
+            try:
                 if op.parameters:
                     getattr(op.target, op.function)(*op.parameters)
                 else:
                     getattr(op.target, op.function)()
-        except BaseException as e:
-            self.tags["errs"].append(e)
+            except BaseException as e:  # Handle errors as they come.
+                self.tags["errs"].append(e)
 
     def log(self):
         """Save details of what happened this shift to various locations."""
@@ -224,7 +251,7 @@ class Session(Thread, Tagable):
     def cleanup(self):
         """Cleanup the session for the next shift."""
         for o in self.objectList:  # Remove objects with no more shifts.(should this be enable-able/disable-able).
-            if not o.tasker.shifts:
+            if not o.tasker.shifts and self.deleteOnEmptyTasker:
                 self.objectList.remove(o)
         self._ops = []
         print("-----------Shift End-----------")  # TODO: remove this line.
@@ -233,5 +260,10 @@ class Session(Thread, Tagable):
         """Obligatory run method; Called with start()."""
         while self.live:
             self.update()
-            if not self.objectList:
+
+            while self.pendRequest:  # Handle directory pend requests.
+                self.pended = True
+            self.pended = False
+
+            if not self.objectList and self.killOnEmptySession:
                 self.live = False
