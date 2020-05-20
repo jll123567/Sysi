@@ -26,7 +26,7 @@ class SessionDirectory(Thread, Tagable):
         errs [BaseException]: Exceptions raised in the directory.
             Does not contain exceptions raised by sessions.
         postLog list: Log of posts executed.
-            Log format: (fucntion, source id)
+            Log format: (function, source id)
 
     Methods:
         takePost(list post): Take post and add it to posts.
@@ -124,7 +124,7 @@ class SessionDirectory(Thread, Tagable):
 
         :param list post:
         """
-        # Format: (fucntion, source id)
+        # Format: (function, source id)
         if isinstance(post[2], str):
             p2 = post[2]
         else:
@@ -172,7 +172,7 @@ class SessionDirectory(Thread, Tagable):
         If newPos is None obj's position is unchanged.
 
         :param object/StaticObject obj: The object to move, must be a StaticObject to set position.
-        :param Session fromSession: Session that obj is comming from/ currently in.
+        :param Session fromSession: Session that obj is coming from/ currently in.
         :param Session toSession: Session to put obj in.
         :param Vector3/None newPos: The new position of obj in toSession.
         """
