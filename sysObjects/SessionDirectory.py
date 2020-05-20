@@ -176,16 +176,19 @@ class SessionDirectory(Thread, Tagable):
         :param Session toSession: Session to put obj in.
         :param Vector3/None newPos: The new position of obj in toSession.
         """
-        sesLst = [fromSession, toSession]
-        self.pendSessions(sesLst)  # Pend before operation.
-        fromSession.objectList.remove(obj)  # Remove obj from fromSession.
-        if newPos is not None:  # Set position if possible.
-            try:
-                obj.model.position = newPos
-            except AttributeError as e:
-                self.tags["errs"].append(e)
-        toSession.objectList.append(obj)  # Put obj in toSession.
-        self.unpendSessions(sesLst)  # Unpend after operation.
+        try:  # Handle bad params from post.
+            sesLst = [fromSession, toSession]
+            self.pendSessions(sesLst)  # Pend before operation.
+            fromSession.objectList.remove(obj)  # Remove obj from fromSession.
+            if newPos is not None:  # Set position if possible.
+                try:
+                    obj.model.position = newPos
+                except AttributeError as e:
+                    self.tags["errs"].append(e)
+            toSession.objectList.append(obj)  # Put obj in toSession.
+            self.unpendSessions(sesLst)  # Unpend after operation.
+        except BaseException as e:
+            self.tags["errs"].append(e)
 
     def run(self):
         """
