@@ -20,6 +20,10 @@ class Taskable(Tagable):
         tasker Tasker: The tasker for this object.
         tags dict: The tags for this object.
 
+    Tags:
+        id str: object's id.
+        permissions [whitelist, blacklist]: List of permissions.
+
     Methods
         makeFunctions(str code_string): Take a string with only function definitions and return a list of functions.
         attachFunction(function funct, str attr): Set <funct> to self.<attr>.
@@ -44,6 +48,7 @@ class Taskable(Tagable):
             self.tasker = Tasker()
         else:
             self.tasker = tsk
+        self.tags["permissions"] = [[], []]
 
     @staticmethod
     def makeFunctions(code_string):

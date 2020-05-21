@@ -27,6 +27,7 @@ class SessionDirectory(Thread, Tagable):
             Does not contain exceptions raised by sessions.
         postLog list: Log of posts executed.
             Log format: (function, source id)
+        permissions [whitelist, blacklist]: List of permissions.
 
     Methods:
         takePost(list post): Take post and add it to posts.
@@ -54,6 +55,10 @@ class SessionDirectory(Thread, Tagable):
         self.posts = []
         self.live = True
         self.tags["id"] = dirId
+        self.tags["permissions"] = [
+            [("all", "crossWarp")],  # Wl
+            [("all", "all")]  # Bl
+        ]
         self.tags["errs"] = []
         self.tags["postLog"] = []
 

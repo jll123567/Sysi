@@ -34,6 +34,7 @@ class Session(Thread, Tagable):
         errs [BaseExecption]: Stores all logged exceptions.
         opLog [tuple]: Stores executed ops.
             Format: (<function>, <target>, <source>)
+        permissions [whitelist, blacklist]: List of permissions.
 
     Methods
         getObjectFromId(str objectId) -> Tagable: Get the object with a matching id tag.
@@ -72,6 +73,16 @@ class Session(Thread, Tagable):
         self.objectList = obj
         self.scene = scn
         self.tags["id"] = sesId
+        self.tags["permissions"] = [
+            [  # Wl
+                ("all", "getObjectFromId"),
+                ("all", "objectOpCheck"),
+                ("all", "fullOpCheck")
+            ],
+            [  # Bl
+                ("all", "all")
+            ]
+        ]
         self.tags["errs"] = []
         self.tags["opLog"] = []
 
@@ -132,10 +143,11 @@ class Session(Thread, Tagable):
         for op in self.rules:  # Unlike in objectOpCollect, no popping.
             self._ops.append(op)
 
-    @staticmethod
-    def objectOpCheck(op):
+    def objectOpCheck(self, op):
         """
         Check an operation from an object and return True if its good and false if its bad.
+
+        This is for ops from objects(so not including rules).
 
         :param Operation op: The operation to check.
         :return: Operation's validity.
@@ -146,6 +158,33 @@ class Session(Thread, Tagable):
         if not isinstance(op.source, (str, Taskable)):  # ops must have the object that created them as a source.(so
             # a str for id or a Taskable object at least)
             return False
+
+        try:  # Permissions check.
+            if isinstance(op.target, Tagable):  # Get target permissions(here if trg is an object).
+                perms = op.target.tags["permissions"]
+
+            else:
+                if op.target == "ses":  # If target is a str.
+                    perms = self.tags["permissions"]  # Session perms for "ses".
+                elif op.target == "dir":
+                    perms = self.directory.tags["permissions"]  # Directory perms for "dir"
+                else:
+                    perms = self.getObjectFromId(op.target).tags["permissions"]  # Resolve the object and get its perms.
+        except KeyError:  # bb-but what if no permissions tag.
+            perms = [[], []]  # Use blank(accept all) perms.
+        except BaseException as e:  # bb-but what if other err.
+            self.tags["errs"].append(e)  # idk... log it aaaaand...
+            perms = [[], []]  # more blank perms. Yeah!
+        if isinstance(op.source, Tagable):  # Get source id.
+            s = op.source.tags["id"]
+        else:
+            s = op.source
+        f = op.function  # f is a nice var name.
+        if not ((s, f) in perms[0] or (s, "all") in perms[0] or ("all", f) in perms[0] or ("all", "all") in perms[0]):
+            # No entry in whitelist? Check black list.
+            if (s, f) in perms[1] or (s, "all") in perms[1] or ("all", f) in perms[1] or ("all", "all") in perms[1]:
+                # Entry in blacklist? Block.
+                return False
         return True
 
     @staticmethod
@@ -153,13 +192,14 @@ class Session(Thread, Tagable):
         """
         Check an operation from an object or rules and return True if its good and false if its bad.
 
+        This is for after rules are added and acts as a final check for all ops.
+
         :param Operation op: The operation to check.
         :return: Operation's validity.
         :rtype: bool
         """
         if op.target is None:  # target should never be none. Use "none" as a keyword instead.
             return False
-        # TODO Permisions checks here.
         return True
 
     def resolve(self):
