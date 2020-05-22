@@ -6,6 +6,8 @@ Classes
 """
 from sysObjects.Tagable import Tagable
 from sysObjects.Taskable import Taskable
+from sysObjects.Scene import Scene
+import copy
 from threading import Thread
 
 
@@ -51,6 +53,7 @@ class Session(Thread, Tagable):
         cleanup(): Cleanup the session for the next shift.
         run(): Obligatory run method.
             Called with start().
+        exportCurrentAsScene(str sId, Container cont, list/None tl) -> Scene: Return a scene with all the objects and no script.
     """
 
     def __init__(self, sesId, parentDir, obj, scn=None, rul=None, tags=None):
@@ -307,3 +310,18 @@ class Session(Thread, Tagable):
 
             if not self.objectList and self.killOnEmptySession:
                 self.live = False
+
+    def exportCurrentAsScene(self, sId, cont, tl):
+        """
+        Return a scene with all the objects and no script.
+
+        :param str sId: Id for the scene.
+        :param Container cont: Scene container.
+        :param list/None tl: Tl info for scene.
+        :return: The scene.
+        :rtype: Scene
+        """
+        s = Scene(sId, cont, tl)
+        for o in self.objectList:
+            s.objectList.append(copy.deepcopy(o))
+        return s
