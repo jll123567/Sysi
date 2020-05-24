@@ -53,7 +53,10 @@ class Session(Thread, Tagable):
         cleanup(): Cleanup the session for the next shift.
         run(): Obligatory run method.
             Called with start().
-        exportCurrentAsScene(str sId, Container cont, list/None tl) -> Scene: Return a scene with all the objects and no script.
+        exportCurrentAsScene(str sId, Container cont, list/None tl) -> Scene: Return a scene with all the objects and no
+            script.
+        exportCurrentToUniverse(Universe uni) -> Universe: Take a universe and output this session's objectList to the
+            universe's objectList.
     """
 
     def __init__(self, sesId, parentDir, obj, scn=None, rul=None, tags=None):
@@ -325,3 +328,16 @@ class Session(Thread, Tagable):
         for o in self.objectList:
             s.objectList.append(copy.deepcopy(o))
         return s
+
+    def exportCurrentToUniverse(self, uni):
+        """
+        Take a universe and output this session's objectList to the universe's objectList.
+
+        :param uni: The universe to output the objectList to.
+        :return: The updated universe.
+        :rtype: Universe
+        """
+        uni.objectList = []
+        for o in self.objectList:
+            uni.objectList.append(o)
+        return uni
