@@ -7,11 +7,12 @@ Classes
 from sysObjects.Tagable import Tagable
 from sysObjects.Taskable import Taskable
 from sysObjects.Scene import Scene
+from sysModules.Tasker import Shift
 import copy
 from threading import Thread
 
 
-class Session(Thread, Tagable):
+class Session(Thread, Tagable):  # TODO update the doooocs
     """
     An instance of objects that interact with each-other.
 
@@ -59,7 +60,7 @@ class Session(Thread, Tagable):
             universe's objectList.
     """
 
-    def __init__(self, sesId, parentDir, obj, scn=None, rul=None, tags=None):
+    def __init__(self, sesId, parentDir, obj, uni=None, rul=None, tags=None):
         super().__init__()  # Init thread
         self._ops = []
         self.deleteOnEmptyTasker = False
@@ -75,9 +76,10 @@ class Session(Thread, Tagable):
             self.rules = []
         else:
             self.rules = rul
+        self.universe = uni
         self.directory = parentDir
         self.objectList = obj
-        self.scene = scn
+        self.scene = None
         self.tags["id"] = sesId
         self.tags["permissions"] = [
             [  # Wl
@@ -294,6 +296,12 @@ class Session(Thread, Tagable):
                 src = op.source
             self.tags["opLog"].append((op.function, trg, src))  # Log format (function, target, source).
 
+        if self.scene is not None:  # TODO test me
+            opL = copy.deepcopy(self._ops)
+            sh = Shift(opL)
+            self.scene.script.append(sh)
+
+
     def cleanup(self):
         """Cleanup the session for the next shift."""
         for o in self.objectList:  # Remove objects with no more shifts.(should this be enable-able/disable-able).
@@ -314,30 +322,35 @@ class Session(Thread, Tagable):
             if not self.objectList and self.killOnEmptySession:
                 self.live = False
 
-    def exportCurrentAsScene(self, sId, cont, tl):
+    def importFromUniverse(self, universe):
         """
-        Return a scene with all the objects and no script.
+        Assign <universe> as the session's universe and set the objectList with <universe>.
 
-        :param str sId: Id for the scene.
-        :param Container cont: Scene container.
-        :param list/None tl: Tl info for scene.
-        :return: The scene.
-        :rtype: Scene
+        :param Universe universe:
         """
-        s = Scene(sId, cont, tl)
+        self.universe = universe
+        self.objectList = universe.objectList
+
+    def setupSavedScene(self, cont, sessionId=None, tl=None, tags=None):  # TODO docs for meee
+        if sessionId is not None:
+            sId = sessionId
+        else:
+            sId = None
+        objs = []
         for o in self.objectList:
-            s.objectList.append(copy.deepcopy(o))
-        return s
+            objs.append(copy.deepcopy(o))
+        self.scene = Scene(sId, cont, tl, obj=objs, tags=tags)
+        if sId is None:
+            self.scene.tags["id"] = self.universe.generateId("sn")
 
-    def exportCurrentToUniverse(self, uni):
+    def exportCurrentToUniverse(self):
         """
-        Take a universe and output this session's objectList to the universe's objectList.
+        Take the session's universe and output it.
 
-        :param uni: The universe to output the objectList to.
         :return: The updated universe.
         :rtype: Universe
         """
-        uni.objectList = []
-        for o in self.objectList:
-            uni.objectList.append(o)
+        uni = self.universe
+        if self.scene is not None:
+            uni.sceneList.append(self.scene)
         return uni
