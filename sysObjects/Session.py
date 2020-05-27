@@ -7,12 +7,12 @@ Classes
 from sysObjects.Tagable import Tagable
 from sysObjects.Taskable import Taskable
 from sysObjects.Scene import Scene
-from sysModules.Tasker import Shift
+from sysModules.Tasker import Shift, Operation
 import copy
 from threading import Thread
 
 
-class Session(Thread, Tagable):  # TODO update the doooocs
+class Session(Thread, Tagable):
     """
     An instance of objects that interact with each-other.
 
@@ -54,13 +54,16 @@ class Session(Thread, Tagable):  # TODO update the doooocs
         cleanup(): Cleanup the session for the next shift.
         run(): Obligatory run method.
             Called with start().
-        exportCurrentAsScene(str sId, Container cont, list/None tl) -> Scene: Return a scene with all the objects and no
-            script.
-        exportCurrentToUniverse(Universe uni) -> Universe: Take a universe and output this session's objectList to the
-            universe's objectList.
+        addObject(object obj): Tasker callable method to add an object to the session.
+        removeObject(object obj): Tasker callable method to remove an object from the session.
+        importFromUniverse(Universe universe): Assign <universe> as the session's universe and set the objectList and id
+            with <universe>.
+        setupSavedScene(Container cont, str/None sceneId=None, list tl=None, dict tags=None): Create and assign a scene
+            to log to.
+        exportCurrentToUniverse() -> Universe: Take the session's universe and output it.
     """
 
-    def __init__(self, sesId, parentDir, obj, uni=None, rul=None, tags=None):
+    def __init__(self, sesId, parentDir=None, obj=None, uni=None, rul=None, tags=None):
         super().__init__()  # Init thread
         self._ops = []
         self.deleteOnEmptyTasker = False
@@ -76,9 +79,12 @@ class Session(Thread, Tagable):  # TODO update the doooocs
             self.rules = []
         else:
             self.rules = rul
+        if obj is None:
+            self.objectList = []
+        else:
+            self.objectList = obj
         self.universe = uni
         self.directory = parentDir
-        self.objectList = obj
         self.scene = None
         self.tags["id"] = sesId
         self.tags["permissions"] = [
@@ -296,11 +302,40 @@ class Session(Thread, Tagable):  # TODO update the doooocs
                 src = op.source
             self.tags["opLog"].append((op.function, trg, src))  # Log format (function, target, source).
 
-        if self.scene is not None:  # TODO test me
-            opL = copy.deepcopy(self._ops)
-            sh = Shift(opL)
-            self.scene.script.append(sh)
+        if self.scene is not None:  # Log shift to scene.
+            opL = self._ops
+            for op in self._ops:  # Replace sessions and directories with keywords.
+                if op.function == "crossWarp":  # Reformat crossWarp for scene.
+                    op.target = "none"
+                    opL.append(Operation("removeObject", [op.source], "ses", op.source))  # Remove as equivalent to
+                    # crossWarp.
+                if op.source == self:
+                    op.source = "ses"
+                if op.target == self:
+                    op.target = self
+                for pIdx in range(op.parameters.__len__()):
+                    p = op.parameters[pIdx]
+                    if p == self:
+                        op.parameters[pIdx] = "ses"
+                if op.source == self.directory:
+                    op.source = "dir"
+                if op.target == self.directory:
+                    op.target = "dir"
+                for pIdx in range(op.parameters.__len__()):
+                    p = op.parameters[pIdx]
+                    if p == self.directory:
+                        op.parameters[pIdx] = "dir"
+                if not isinstance(op.source, str):
+                    op.source = op.source.tags["id"]
+                if not isinstance(op.target, str):
+                    op.target = op.target.tags["id"]
 
+            try:
+                opL = copy.deepcopy(opL)  # Copy and save ops list.
+                sh = Shift(opL)
+                self.scene.script.append(sh)
+            except BaseException as e:
+                self.tags["errs"].append(e)
 
     def cleanup(self):
         """Cleanup the session for the next shift."""
@@ -322,18 +357,43 @@ class Session(Thread, Tagable):  # TODO update the doooocs
             if not self.objectList and self.killOnEmptySession:
                 self.live = False
 
+    def addObject(self, obj):
+        """
+        Tasker callable method to add an object to the session.
+
+        :param object obj:
+        """
+        self.objectList.append(obj)
+
+    def removeObject(self, obj):
+        """
+        Tasker callable method to remove an object from the session.
+
+        :param object obj: object to remove.
+        """
+        self.objectList.remove(obj)
+
     def importFromUniverse(self, universe):
         """
-        Assign <universe> as the session's universe and set the objectList with <universe>.
+        Assign <universe> as the session's universe and set the objectList and id with <universe>.
 
-        :param Universe universe:
+        :param Universe universe: Universe to import.
         """
         self.universe = universe
+        self.tags["id"] = universe.tags["id"]
         self.objectList = universe.objectList
 
-    def setupSavedScene(self, cont, sessionId=None, tl=None, tags=None):  # TODO docs for meee
-        if sessionId is not None:
-            sId = sessionId
+    def setupSavedScene(self, cont, sceneId=None, tl=None, tags=None):
+        """
+        Create and assign a scene to log to.
+
+        :param Container cont: Scene container.
+        :param str/None sceneId: scene's id. Set to None to generate.
+        :param list tl: Timeline info for scene. None for default.
+        :param dict tags: Tags.
+        """
+        if sceneId is not None:
+            sId = sceneId
         else:
             sId = None
         objs = []

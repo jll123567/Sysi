@@ -48,10 +48,13 @@ class SessionDirectory(Thread, Tagable):
             self.tags = {}
         else:
             self.tags = tags
+        if ses is None:
+            self.sessionList = []
+        else:
+            self.sessionList = ses
         self.pendForAll = False
         self.removeDeadSessions = False
         self.killOnSessionsDead = True
-        self.sessionList = ses
         self.posts = []
         self.live = True
         self.tags["id"] = dirId
