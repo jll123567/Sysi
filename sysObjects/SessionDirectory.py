@@ -222,3 +222,6 @@ class SessionDirectory(Thread, Tagable):
 
             for p in self.posts:  # Handle posts.
                 self.handlePost(p)
+
+        for ses in self.sessionList:  # Kill sessions on directory kill.
+            ses.live = False
