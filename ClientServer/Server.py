@@ -19,15 +19,16 @@ class SysServer(threading.Thread, sysObjects.Tagable.Tagable):
 
     def __init__(self, srvId, dirs=None, tags=None):
         super().__init__()
+        self._sendingObjects = []
         if tags is None:
             self.tags = {}
         else:
             self.tags = tags
         self.tags["id"] = srvId
         if dirs is None:
-            self.directories = []
+            self.directoryList = []
         else:
-            self.directories = dirs
+            self.directoryList = dirs
         self.clientLookupTable = {}
         self.live = True
 
@@ -35,10 +36,10 @@ class SysServer(threading.Thread, sysObjects.Tagable.Tagable):
         """
 
         """
-        for dirr in self.directories:  # Start directories and sessions.
+        for dirr in self.directoryList:  # Start directories and sessions.
             dirr.start()
         asyncio.run(self.main())
-        for dirr in self.directories:  # Kill directories on server kill.
+        for dirr in self.directoryList:  # Kill directories on server kill.
             dirr.live = False
 
     async def main(self):
@@ -49,7 +50,7 @@ class SysServer(threading.Thread, sysObjects.Tagable.Tagable):
         try:
             await asyncio.gather(sockSrv.serve_forever(), self.sendNetworkedObjects(), self.taskManager())
         except asyncio.CancelledError:
-            print("canceled")
+            print("Tasks canceled. Live: {}".format(self.live))  # debug
 
     async def sendNetworkedObjects(self):
         """
@@ -60,7 +61,7 @@ class SysServer(threading.Thread, sysObjects.Tagable.Tagable):
         while self.live:
             netObjs = []
             await asyncio.sleep(0)
-            for dirr in self.directories:  # run though all directories and allow execution to move.
+            for dirr in self.directoryList:  # run though all directories and allow execution to move.
                 for ses in dirr.sessionList:  # run though all sessions in dirr and allow execution to move.
                     for obj in ses.objectList:  # run though all objects in ses but be blocking at this part.
                         if "networkObject" in obj.tags.keys():
@@ -72,12 +73,25 @@ class SysServer(threading.Thread, sysObjects.Tagable.Tagable):
 
         :param Tagable obj:
         """
-        address, port = self.clientLookupTable[
-            obj.tags["networkObject"]]  # Lookup the address and port of the client.
-        writer = (await asyncio.open_connection(address, port))[1]  # Open a connection and get the writer.
-        obj = base64.b64encode(pickle.dumps(obj))
-        writer.write(obj)
-        await writer.drain()
+        try:
+            address, port = self.clientLookupTable[
+                obj.tags["networkObject"]]  # Lookup the address and port of the client.
+            writer = (await asyncio.open_connection(address, port))[1]  # Open a connection and get the writer.
+        except ConnectionRefusedError:
+            # print("connect refused. ending...")  # debug
+            return
+        except KeyError:
+            # print("client not found. ending...")  # debug
+            return
+        objDt = base64.b64encode(pickle.dumps(obj))
+        writer.write(b"obj:" + objDt + b":end")
+        try:
+            await writer.drain()
+        except ConnectionResetError:
+            # print("connection reset. ending...")  # debug
+            return
+        writer.close()
+        await writer.wait_closed()
 
     async def handleNetworkRequests(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
         """
@@ -86,7 +100,6 @@ class SysServer(threading.Thread, sysObjects.Tagable.Tagable):
         :param StreamReader reader: Data from client to read.
         :param StreamWriter writer: Unused
         """
-        print("handleNetworkRequets hit")
         connected = True
         lastMessage = time.monotonic()
         while connected:
@@ -105,7 +118,6 @@ class SysServer(threading.Thread, sysObjects.Tagable.Tagable):
             elif dataType == b"newConnection":  # newConnection:<cliId>:<address>:<port>:end
                 await self.registerNewClient(data)
             elif dataType == b"disconnect":  # disconnect::end
-                print("dc reached")
                 connected = False
 
     async def registerNewClient(self, data):
@@ -118,9 +130,9 @@ class SysServer(threading.Thread, sysObjects.Tagable.Tagable):
         data = data.split(b":")  # <cliId>:<address>:<port> -> [cliId, address, port]
         newData = []
         for idx in range(data.__len__()):  # Base64 decode and convert to string.
-            newData.append(str(base64.b64decode(data[idx])))
+            newData.append(base64.b64decode(data[idx]).decode())
         self.clientLookupTable[newData[0]] = (
-            newData[1], newData[2])  # add {<cliId>:(<address>, <port>)} to cliLookupTable.
+            newData[1], int(newData[2]))  # add {<cliId>:(<address>, <port>)} to cliLookupTable.
 
     async def taskManager(self):
         """
@@ -135,36 +147,26 @@ class SysServer(threading.Thread, sysObjects.Tagable.Tagable):
             except asyncio.CancelledError:
                 pass
 
-    async def receiveObject(self, data):
-        """
-
-        :param data:
-        """
-        data = data.split(b":")  # <dirId>:<sesId>:<object> -> [<dirId>, <sesId>, <object>]
-        dirId = str(base64.b64decode(data[0]))
-        sesId = str(base64.b64decode(data[1]))
-        obj = pickle.loads(base64.b64decode(data[0]))
-        for dirr in self.directories:
-            if dirr.tags["id"] == dirId:
-                for ses in dirr.sessions:
-                    if ses.tags["id"] == sesId:
-                        ses.addObject(obj)
-
     async def receiveShift(self, data):
         """
 
         :param data:
         """
         data = data.split(b":")  # <objectId>:<shift>:<idx> -> [<objectId>, <shift>, <idx>]
-        objId = str(base64.b64decode(data[0]))
+        objId = base64.b64decode(data[0]).decode()
         shift = pickle.loads(base64.b64decode(data[1]))  # assuming shift is pickled b64-encoded Shift.
-        idx = str(base64.b64decode(data[0]))  # idx is either an int for insert or "append" to append.
+        idx = base64.b64decode(data[2]).decode()  # idx is either an int for insert or "append" to append.
         o = None
-        for dirr in self.directories:
-            for ses in dirr.sessions:
+        for dirr in self.directoryList:
+            for ses in dirr.sessionList:
                 for obj in ses.objectList:
                     if obj.tags["id"] == objId:
                         o = obj
+                        break
+                if o is not None:
+                    break
+            if o is not None:
+                break
         if idx == "append":
             o.tasker.shifts.append(shift)
         else:
@@ -172,3 +174,19 @@ class SysServer(threading.Thread, sysObjects.Tagable.Tagable):
                 o.tasker.shifts.insert(int(idx))
             except ValueError:
                 pass  # ???
+
+    async def receiveObject(self, data):
+        """
+
+        :param data:
+        """
+        data = data.split(b":")  # <dirId>:<sesId>:<object> -> [<dirId>, <sesId>, <object>]
+        dirId = base64.b64decode(data[0]).decode()
+        sesId = base64.b64decode(data[1]).decode()
+        obj = pickle.loads(base64.b64decode(data[2]))
+        for dirr in self.directoryList:
+            if dirr.tags["id"] == dirId:
+                for ses in dirr.sessionList:
+                    if ses.tags["id"] == sesId:
+                        ses.addObject(obj)
+                        return

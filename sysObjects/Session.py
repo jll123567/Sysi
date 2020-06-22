@@ -120,7 +120,7 @@ class Session(Thread, Tagable):
                     return o
             except AttributeError:
                 # Error for object with no tags.
-                # print("{} object found with no tags.".format(type(o)))
+                # print("{} object found with no tags.".format(type(o)))  # debug
                 pass
         return None
 
@@ -343,7 +343,7 @@ class Session(Thread, Tagable):
             if not o.tasker.shifts and self.deleteOnEmptyTasker:
                 self.objectList.remove(o)
         self._ops = []
-        print("-----------Shift End-----------")  # TODO: remove this line.
+        # print("-----------Shift End-----------")  # debug
 
     def run(self):
         """Obligatory run method; Called with start()."""
