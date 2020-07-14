@@ -19,30 +19,15 @@ class StaticObject(Taskable):
 
     Think something that provides only basic utility, like a mug.
 
-    Attributes
-        model Model: Object's model.
-        memory Memory: Object's memory.
-        tasker Tasker: Object's tasker.
-        tags dict: Object's tags.
+    :param str id: The object's id.
+    :param Model mod: The object's model, defaults to Model().
+    :param Memory mem: The object's memory, defaults to Memory().
+    :param Tasker tsk: The object's tasker, defaults to Tasker().
+    :param dict tags: The object's tags, defaults to {"id": <id>, "permissions": [[],[]]}.
     """
 
     def __init__(self, id, mod=None, mem=None, tsk=None, tags=None):
-        """
-        Constructor
-
-        Defaults
-            model = Model()
-            memory = Memory()
-            tasker = Tasker()
-            tags = {"id": <id>}
-
-        Parameters
-            id str: Id
-            mod Model: model
-            mem Memory: memory
-            tsk Tasker: tasker
-            tags dict: tags
-        """
+        """Constructor"""
         super().__init__(tsk, tags)
         self.tags["id"] = id
         if mod is None:
