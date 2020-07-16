@@ -24,10 +24,12 @@ class SysClient(threading.Thread, sysObjects.Tagable.Tagable):
     :param int port: The client's port, defaults to 6248.
     :param list shifts: A queue of shifts to send to the networked object, defaults to an empty list.
     :param list ses: A list of local sessions. Use these however.
+    :param int timeout: Time to wait for a message from a client before disconnecting in seconds,
+        defaults to five minutes.
     :param dict tags: Tags like Tagable.
     """
 
-    def __init__(self, cliId, server, obj, port=6248, shifts=None, ses=None, tags=None):
+    def __init__(self, cliId, server, obj, port=6248, shifts=None, ses=None, timeout=(5 * 60), tags=None):
         """Constructor"""
         super().__init__()  # Get thread stuff(super() points to parent 0).
         if tags is None:  # Manually add tags cuz super won't.
@@ -48,6 +50,7 @@ class SysClient(threading.Thread, sysObjects.Tagable.Tagable):
 
         self.address = socket.gethostbyname(socket.gethostname())  # Own address.
         self.port = port
+        self.timeout = timeout
         self.live = True  # When false, client is kill.
 
     def __str__(self):
@@ -55,7 +58,7 @@ class SysClient(threading.Thread, sysObjects.Tagable.Tagable):
             isAlive = "Alive"
         else:
             isAlive = "Dead"
-        return "{}:{}:{}:".format(self.tags["id"], self.obj, self.server, isAlive)
+        return "{}:{}:{}:{}".format(self.tags["id"], self.obj, self.server, isAlive)
 
     def run(self):
         """Code to run at thread start. Call with self.start()"""
@@ -74,11 +77,7 @@ class SysClient(threading.Thread, sysObjects.Tagable.Tagable):
             # print("Tasks canceled. Live: {}".format(self.live))  # debug
 
     async def taskManager(self):
-        """
-        Cancel all running tasks when self.live is false and handle Cancelled Errors.
-
-        Handles CancelledError.
-        """
+        """Cancel all running tasks when self.live is false and handle CancelledErrors."""
         while self.live:
             await asyncio.sleep(0)  # Pass execution if the thread is still live.
         tasks = asyncio.all_tasks()  # Get all running tasks.
@@ -172,7 +171,7 @@ class SysClient(threading.Thread, sysObjects.Tagable.Tagable):
                 # print("Server Disconnected Unexpectedly")  # debug
                 return
 
-            if time.monotonic() >= (lastTime + (60 * 5)):  # Break connection if 5 minutes since last message.
+            if time.monotonic() >= (lastTime + self.timeout):  # Break connection if <timeout> since last message.
                 break
 
             if dataType == b"obj":  # obj:<object>:end
