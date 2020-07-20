@@ -5,6 +5,7 @@ Classes
     Vector3
     Model
 """
+from copy import copy
 
 
 class Vector3:
@@ -102,6 +103,18 @@ class Model:
             self.position = Vector3()
         else:
             self.position = pos  # https://twitter.com/PossumEveryHour
+        self._modRestore = None
 
     def __str__(self):
         return "{}".format(self.position, self.model, self.material)
+
+    def makeAssembly(self):
+        """Store the model and material in a protected attribute and set them to None."""
+        self._modRestore = (copy(self.model), copy(self.material))  # Save removed components.
+        self.model = None
+        self.material = None
+
+    def restoreFromAssembly(self):
+        """Restore the model and material from the _modRestore attribute."""
+        self.model = self._modRestore[0]
+        self.material = self._modRestore[1]
