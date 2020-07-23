@@ -145,6 +145,8 @@ class Session(Thread, Tagable):
     def objectOpCollect(self):
         """Get operations from objects in objectList."""
         for o in self.objectList:  # Get all ops from objects.
+            if "health" in o.tags.keys() and o.tags["health"] <= 0:  # Skip this object if its health is zero or less.
+                continue
             try:
                 objShift = o.tasker.__next__()  # Pops shift from o's tasker!
                 for op in objShift:  # Pops op from objShift!

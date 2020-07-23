@@ -92,6 +92,34 @@ class Memory:
         """Unimplemented."""
         pass
 
+    def search(self, content, shortOrLong=False):
+        """
+        Find data in memory that has any matching content tags to that of <content>.
+        :param list content: A list of strings to find in data objects.
+            Elements in content are implicitly or'd.
+        :param bool shortOrLong: Weather or not to look in sts or lts, defaults to false for sts.
+        :return: Data objects with matching content tags.
+        :rtype: list
+        """
+        resultsIdx = set()
+        for c in content:
+            if not shortOrLong:
+                for d in self.sts:
+                    if "content" in d.tags.keys() and c in d.tags["content"]:
+                        resultsIdx.update([self.sts.index(d)])
+            else:
+                for d in self.lts:
+                    if "content" in d.tags.keys() and c in d.tags["content"]:
+                        resultsIdx.update([self.sts.index(d)])
+        results = []
+        if not shortOrLong:
+            for idx in resultsIdx:
+                results.append(self.sts[idx])
+        else:
+            for idx in resultsIdx:
+                results.append(self.sts[idx])
+        return results
+
 
 class SegmentedMemory:
     """

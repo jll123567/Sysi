@@ -25,6 +25,9 @@ class Data(Tagable):
         super().__init__(tags)
         self.tags['id'] = id
         self.tags["dataType"] = "None"
+        self.tags["relevancy"] = [0]  # Make a formal format for this later.
+        self.tags["interest"] = [0]
+        self.tags["content"] = []  # A list of strings that describe the content of the data. Not just the type.
         self.storage = s
 
     def __str__(self):
@@ -33,3 +36,4 @@ class Data(Tagable):
     def setDataType(self, dataType: str):
         """Set the dataType of this Data to <dataType>."""
         self.tags["dataType"] = dataType
+

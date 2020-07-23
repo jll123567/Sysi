@@ -30,6 +30,7 @@ class StaticObject(Taskable):
         """Constructor"""
         super().__init__(tsk, tags)
         self.tags["id"] = id
+        self.tags["health"] = 100
         if mod is None:
             self.model = Model()
         else:
