@@ -1,3 +1,12 @@
+"""
+Module for Switchers.
+Classes
+    Switcher
+    ModelSwitcher
+    PersonalitySwitcher
+"""
+
+
 class Switcher:
     """
     Base class for Switcher type modules.
