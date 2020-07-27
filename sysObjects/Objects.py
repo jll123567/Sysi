@@ -6,6 +6,7 @@ Classes
     DynamicObject
     User
 """
+from sysObjects.Data import Data
 from sysObjects.Taskable import Taskable
 import sysModules.Memory as Memory
 from sysModules.Model import Model
@@ -42,6 +43,18 @@ class StaticObject(Taskable):
 
     def __str__(self):
         return self.tags['id']
+
+    def passReference(self, requester):
+        """
+        Append a reference to self at <requester>'s short term memory.
+
+        The reference is a data object with an id of None and who's storage is (self's id, self).
+
+        :param StaticObject requester: The object that requested the reference to self.
+        """
+        reference = Data(None, (self.tags["id"], self))
+        reference.tags["dataType"] = "passReference"
+        requester.memory.sts.append(reference)
 
 
 class DynamicObject(StaticObject):

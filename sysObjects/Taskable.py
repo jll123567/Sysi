@@ -4,8 +4,10 @@ Module for the Taskable class.
 Classes
     Taskable
 """
+from copy import copy
+
 from sysObjects.Tagable import Tagable
-from sysModules.Tasker import Tasker
+import sysModules.Tasker as Tasker
 import types
 
 
@@ -45,7 +47,7 @@ class Taskable(Tagable):
         """
         super().__init__(tags)
         if tsk is None:
-            self.tasker = Tasker()
+            self.tasker = Tasker.Tasker()
         else:
             self.tasker = tsk
         self.tags["permissions"] = [[], []]
@@ -133,3 +135,57 @@ class Taskable(Tagable):
             n = i[1]
             self.attachFunction(types.FunctionType(f, globals(), n), n)
             self.bindFunction(n)
+
+    @staticmethod
+    def printFromObject(*args, **kwargs):
+        """
+        Call print with args and kwargs.
+
+        :param list args: Arguments to feed into print.
+        :param dict kwargs: Keyword arguments to feed into print.
+        """
+        print(*args, **kwargs)
+
+    def loopOp(self, op, iterations):
+        """
+        Schedule an operation to be called in the next shift <iterations> number of times.
+
+        :param Operation op: The operation to be called in the next shift.
+        :param int iterations: The number of times to repeat this procedure.
+            Effectively how many iterations of the "loop".
+        """
+        if iterations > 0:
+            newOp = copy(op)  # The original operation is copied to avoid always using the same object in case it
+            # gets modified somehow.
+            iterations -= 1
+            ownOp = Tasker.Operation("loopOp", [newOp, iterations], self, self)
+            if not self.tasker.shifts:  # Handle different states of tasker.shifts
+                sh = Tasker.Shift([newOp, ownOp])
+                self.tasker.shifts.append(sh)
+            elif isinstance(self.tasker.shifts[0], Tasker.Shift):
+                self.tasker.shifts[0].append(newOp)
+                self.tasker.shifts[0].append(ownOp)
+            else:
+                sh = Tasker.Shift([newOp, ownOp])
+                self.tasker.shifts[0] = sh
+        else:
+            return
+
+    def loopOpInf(self, op):
+        """
+        Schedule an operation to be called in the next shift for every shift onwards.
+
+        :param Operation op: The operation to be called next shift.
+        """
+        newOp = copy(op)  # The original operation is copied to avoid always using the same object in case it
+        # gets modified somehow.
+        ownOp = Tasker.Operation("loopOpInf", [newOp], self, self)
+        if not self.tasker.shifts:  # Handle different states of tasker.shifts
+            sh = Tasker.Shift([newOp, ownOp])
+            self.tasker.shifts.append(sh)
+        elif isinstance(self.tasker.shifts[0], Tasker.Shift):
+            self.tasker.shifts[0].append(newOp)
+            self.tasker.shifts[0].append(ownOp)
+        else:
+            sh = Tasker.Shift([newOp, ownOp])
+            self.tasker.shifts[0] = sh

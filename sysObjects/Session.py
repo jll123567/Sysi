@@ -6,6 +6,7 @@ Classes
 """
 from sysObjects.Tagable import Tagable
 from sysObjects.Taskable import Taskable
+from sysObjects.Data import Data
 from sysObjects.Scene import Scene
 from sysModules.Tasker import Shift, Operation
 import copy
@@ -25,7 +26,7 @@ class Session(Thread, Tagable):
         pendRequest bool: Holds weather the Session has been told to pend shifts by directory.
         pended bool: Holds if the Session is currently pending stuff from the directory.
         directory Directory: The Directory that this session is within.
-        objectList [object]: The objects in the session.
+        objectList [Tagable]: The objects in the session.
             Preferably they are all Taskable.
         scene Scene: The scene to save shifts to.
         rules [Operation]: List of operations to run every shift.
@@ -88,12 +89,13 @@ class Session(Thread, Tagable):
         self.scene = None
         self.tags["id"] = sesId
         self.tags["permissions"] = [
-            [  # Wl
+            [  # allowed
                 ("all", "getObjectFromId"),
                 ("all", "objectOpCheck"),
-                ("all", "fullOpCheck")
+                ("all", "fullOpCheck"),
+                ("all", "fullDiscovery")
             ],
-            [  # Bl
+            [  # blocked
                 ("all", "all")
             ]
         ]
@@ -152,7 +154,8 @@ class Session(Thread, Tagable):
                 for op in objShift:  # Pops op from objShift!
                     self._ops.append(op)
             except BaseException as e:
-                self.tags["errs"].append(e)  # Log error
+                if not isinstance(e, (StopIteration)):
+                    self.tags["errs"].append(e)  # Log error
 
     def ruleOpCollect(self):
         """Get operations from rules."""
@@ -189,7 +192,8 @@ class Session(Thread, Tagable):
         except KeyError:  # bb-but what if no permissions tag.
             perms = [[], []]  # Use blank(accept all) perms.
         except BaseException as e:  # bb-but what if other err.
-            self.tags["errs"].append(e)  # idk... log it aaaaand...
+            if not isinstance(e, (StopIteration)):
+                self.tags["errs"].append(e)  # Log error
             perms = [[], []]  # more blank perms. Yeah!
         if isinstance(op.source, Tagable):  # Get source id.
             s = op.source.tags["id"]
@@ -277,7 +281,8 @@ class Session(Thread, Tagable):
                     else:
                         getattr(o, op.function)()
                 except BaseException as e:  # Handle errors as they come.
-                    self.tags["errs"].append(e)
+                    if not isinstance(e, (StopIteration)):
+                        self.tags["errs"].append(e)  # Log error
         elif op.target == self.directory:
             self.directory.takePost([op.function, op.parameters, self])
         else:
@@ -287,7 +292,8 @@ class Session(Thread, Tagable):
                 else:
                     getattr(op.target, op.function)()
             except BaseException as e:  # Handle errors as they come.
-                self.tags["errs"].append(e)
+                if not isinstance(e, (StopIteration)):
+                    self.tags["errs"].append(e)  # Log error
 
     def log(self):
         """Save details of what happened this shift to various locations."""
@@ -337,7 +343,8 @@ class Session(Thread, Tagable):
                 sh = Shift(opL)
                 self.scene.script.append(sh)
             except BaseException as e:
-                self.tags["errs"].append(e)
+                if not isinstance(e, (StopIteration)):
+                    self.tags["errs"].append(e)  # Log error
 
     def cleanup(self):
         """Cleanup the session for the next shift."""
@@ -416,3 +423,18 @@ class Session(Thread, Tagable):
         if self.scene is not None:
             uni.sceneList.append(self.scene)
         return uni
+
+    def fullDiscovery(self, requester):
+        """
+        Pass a list of the id of all objects in the session to the requester.
+
+        The list is in a data object with an id of None.
+
+        :param StaticObject requester: The object the made the request.
+        """
+        ids = []
+        for o in self.objectList:
+            ids.append(o.tags["id"])
+        d = Data(None, ids)
+        d.tags["dataType"] = "fullDiscovery"
+        requester.memory.sts.append(d)

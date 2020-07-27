@@ -59,8 +59,12 @@ class SessionDirectory(Thread, Tagable):
         self.live = True
         self.tags["id"] = dirId
         self.tags["permissions"] = [
-            [("all", "crossWarp")],  # Wl
-            [("all", "all")]  # Bl
+            [  # allowed
+                ("all", "crossWarp")
+            ],
+            [  # blocked
+                ("all", "all")
+            ]
         ]
         self.tags["errs"] = []
         self.tags["postLog"] = []
@@ -124,7 +128,8 @@ class SessionDirectory(Thread, Tagable):
             else:
                 getattr(self, post[0])()
         except BaseException as e:
-            self.tags["errs"].append(e)
+            if not isinstance(e, (StopIteration)):
+                self.tags["errs"].append(e)  # Log error
 
     def log(self, post):
         """
@@ -196,7 +201,8 @@ class SessionDirectory(Thread, Tagable):
             toSession.objectList.append(obj)  # Put obj in toSession.
             self.unpendSessions(sesLst)  # Unpend after operation.
         except BaseException as e:
-            self.tags["errs"].append(e)
+            if not isinstance(e, (StopIteration)):
+                self.tags["errs"].append(e)  # Log error
 
     def run(self):
         """

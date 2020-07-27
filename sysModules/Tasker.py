@@ -95,6 +95,14 @@ class Shift:
             s.append(o.getFunction())
         return "[" + str.join(", ", s) + "]"
 
+    def append(self, o):
+        """
+        Append o to the operations list.
+
+        :param Operation o:
+        """
+        self.operations.append(o)
+
 
 class Tasker:
     """

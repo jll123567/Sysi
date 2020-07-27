@@ -31,7 +31,7 @@ class Data(Tagable):
         self.storage = s
 
     def __str__(self):
-        return "{}:{}[\n{},\n{}\n]".format(self.tags["id"], self.tags["dataType"], self.storage, self.tags)
+        return "{}:{}".format(self.tags["dataType"], self.storage)
 
     def setDataType(self, dataType: str):
         """Set the dataType of this Data to <dataType>."""
