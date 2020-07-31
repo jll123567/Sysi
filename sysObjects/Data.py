@@ -36,4 +36,3 @@ class Data(Tagable):
     def setDataType(self, dataType: str):
         """Set the dataType of this Data to <dataType>."""
         self.tags["dataType"] = dataType
-

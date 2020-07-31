@@ -14,23 +14,13 @@ class Personality:
     The idea is to get all Conditional objects in goals to be true and false in limits.
     This allows a user to make decisions by mapping functions to changed output.
 
-    Attributes
-        goals [Conditional]: Conditionals to make true.
-        limits [Conditional]: Conditionals to keep false.
-        functions [str]: Functions usable by users.
+    :param list gl: Conditionals to make true.
+    :param list lim: Conditionals to keep false.
+    :param list funct: Functions usable by users.
     """
 
     def __init__(self, gl=None, lim=None, funct=None):
-        """
-        Constructor
-
-        Goals, limits, and functions default to an empty list.
-
-        Parameters
-            gl=None [Conditional]: Conditionals to make true.
-            lim=None [Conditional]: Conditionals to keep false.
-            funct=None [str]: Functions usable by users.
-        """
+        """Constructor"""
         if gl is None:
             self.goals = []
         else:
@@ -52,22 +42,22 @@ class Conditional:
     """
     Put two objects in to have a constantly updating way to compare them.
 
-    Attributes
-        a any: Thing one.
-        aAttribute str: The part of a to check.
-        b any: Thing two.
-        bAttribute str: The part of b to check.
-        evalType str: How Conditional compares a and b.
+    :param any a: Thing one.
+    :param str a_atr: The part of a to check.
+    :param any b: Thing two.
+    :param str b_atr: The part of b to check.
+    :param str evalType: How Conditional compares a and b.
 
     Methods
         distance(): Calculate how far apart a and b are.
     """
 
-    def __init__(self, a, aatr, b, batr, evalType):
+    def __init__(self, a, a_atr, b, b_atr, evalType):
+        """Constructor"""
         self.a = a
-        self.aAttribute = aatr
+        self.aAttribute = a_atr
         self.b = b
-        self.bAttribute = batr
+        self.bAttribute = b_atr
         self.evalType = evalType
 
     def __bool__(self):

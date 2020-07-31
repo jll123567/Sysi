@@ -21,7 +21,7 @@ class Scene(Tagable):
         container Container: The container where the session took place.
         timeline tuple: The timeline id and what shift the scene starts at (in that order).
         script [Shifts]: The shifts in order of occurrence.
-        objectList [object]: The objects in the scene at their inital state.
+        objectList [object]: The objects in the scene at their initial state.
         tags dict: Tags.
     """
 

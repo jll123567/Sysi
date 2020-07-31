@@ -23,8 +23,8 @@ class Universe(Tagable):
         sceneList [Scene]: List of all scenes relating to this uni.
         objectList [object]: List of all objects that can interact with each-other.
         containerList [Container]: All containers relevant to this universe.
-        requiredFunctionSuite str/None: A string with all functions that need to be installed in taskable objects to work in
-            this uni. None if unused
+        requiredFunctionSuite str/None: A string with all functions that need to be installed in taskable objects to
+            work in this uni. None if unused
         rules [Operation]: Operations to be run on all objects every shift.
         tags dict: Tags for this uni.
 
@@ -44,7 +44,7 @@ class Universe(Tagable):
 
         Timeline defaults to 0.
         Scene, object, container, and rules lists default to an empty list.
-        RequiredFucntionSuite default to None.
+        RequiredFunctionSuite default to None.
         _lastId is setup to have the first id generated be "00" for each type.
 
          Parameters
@@ -109,7 +109,7 @@ class Universe(Tagable):
             lastId += 1
             self._lastId["u"] = lastId
             check = str(lastId)[-1]  # Generate check character.
-            obj.tags["id"] = "{}/u/{}{}".format(idStub, lastId, check)  # Aaaaaand set.
+            obj.tags["id"] = "{}/u/{}{}".format(idStub, lastId, check)  # set.
         elif isinstance(obj, Objects.DynamicObject):  # You get the gist...
             lastId = self._lastId["do"]
             lastId += 1
@@ -186,7 +186,7 @@ class Universe(Tagable):
             lastId += 1
             self._lastId["u"] = lastId
             check = str(lastId)[-1]  # Generate check character.
-            return "{}/u/{}{}".format(idStub, lastId, check)  # Aaaaaand set.
+            return "{}/u/{}{}".format(idStub, lastId, check)  # set.
         elif objType == "do":  # You get the gist...
             lastId = self._lastId["do"]
             lastId += 1

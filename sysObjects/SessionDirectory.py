@@ -128,7 +128,7 @@ class SessionDirectory(Thread, Tagable):
             else:
                 getattr(self, post[0])()
         except BaseException as e:
-            if not isinstance(e, (StopIteration)):
+            if not isinstance(e, StopIteration):
                 self.tags["errs"].append(e)  # Log error
 
     def log(self, post):
@@ -182,7 +182,7 @@ class SessionDirectory(Thread, Tagable):
         Move obj from fromSession to toSession possibly with position of newPos.
 
         Sessions are pended before action is taken and un-pended afterwards.
-        If newPos is None obj's position is unchanged.
+        If newPos is None, object's position is unchanged.
 
         :param object/StaticObject obj: The object to move, must be a StaticObject to set position.
         :param Session fromSession: Session that obj is coming from/ currently in.
@@ -201,7 +201,7 @@ class SessionDirectory(Thread, Tagable):
             toSession.objectList.append(obj)  # Put obj in toSession.
             self.unpendSessions(sesLst)  # Unpend after operation.
         except BaseException as e:
-            if not isinstance(e, (StopIteration)):
+            if not isinstance(e, StopIteration):
                 self.tags["errs"].append(e)  # Log error
 
     def run(self):

@@ -17,27 +17,15 @@ class Sensory:
     If a module is un-used. Put None in its place.
     Feel free to add your own stuff to Sensory.
 
-    Attributes
-        visual Visual: Reserved space for visual input.
-        auditory Auditory: Reserved space for auditory io.
-        tactile Tactile: Reserved space for tactile input.
-        taste Taste: Reserved space for taste input.
-        smell Smell: Reserved space for smell input.
+    :param Visual vis: Reserved space for visual input.
+    :param Auditory aud: Reserved space for auditory io.
+    :param Tactile tact: Reserved space for tactile input.
+    :param Taste tst: Reserved space for taste input.
+    :param Smell sml: Reserved space for smell input.
     """
 
     def __init__(self, vis=None, aud=None, tact=None, tst=None, sml=None):
-        """
-        Constructor
-
-        All sensory modules are defaulted to None.
-
-        Parameters
-            vis Visual/None: Reserved for visual.
-            aud Auditory/None: Reserved for auditory.
-            tact Tactile/None: Reserved for tactile.
-            tst Taste/None: Reserved for taste.
-            sml Smell/None: Reserved for smell.
-        """
+        """Constructor"""
         self.visual = vis
         self.auditory = aud
         self.tactile = tact
@@ -56,12 +44,8 @@ class SensoryModule:
 
     Please implement all methods.
 
-    Attributes
-        i any: Input from session.
-        o any: Output to session.
-
-    Methods
-        package(inOrOut bool): Implement this as to return useful data object.
+    :param any i: Input from session.
+    :param any o: Output to session.
     """
 
     def __init__(self, i=None, o=None):
@@ -95,7 +79,7 @@ class Visual(SensoryModule):
     """
 
     def __init__(self, i=None):
-        super().__init__(i, None)  # TODO: Vis out holds camera info for session.
+        super().__init__(i)  # TODO: Vis out holds camera info for session.
 
     def __str__(self):
         return "image?:{}".format(self.i is not None)
@@ -106,8 +90,9 @@ class Visual(SensoryModule):
 
         if <inOrOut> is false this function returns None.
 
-        Parameters
-            inOrOut bool: Weather to return self.in or self.out.
+        :param bool inOrOut: Weather to return self.in or self.out.
+        :return: The packaged data.
+        :rtype: Data/None
         """
         if inOrOut:
             d = Data(None, self.i)

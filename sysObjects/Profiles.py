@@ -139,17 +139,17 @@ class GeneticProfile:
     @staticmethod
     def average(vals):
         """
-        Take a list of lists of values and return the average of each list's vlaues.
+        Take a list of lists of values and return the average of each list's values.
 
         :param list vals: A list of lists of values.
         :return: A list of averages.
         :rtype: list
         """
         for idx in range(vals.__len__()):  # Average each numSet
-            sum = 0
+            some = 0
             for num in vals[idx]:
-                sum += num
-            vals[idx] = sum / vals[idx].__len__()
+                some += num
+            vals[idx] = some / vals[idx].__len__()
         return vals
 
     def applyRandomWalk(self, val, walkBounds):
@@ -175,16 +175,16 @@ class GeneticProfile:
         :return: List of walked values.
         :rtype: list
         """
-        bnds = []
+        bounds = []
         if isinstance(walkBounds, int):
             for _ in range(vals.__len__()):
-                bnds.append(walkBounds)
+                bounds.append(walkBounds)
         else:
-            bnds = walkBounds
+            bounds = walkBounds
 
         for idx in range(vals.__len__()):
             try:
-                vals[idx] = self.applyRandomWalk(vals[idx], bnds[idx])
+                vals[idx] = self.applyRandomWalk(vals[idx], bounds[idx])
             except IndexError:  # If bounds are shorter than averages. Don't apply walk.
                 pass
         return vals

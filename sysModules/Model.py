@@ -14,18 +14,9 @@ class Vector3:
 
     Yep I could probably have imported this or used a list.
 
-    Attributes
-        x float: Pos on x axis.
-        y float: Pos on y axis.
-        z float: Pos on z axis.
-
-    Methods
-        S: add(Vector3 a, Vector3 b)
-        S: sub(Vector3 a, Vector3 b)
-        S: distance(Vector3 a, Vector3 b)
-        distance(Vector3 other)
-        S: areaBetween(Vector3 a, Vector3 b)
-        areaBetween(Vector3 other)
+    :param float x: x value.
+    :param float y: y value.
+    :param float z: z value.
     """
 
     def __init__(self, x=0.0, y=0.0, z=0.0):
@@ -63,26 +54,20 @@ class Vector3:
             return NotImplemented
         return Vector3.sub(self, other)
 
-    @staticmethod
-    def distance(a, b):
-        """Calculate the distance between <a> and <b>."""
-        c = a - b
+    def distance(self, a, b=None):
+        """Calculate the distance between <a> and <b> or <a> and self."""
+        if b is None:
+            c = self - a
+        else:
+            c = a - b
         return Vector3(abs(c.x), abs(c.y), abs(c.z))
 
-    def distance(self, other):
-        """Calculate the distance between self and <other>."""
-        c = self - other
-        return Vector3(abs(c.x), abs(c.y), abs(c.z))
-
-    @staticmethod
-    def areaBetween(a, b):
-        """Calculate the area between <a> and <b>."""
-        c = Vector3.distance(a, b)
-        return c.x * c.y * c.z
-
-    def areaBetween(self, other):
-        """Calculate the area between self and <other>."""
-        c = Vector3.distance(self, other)
+    def areaBetween(self, a, b=None):
+        """Calculate the area between <a> and <b> or <a> and self."""
+        if b is None:
+            c = self.distance(a)
+        else:
+            c = Vector3.distance(a, b)
         return c.x * c.y * c.z
 
 
@@ -90,10 +75,11 @@ class Model:
     """
     Represents object's appearance in 3d space.
 
-    Attributes
-        model any: Geometry and animations.
-        material any: Ill implement something more substantial later.
-        position Vector3: Position info
+    Put this module at <your_object>.model if its not there already.
+
+    :param any mod: Geometry and animations.
+    :param any mat: Ill implement something more substantial later.
+    :param Vector3 pos: Position info.
     """
 
     def __init__(self, mod=None, mat=None, pos=None):
@@ -118,3 +104,8 @@ class Model:
         """Restore the model and material from the _modRestore attribute."""
         self.model = self._modRestore[0]
         self.material = self._modRestore[1]
+
+    functionSuiteString = """
+def modelMove(self, distance):
+    self.model.position = self.model.position + distance
+"""  # Install this with Taskable.installFunctionSuite()

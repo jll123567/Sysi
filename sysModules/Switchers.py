@@ -18,7 +18,7 @@ class Switcher:
     """
 
     def __init__(self, elements=None, current=None):
-        if self.elements is None:
+        if elements is None:
             self.elements = {}
         else:
             self.elements = elements
@@ -53,6 +53,8 @@ class ModelSwitcher(Switcher):
     """
     Switcher for model.
 
+    Put this module at <your_object>.modelSwitcher.
+
     :param Taskable owner: The owner of this module.
     :param dict elements: The elements that can be swapped between.
         Format should be {"unique name of element": element}
@@ -81,10 +83,19 @@ class ModelSwitcher(Switcher):
         self.switchWithPrevious()
         self.owner.model = self.getCurrentFromElements()
 
+    functionSuiteString = """
+def modelSwitcherSetCurrentModel(self, name):
+    self.modelSwitcher.setCurrentPers(name)
+def modelSwitcherSwitchModelWithPrevious(self):
+    self.modelSwitcher.switchModelWithPrevious()    
+"""  # Install this with Taskable.installFunctionSuite()
+
 
 class PersonalitySwitcher(Switcher):
     """
     Switcher for personality.
+
+    Put this module at <your_object>.personalitySwitcher.
 
     :param Taskable owner: The owner of this module.
     :param dict elements: The elements that can be swapped between.
@@ -99,7 +110,7 @@ class PersonalitySwitcher(Switcher):
         else:
             super().__init__(elements, current)
 
-    def setCurrentModel(self, name):
+    def setCurrentPers(self, name):
         """
         Set the current personality using <name>.
         Sets previous.
@@ -113,3 +124,10 @@ class PersonalitySwitcher(Switcher):
         """Swap the contents of current and previous and set personality."""
         self.switchWithPrevious()
         self.owner.personality = self.getCurrentFromElements()
+
+    functionSuiteString = """
+def personalitySwitcherSetCurrentPers(self, name):
+    self.personalitySwitcher.setCurrentPers(name)
+def personalitySwitcherSwitchModelWithPrevious(self):
+    self.personalitySwitcher.switchModelWithPrevious()    
+"""  # Install this with Taskable.installFunctionSuite()

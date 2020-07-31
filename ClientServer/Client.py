@@ -95,6 +95,7 @@ class SysClient(threading.Thread, sysObjects.Tagable.Tagable):
         Handles ConnectionRefusedError and ConnectionResetError.
         """
         connected = False
+        reader, writer = None, None
         while not connected:  # Keep trying to connect until it works.
             try:
                 reader, writer = await asyncio.open_connection(host=self.server[0], port=self.server[1])

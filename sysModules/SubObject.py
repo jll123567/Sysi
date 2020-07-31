@@ -48,7 +48,7 @@ class SubObject:
             if ch.tags["id"] == chId:
                 return ch
 
-    def setChildParrents(self):
+    def setChildParents(self):
         """
         Set the parent of all objects in self.children to self.owner.
 
@@ -89,3 +89,16 @@ class SubObject:
     def restoreModelFromAssembly(self):
         """Call restoreFromAssembly() at the owner's model."""
         self.owner.model.restoreFromAssembly()
+
+    functionSuiteString = """
+def subObjSetChildParents(self):
+    self.subObject.setChildParents()
+def subObjSetNewPosition(self):
+    self.subObject.setNewPosition()
+def subObjUpdateChildPositions(self):
+    self.subObject.updateChildPositions()
+def subObjMakeModelAssembly(self):
+    self.subObject.makeModelAssembly()
+def subObjRestoreModelFromAssembly(self):
+    self.subObject.restoreModelFromAssembly()
+"""  # Install this with Taskable.installFunctionSuite()

@@ -12,23 +12,14 @@ class Operation:
     """
     Represents one action that is requested to the session.
 
-    Attributes
-        function str: Identifier for the function to call.
-        parameters list: List of parameters to pass to function.
-        target str/Taskable: The Taskable object(or its id) to call the function of.
-        source str/Taskable: The Taskable object(or its id) that requested this.
+    :param str funct: Identifier for the function to call.
+    :param list param: List of parameters to pass to function.
+    :param str/Taskable trg: The Taskable object(or its id) to call the function of.
+    :param str/Taskable src: The Taskable object(or its id) that requested this.
     """
 
     def __init__(self, funct, param, trg, src):  # Consider Enable/Disable for ops.
-        """
-        Constructor
-
-        Parameters
-            funct str: Identifier for the function to call.
-            param list: List of parameters to pass to function.
-            target str or Taskable: The Taskable object(or its id) to call the function of.
-            source str or Taskable: The Taskable object(or its id) that requested this.
-        """
+        """Constructor"""
         self.function = funct
         self.parameters = param
         self.target = trg
@@ -53,8 +44,7 @@ class Shift:
     Similar to Tasker a shift is a list of operations.
     It's also an iterator where next pops the next operation.
 
-    Attributes
-        operations(list): A list of operations.
+    :param list ops: A list of operations.
     """
 
     def __init__(self, ops=None):
@@ -111,8 +101,7 @@ class Tasker:
     A tasker is a list of shifts where the first shift is the next set of operations to preform.
     It's also an iterator where next pops the next shift.
 
-    Attributes
-        shifts(list): A list of shifts.
+    :param list shifts: A list of shifts.
     """
 
     def __init__(self, shifts=None):
@@ -120,9 +109,6 @@ class Tasker:
         Constructor
 
         Shifts is set to [] if None is provided.
-
-        Parameters
-            shifts list: a list of shifts.
         """
         if shifts is None:
             self.shifts = []

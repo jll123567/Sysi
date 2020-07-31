@@ -116,21 +116,21 @@ class Taskable(Tagable):
                 fCs.append(i)
         fCs.pop(-1)
 
-        mthds = []
-        functs = []  # Separate the functions from the methods.
+        methodList = []
+        functionList = []  # Separate the functions from the methods.
         for i in range(fCs.__len__())[::-1]:  # Parse in reverse because popping.
             if fCs[i].co_varnames.__len__() == 0:  # Handle zero args/vars.
-                functs.append([fCs.pop(i), fNs.pop(i)])
-            elif fCs[i].co_varnames[0] == "self":  # Its a method if the first varname(ie argument) is "self".
-                mthds.append([fCs.pop(i), fNs.pop(i)])
+                functionList.append([fCs.pop(i), fNs.pop(i)])
+            elif fCs[i].co_varnames[0] == "self":  # Its a method if the first var name(ie argument) is "self".
+                methodList.append([fCs.pop(i), fNs.pop(i)])
             else:  # Some args/vars but no self.
-                functs.append([fCs.pop(i), fNs.pop(i)])
+                functionList.append([fCs.pop(i), fNs.pop(i)])
 
-        for i in functs:  # For functions: attach to self with name.
+        for i in functionList:  # For functions: attach to self with name.
             f = i[0]
             n = i[1]
             self.attachFunction(types.FunctionType(f, globals(), n), n)  # Globals to keep global vars/builtins.
-        for i in mthds:  # For methods: attach to self with name and bind.
+        for i in methodList:  # For methods: attach to self with name and bind.
             f = i[0]
             n = i[1]
             self.attachFunction(types.FunctionType(f, globals(), n), n)

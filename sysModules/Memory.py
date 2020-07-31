@@ -13,15 +13,9 @@ class Memory:
 
     Storage is done in short term and long term.
 
-    Attributes
-        sts None/list: Short term is intended disposable stuff.
-        lts None/list/SegmentedMemory(unimplemented): Long term is intended for non-disposable stuff.
-        ltsEnable bool: Enable for long term storage.
-
-    Methods
-        enableLts(list/SegmentedMemory/None memory=None): Enable long term storage and set it to <memory>.
-        disableLts(): Disable long term storage.
-        getLts(): Get and return lts or lts.mem if lts is a SegmentedMemory object.
+    :param None/list sts: Short term is intended disposable stuff.
+    :param None/list/SegmentedMemory lts: Long term is intended for non-disposable stuff.
+    :param bool ltsEnable: Enable for long term storage.
     """
 
     def __init__(self, sts=None, lts=None, ltsEnable=False):
@@ -30,11 +24,6 @@ class Memory:
 
         If ltsEnable is false then lts is set to None.
         Short term storage and long term storage are set to an empty list by default.
-
-        Parameters
-            sts None/list: Short term storage.
-            lts None/list/SegmentedMemory(unimplemented): Long term storage.
-            ltsEnable bool: Enable for long term storage.
         """
         if sts is None:
             self.sts = []
@@ -96,7 +85,7 @@ class Memory:
         """
         Find data in memory that has any matching content tags to that of <content>.
         :param list content: A list of strings to find in data objects.
-            Elements in content are implicitly or'd.
+            Elements in content are implicitly or 'd.
         :param bool shortOrLong: Weather or not to look in sts or lts, defaults to false for sts.
         :return: Data objects with matching content tags.
         :rtype: list
@@ -133,15 +122,12 @@ class SegmentedMemory:
         <segment name> is a string
         In other words a dict where all values are lists of something or other.
 
-    Iteration effectively though not literally flattens the dict's values to one large list.
+    Iteration effectively though not literally flattens the dictionary's values to one large list.
     if a segment is an empty list None is returned by next.
     If a segment has a value that is not a list it will be converted to a list by next.
         so <segment>:<value> becomes <segment>:[<value>]
 
-    Attributes
-        mem dict: The dictionary itself
-        segment int: Counter for the segment for next.
-        obj int: Counter for the element of the segment for next.
+    :param dict mem: The dictionary itself
     """
 
     def __init__(self, mem=None):

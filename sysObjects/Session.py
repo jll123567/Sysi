@@ -35,7 +35,7 @@ class Session(Thread, Tagable):
     Tags
         id str: Session's id.
             Format: "dr/<directory>/un/<universe this session represents>"
-        errs [BaseExecption]: Stores all logged exceptions.
+        errs [BaseException]: Stores all logged exceptions.
         opLog [tuple]: Stores executed ops.
             Format: (<function>, <target>, <source>)
         permissions [whitelist, blacklist]: List of permissions.
@@ -154,7 +154,7 @@ class Session(Thread, Tagable):
                 for op in objShift:  # Pops op from objShift!
                     self._ops.append(op)
             except BaseException as e:
-                if not isinstance(e, (StopIteration)):
+                if not isinstance(e, StopIteration):
                     self.tags["errs"].append(e)  # Log error
 
     def ruleOpCollect(self):
@@ -192,7 +192,7 @@ class Session(Thread, Tagable):
         except KeyError:  # bb-but what if no permissions tag.
             perms = [[], []]  # Use blank(accept all) perms.
         except BaseException as e:  # bb-but what if other err.
-            if not isinstance(e, (StopIteration)):
+            if not isinstance(e, StopIteration):
                 self.tags["errs"].append(e)  # Log error
             perms = [[], []]  # more blank perms. Yeah!
         if isinstance(op.source, Tagable):  # Get source id.
@@ -281,7 +281,7 @@ class Session(Thread, Tagable):
                     else:
                         getattr(o, op.function)()
                 except BaseException as e:  # Handle errors as they come.
-                    if not isinstance(e, (StopIteration)):
+                    if not isinstance(e, StopIteration):
                         self.tags["errs"].append(e)  # Log error
         elif op.target == self.directory:
             self.directory.takePost([op.function, op.parameters, self])
@@ -292,7 +292,7 @@ class Session(Thread, Tagable):
                 else:
                     getattr(op.target, op.function)()
             except BaseException as e:  # Handle errors as they come.
-                if not isinstance(e, (StopIteration)):
+                if not isinstance(e, StopIteration):
                     self.tags["errs"].append(e)  # Log error
 
     def log(self):
@@ -343,7 +343,7 @@ class Session(Thread, Tagable):
                 sh = Shift(opL)
                 self.scene.script.append(sh)
             except BaseException as e:
-                if not isinstance(e, (StopIteration)):
+                if not isinstance(e, StopIteration):
                     self.tags["errs"].append(e)  # Log error
 
     def cleanup(self):
