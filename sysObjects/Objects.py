@@ -2,9 +2,7 @@
 Classes for actual things.
 
 Classes
-    StaticObject
-    DynamicObject
-    User
+    :class:`StaticObject`, :class:`DynamicObject`, :class:`User`
 """
 from sysObjects.Data import Data
 from sysObjects.Taskable import Taskable
@@ -21,10 +19,14 @@ class StaticObject(Taskable):
     Think something that provides only basic utility, like a mug.
 
     :param str id: The object's id.
-    :param Model mod: The object's model, defaults to Model().
-    :param Memory mem: The object's memory, defaults to Memory().
-    :param Tasker tsk: The object's tasker, defaults to Tasker().
-    :param dict tags: The object's tags, defaults to {"id": <id>, "permissions": [[],[]]}.
+    :param mod: The object's model, defaults to Model().
+    :type mod: Model, optional
+    :param mem: The object's memory, defaults to Memory().
+    :type mem: Memory, optional
+    :param tsk: The object's tasker, defaults to Tasker().
+    :type tsk: Tasker, optional
+    :param tags: The object's tags, defaults to {"id": <id>, "permissions": [[],[]]}.
+    :type tags: dict, optional
     """
 
     def __init__(self, id, mod=None, mem=None, tsk=None, tags=None):
@@ -63,33 +65,21 @@ class DynamicObject(StaticObject):
 
     Think something living.
 
-    Attributes
-        sensory Sensory: Object's sensory module.
-        model Model: Object's model.
-        memory Memory: Object's memory.
-        tasker Tasker: Object's tasker.
-        tags dict: Object's tags.
+    :param str id: The object's id.
+    :param sns: The object's :class:`Sensory` module, one will be made if none is provided.
+    :type sns: Sensory, optional
+    :param mod: The object's :class:`Model` module, one will be made if none is provided.
+    :type mod: Model, optional
+    :param mem: The object's :class:`Memory` module, one will be made if none is provided.
+    :type mem: Memory, optional
+    :param tsk: The object's :class:`Tasker` module, one will be made if none is provided.
+    :type tsk: Tasker, optional
+    :param tags: The object's tags, will make new tags if none is provided, id tag will be set to `id`.
+    :type tags: dict, optional
     """
 
     def __init__(self, id, sns=None, mod=None, mem=None, tsk=None, tags=None):
-        """
-        Constructor
-
-        Defaults
-            sensory = Sensory()
-            model = Model()
-            memory = Memory([], [], True)
-            tasker = Tasker()
-            tags = {"id": <id>}
-
-        Parameters
-            id str: Id
-            sns Sensory: sensory
-            mod Model: model
-            mem Memory: memory
-            tsk Tasker: tasker
-            tags dict: tags
-        """
+        """Constructor"""
         if mem is None:
             mem = Memory.Memory([], [], True)
         super().__init__(id, mod, mem, tsk, tags)
@@ -105,35 +95,23 @@ class User(DynamicObject):
 
     ???
 
-    Attributes
-        personality Personality: User's personality.
-        sensory Sensory: User's sensory module.
-        model Model: User's model.
-        memory Memory: User's memory.
-        tasker Tasker: User's tasker.
-        tags dict: User's tags.
+    :param str id: The object's id.
+    :param prs: The user's :class:`Personality` module, one will be made if none is provided.
+    :type prs: Personality, optional
+    :param sns: The object's :class:`Sensory` module, one will be made if none is provided.
+    :type sns: Sensory, optional
+    :param mod: The object's :class:`Model` module, one will be made if none is provided.
+    :type mod: Model, optional
+    :param mem: The object's :class:`Memory` module, one will be made if none is provided.
+    :type mem: Memory, optional
+    :param tsk: The object's :class:`Tasker` module, one will be made if none is provided.
+    :type tsk: Tasker, optional
+    :param tags: The object's tags, will make new tags if none is provided. Id tag will be set to `id`.
+    :type tags: dict, optional
     """
 
     def __init__(self, id, prs=None, sns=None, mod=None, mem=None, tsk=None, tags=None):
-        """
-        Constructor
-
-        Defaults
-            personality = Personality()
-            sensory = Sensory()
-            model = Model()
-            memory = Memory([], Memory.SegmentedMemory(), True)
-            tasker = Tasker()
-            tags = {"id": <id>}
-
-        Parameters
-            id str: Id
-            sns Sensory: sensory
-            mod Model: model
-            mem Memory: memory
-            tsk Tasker: tasker
-            tags dict: tags
-        """
+        """Constructor"""
         if mem is None:
             mem = Memory.Memory([], Memory.SegmentedMemory(), True)
         super().__init__(id, sns, mod, mem, tsk, tags)
