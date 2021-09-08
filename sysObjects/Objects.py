@@ -50,7 +50,7 @@ class StaticObject(Taskable):
         """
         Append a reference to self at `requester`'s short term memory.
 
-        The reference is a :class:`Data` object with an id of `None` and who's storage is (self's id, self).
+        The reference is a :class:`sysObjects.Data.Data` object with an id of `None` and who's storage is (self's id, self).
 
         :param StaticObject requester: The object that requested the reference to self.
         """
