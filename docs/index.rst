@@ -17,6 +17,7 @@ If you plan to use this code for some reason and need help or want a feature fee
    :caption: Contents
 
    Objects
+   Container
 
 Indices and tables
 ==================

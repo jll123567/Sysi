@@ -1,8 +1,11 @@
 """
-Module for Container
+Container object.
+
+Describes a set of boundries that other objects could reside within. Containers are the parents of other containers and
+are offset by their parent.
 
 Classes
-    Container
+    :class:`Container`
 """
 from sysObjects.Tagable import Tagable
 from sysModules.Model import Vector3
@@ -10,39 +13,33 @@ from sysModules.Model import Vector3
 
 class Container(Tagable):
     """
-    Specifies an area.
+    Specifies an area that objects can be contained within.
 
     Allows for nesting structure.
-    Required for scenes and universes.
+    Encouraged for scenes and universes.
+    The parent holds the parent container and can be `None`. The origin offset is a :class:`Vector3` with the offset from
+    the parent and should be zero when the parent is `None`. Bounds are a list containing two :class:`Vector3` s or None.
+    When the list is [None, None] the container is "Unbounded" and every object is inside of it. Useful for the base
+    container of a :class:`Universe`.
 
-    Attributes
-        parent Container/None: The parent container this container is within. None if its the base container.
-        originOffset Vector3: The distance from the origin of the parent container. Set to 0 if parent is None.
-        bounds list: The area enclosed by the container defined by two Vector3s from this container's origin.
-            This container's origin is the total offset from base container.
-            If bounds are [None, None] the container is "Unbounded"
-                Only self.bounds[0] is checked here tho.
-        tags dict: tags
 
-    Methods
-        getArea(): Get the area of the bounds.
-        getTotalOriginOffset(): Get the total offset from this container to the base and return it as a Vector3.
+    :param str id: The id of this container.
+    :param p: The parent container this container is within and offset by.
+    :type p: Container or None
+    :param org: The distance from the origin of the parent container. Make sure it's 0 if parent is None.
+    :type org: Vector3, optional
+    :param bnd: The area enclosed by the container defined by a list two :class:`Vector3`s from this container's origin.
+        If bounds are [None, None] the container is "Unbounded" but only self.bounds[0] is checked in this file.
+        Defaults to unbounded.
+        The container's origin is the total offset from base container.
+    :type bnd: list, optional
+    :param tags: Tags. The `id` tag will be set to `id`.
+    :type tags: dict, optional
     """
 
     def __init__(self, id, p=None, org=None, bnd=None, tags=None):
         """
         Constructor
-
-        Parent defaults to None.
-        OriginOffset defaults to 0 and is set to 0 if parent is None.
-        Bounds defaults to None(Unbounded).
-
-        Parameters
-            id str: id
-            p Container: parent
-            org Vector3: originOffset
-            bnd list: bounds
-            tags dict: tags
         """
         super().__init__(tags)
         self.tags['id'] = id
@@ -68,16 +65,15 @@ class Container(Tagable):
         """
         Get the area of the bounds.
 
-        Returns "Unbounded" if bounds are [None, None].
-        Returns
-            float/str: area/unbounded message.
+        :return: Returns either a float, a string with the area, or "Unbounded" if bounds are [None, None].
+        :rtype: float or str
         """
         if self.bounds[0] is None:
             return "Unbounded"
         return self.bounds[0].areaBetween(self.bounds[1])
 
     def getTotalOriginOffset(self):
-        """Get the total offset from this container to the base and return it as a Vector3."""
+        """Gets the total offset from this container to the base and returns it as a Vector3."""
         if self.parent is None:
             return self.originOffset
         return self.originOffset + self.parent.getTotalOriginOffset()

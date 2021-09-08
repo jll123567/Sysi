@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'Sysh'
+project = 'Sys-i'
 copyright = '2021, Jacob Ledbetter'
 author = 'Jacob Ledbetter'
 
