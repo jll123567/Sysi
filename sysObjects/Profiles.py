@@ -2,21 +2,22 @@
 Profile stuff
 
 Classes:
-    Profile
-    GeneticProfile
+    :class:`Profile`
+    :class:`GeneticProfile`
 """
 from random import Random
 
 
+# TODO: This needs to be entirely redone.
 class Profile:
     """
     Produce objects randomly.
 
-    Overload factoryProfile and use it to produce objects using random values.
+    Overload :py:meth:`factoryProfile` and use it to produce objects using random values.
 
-    :param int mainSeed: The seed for the mainRandom used to generate seeds for Randoms in produceRandint, defaults to
-        None.
-    :param tuple mainState: A state to use for mainRandom, defaults to None, not used if set to None.
+    :param int mainSeed: The seed for the :py:attr:`mainRandom` used to generate seeds for Randoms in produceRandint,
+        defaults to `None`.
+    :param tuple mainState: A state to use for :py:attr:`mainRandom`, defaults to `None`, not used if set to `None`.
     """
 
     def __init__(self, mainSeed=None, mainState=None):
@@ -30,45 +31,50 @@ class Profile:
 
     def produceRandint(self, rRange):
         """
-        Produce an object using factoryProfile and a Random produced by <rRange>.
+        Produce an object using :py:meth:`factoryProfile` and a :py:class:`Random` produced by :py:attr:`rRange`.
 
-        :param tuple rRange: Range of ints to use when making a seed for the random passed to factoryProfile.
+        :param tuple rRange: Range of ints to use when making a seed for the random passed to :py:attr:`factoryProfile`.
         :return: An object defined by factoryProfile.
+        :rtype: any
         """
         return self.factoryProfile(Random(self.mainRandom.randint(rRange[0], rRange[1])))
 
     def produceRand(self):
         """
-        Produce an object using factoryProfile and a Random().
+        Produce an object using :py:meth:`factoryProfile` and a :py:class:`Random`.
 
-        :return: An object defined by factoryProfile.
+        :return: An object defined by :py:meth:`factoryProfile`.
+        :rtype: any
         """
         return self.factoryProfile(Random())
 
     def produceSeed(self, seed):
         """
-        Produce an object using factoryProfile and Random with <seed>.
+        Produce an object using :py:meth:`factoryProfile` and :py:class:`Random` with `seed`.
 
-        :param int seed: The seed for the Random passed to factoryProfile.
+        :param int seed: The seed for the :py:class:`Random` passed to :py:meth:`factoryProfile`.
         :return: An object defined by factoryProfile.
+        :rtype: any
         """
         return self.factoryProfile(Random(seed))
 
     def getMainRandomState(self):
         """
-        Get the state of the mainRandom.
-        :return: The state as a Tuple
+        Get the state of the :py:attr:`mainRandom`.
+
+        :return: The state of :py:attr:`mainRandom`.
+        :rtype: tuple
         """
         return self.mainRandom.getstate()
 
     @staticmethod
     def factoryProfile(rand):
         """
-        Overload this method. Take the Random <rand> and output an object.
+        Overload this method. Take the :py:class:`Random` and output an object.
 
-        :param Random rand: The Random.
-        :return: What you return.
-        :rtype: Any
+        :param Random rand: The :py:class:`Random` that you use to create your object.
+        :return: The object you make.
+        :rtype: any
         """
         return
 
@@ -77,13 +83,16 @@ class GeneticProfile:
     """
     Produce objects based on values from their parents.
 
-    Overload factoryProfile and use it to produce objects using semi-random values.
+    Overload :py:meth:`factoryProfile` and use it to produce objects using semi-random values.
 
-    :param float/list walkBounds: Bounds for how far to randomly walk averaged values from parents.
+    :param walkBounds: Bounds for how far to randomly walk averaged values from parents.
         A single float can be used for all walks or a list of floats can be used to specify bounds for each value.
-    :param int mainSeed: The seed for the mainRandom used to generate seeds for Randoms in produceRandint, defaults to
-        None.
-    :param tuple mainState: A state to use for mainRandom, defaults to None, not used if set to None.
+    :type walkBounds: float or list
+    :param int mainSeed: The seed for the :py:attr:`mainRandom` used to generate seeds for Randoms in
+        :py:meth:`produceRandint`. If `None` is provided then dont provide a seed for the :py:attr:`mainRandom`.
+        Defaults to `None`.
+    :type mainSeed: int or None
+    :param tuple mainState: A state to use for py:attr:`mainRandom`, defaults to `None`, not used if set to `None`.
     """
 
     def __init__(self, walkBounds, mainSeed=None, mainState=None):
@@ -99,9 +108,9 @@ class GeneticProfile:
     @staticmethod
     def getLongest(vals):
         """
-        Get the length of the longest sublist of vals.
+        Get the length of the longest sublist of `vals`.
 
-        :param list vals: A list of lists.
+        :param list vals: A `list` of lists.
         :return: The length of the longest sublist of vals.
         :rtype: int
         """
@@ -114,7 +123,7 @@ class GeneticProfile:
     @staticmethod
     def convertToSetsList(vals, longest):
         """
-        Convert vals from a list of parents values to a list of the 0 to nth of value from each parent.
+        Convert vals from a `list` of parents values to a list of the 0 to nth of value from each parent.
 
         The length of the outputted lists of values are determined by longest.
 
@@ -139,10 +148,10 @@ class GeneticProfile:
     @staticmethod
     def average(vals):
         """
-        Take a list of lists of values and return the average of each list's values.
+        Take a `list` of lists of values and return the average of each list's values.
 
-        :param list vals: A list of lists of values.
-        :return: A list of averages.
+        :param list vals: A `list` of lists of values.
+        :return: A `list` of averages.
         :rtype: list
         """
         for idx in range(vals.__len__()):  # Average each numSet
@@ -154,9 +163,9 @@ class GeneticProfile:
 
     def applyRandomWalk(self, val, walkBounds):
         """
-        Add a random value between - <randomWalk> and <randomWalk> to <val>.
+        Add a random value between `-randomWalk` and `randomWalk` to `val`.
 
-        :param float val: List of values to apply the walk to.
+        :param float val: `List` of values to apply the walk to.
         :param float walkBounds: The bounds between to get the value of represented by one value.
         :return: Walked value.
         :rtype: float
@@ -191,14 +200,14 @@ class GeneticProfile:
 
     def produceWithParents(self, pVals):
         """
-        Produce an object using a list of values from multiple parents and the factoryProfile.
+        Produce an object using a list of values from multiple parents and the :py:meth:`factoryProfile`.
 
         This method creates a list of average values from the values of all the parents. Then applies a random walk to
-        each average who's bounds are defined by self.walkBounds. It then feeds these walked averages into
-        self.factoryProfile and returns the the averages and produced object in a tuple.
+        each average who's bounds are defined by :py:attr:`walkBounds`. It then feeds these walked averages into
+        :py:meth:`factoryProfile` and returns the the averages and produced object in a tuple.
 
         :param list pVals: List of the input values from each parent.
-        :return: Tuple of the values fed into factoryProfile.
+        :return: Tuple of the values fed into :py:meth:`factoryProfile`.
         :rtype: tuple
         """
         longest = self.getLongest(pVals)
@@ -209,18 +218,20 @@ class GeneticProfile:
 
     def getMainRandomState(self):
         """
-        Get the state of the mainRandom.
+        Get the state of the :py:attr:`mainRandom`.
+
         :return: The state as a Tuple
+        :rtype: tuple
         """
         return self.mainRandom.getstate()
 
     @staticmethod
     def factoryProfile(vals):
         """
-        Overload this method. Take the Random <rand> and output an object.
+        Overload this method. Take the :py:class:`Random` and output an object.
 
         :param list vals: List of values.
         :return: What you return.
-        :rtype: Any
+        :rtype: any
         """
         return

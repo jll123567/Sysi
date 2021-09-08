@@ -1,8 +1,8 @@
 """
 Module for tagged data storage.
 
-Classes
-    Data
+Classes:
+    :class:`Data`
 """
 from sysObjects.Tagable import Tagable
 
@@ -13,26 +13,24 @@ class Data(Tagable):
 
     Inherit from this if you plan to make a more robust object to store your particular type of data.
 
-    Attributes
-        storage any: The data you plan to store.
-        tags dict: Tags.
+    :param str id: The id of this object.
+    :param any storage: The data you plan to store.
+    :param dict tags: Tags. Defaults to `{"id": id, "dataType": None, "relevancy": [0], "interest": [0], "content": []}`
 
-    Methods
-        setDataType(str dataType): Set the dataType of this Data to <dataType>.
     """
 
-    def __init__(self, id, s=None, tags=None):
+    def __init__(self, id, storage=None, tags=None):
         super().__init__(tags)
         self.tags['id'] = id
         self.tags["dataType"] = "None"
         self.tags["relevancy"] = [0]  # Make a formal format for this later.
         self.tags["interest"] = [0]
         self.tags["content"] = []  # A list of strings that describe the content of the data. Not just the type.
-        self.storage = s
+        self.storage = storage
 
     def __str__(self):
         return "{}:{}".format(self.tags["dataType"], self.storage)
 
     def setDataType(self, dataType: str):
-        """Set the dataType of this Data to <dataType>."""
+        """Set the dataType of this Data to `dataType`."""
         self.tags["dataType"] = dataType
