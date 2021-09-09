@@ -15,7 +15,7 @@ class Data(Tagable):
 
     :param str id: The id of this object.
     :param any storage: The data you plan to store.
-    :param dict tags: Tags. Defaults to `{"id": id, "dataType": None, "relevancy": [0], "interest": [0], "content": []}`
+    :param dict tags: Tags. Defaults to ``{"id": id, "dataType": None, "relevancy": [0], "interest": [0], "content": []}``
 
     """
 
@@ -32,5 +32,5 @@ class Data(Tagable):
         return "{}:{}".format(self.tags["dataType"], self.storage)
 
     def setDataType(self, dataType: str):
-        """Set the dataType of this Data to `dataType`."""
+        """Set the dataType of this Data to ``dataType``."""
         self.tags["dataType"] = dataType

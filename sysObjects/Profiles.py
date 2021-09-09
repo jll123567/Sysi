@@ -16,8 +16,8 @@ class Profile:
     Overload :py:meth:`factoryProfile` and use it to produce objects using random values.
 
     :param int mainSeed: The seed for the :py:attr:`mainRandom` used to generate seeds for Randoms in produceRandint,
-        defaults to `None`.
-    :param tuple mainState: A state to use for :py:attr:`mainRandom`, defaults to `None`, not used if set to `None`.
+        defaults to ``None``.
+    :param tuple mainState: A state to use for :py:attr:`mainRandom`, defaults to ``None``, not used if set to ``None``.
     """
 
     def __init__(self, mainSeed=None, mainState=None):
@@ -89,10 +89,10 @@ class GeneticProfile:
         A single float can be used for all walks or a list of floats can be used to specify bounds for each value.
     :type walkBounds: float or list
     :param int mainSeed: The seed for the :py:attr:`mainRandom` used to generate seeds for Randoms in
-        :py:meth:`produceRandint`. If `None` is provided then dont provide a seed for the :py:attr:`mainRandom`.
-        Defaults to `None`.
+        :py:meth:`produceRandint`. If ``None`` is provided then dont provide a seed for the :py:attr:`mainRandom`.
+        Defaults to ``None``.
     :type mainSeed: int or None
-    :param tuple mainState: A state to use for py:attr:`mainRandom`, defaults to `None`, not used if set to `None`.
+    :param tuple mainState: A state to use for py:attr:`mainRandom`, defaults to ``None``, not used if set to ``None``.
     """
 
     def __init__(self, walkBounds, mainSeed=None, mainState=None):
@@ -108,9 +108,9 @@ class GeneticProfile:
     @staticmethod
     def getLongest(vals):
         """
-        Get the length of the longest sublist of `vals`.
+        Get the length of the longest sublist of ``vals``.
 
-        :param list vals: A `list` of lists.
+        :param list vals: A ``list`` of lists.
         :return: The length of the longest sublist of vals.
         :rtype: int
         """
@@ -123,7 +123,7 @@ class GeneticProfile:
     @staticmethod
     def convertToSetsList(vals, longest):
         """
-        Convert vals from a `list` of parents values to a list of the 0 to nth of value from each parent.
+        Convert vals from a ``list`` of parents values to a list of the 0 to nth of value from each parent.
 
         The length of the outputted lists of values are determined by longest.
 
@@ -148,10 +148,10 @@ class GeneticProfile:
     @staticmethod
     def average(vals):
         """
-        Take a `list` of lists of values and return the average of each list's values.
+        Take a ``list`` of lists of values and return the average of each list's values.
 
-        :param list vals: A `list` of lists of values.
-        :return: A `list` of averages.
+        :param list vals: A ``list`` of lists of values.
+        :return: A ``list`` of averages.
         :rtype: list
         """
         for idx in range(vals.__len__()):  # Average each numSet
@@ -163,9 +163,9 @@ class GeneticProfile:
 
     def applyRandomWalk(self, val, walkBounds):
         """
-        Add a random value between `-randomWalk` and `randomWalk` to `val`.
+        Add a random value between ``-randomWalk`` and ``randomWalk`` to ``val``.
 
-        :param float val: `List` of values to apply the walk to.
+        :param float val: ``List`` of values to apply the walk to.
         :param float walkBounds: The bounds between to get the value of represented by one value.
         :return: Walked value.
         :rtype: float

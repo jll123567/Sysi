@@ -48,9 +48,9 @@ class StaticObject(Taskable):
 
     def passReference(self, requester):
         """
-        Append a reference to self at `requester`'s short term memory.
+        Append a reference to self at ``requester``'s short term memory.
 
-        The reference is a :class:`sysObjects.Data.Data` object with an id of `None` and who's storage is (self's id, self).
+        The reference is a :class:`sysObjects.Data.Data` object with an id of ``None`` and who's storage is (self's id, self).
 
         :param StaticObject requester: The object that requested the reference to self.
         """
@@ -74,7 +74,7 @@ class DynamicObject(StaticObject):
     :type mem: Memory, optional
     :param tsk: The object's :class:`Tasker` module, one will be made if none is provided.
     :type tsk: Tasker, optional
-    :param tags: The object's tags, will make new tags if none is provided, id tag will be set to `id`.
+    :param tags: The object's tags, will make new tags if none is provided, id tag will be set to ``id``.
     :type tags: dict, optional
     """
 
@@ -106,7 +106,7 @@ class User(DynamicObject):
     :type mem: Memory, optional
     :param tsk: The object's :class:`Tasker` module, one will be made if none is provided.
     :type tsk: Tasker, optional
-    :param tags: The object's tags, will make new tags if none is provided. Id tag will be set to `id`.
+    :param tags: The object's tags, will make new tags if none is provided. Id tag will be set to ``id``.
     :type tags: dict, optional
     """
 

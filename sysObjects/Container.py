@@ -17,11 +17,10 @@ class Container(Tagable):
 
     Allows for nesting structure.
     Encouraged for scenes and universes.
-    The parent holds the parent container and can be `None`. The origin offset is a :class:`Vector3` with the offset from
-    the parent and should be zero when the parent is `None`. Bounds are a list containing two :class:`Vector3` s or None.
-    When the list is [None, None] the container is "Unbounded" and every object is inside of it. Useful for the base
-    container of a :class:`Universe`.
-
+    The parent holds the parent container and can be ``None``. The origin offset is a :class:`Vector3` with the offset
+    from the parent and should be zero when the parent is ``None``. Bounds are a list containing two :class:`Vector3` s
+    or None. When the list is [None, None] the container is "Unbounded" and every object is inside of it.
+    Useful for the base container of a :class:`Universe`.
 
     :param str id: The id of this container.
     :param p: The parent container this container is within and offset by.
@@ -33,7 +32,7 @@ class Container(Tagable):
         Defaults to unbounded.
         The container's origin is the total offset from base container.
     :type bnd: list, optional
-    :param tags: Tags. The `id` tag will be set to `id`.
+    :param tags: Tags. The ``id`` tag will be set to ``id``.
     :type tags: dict, optional
     """
 
