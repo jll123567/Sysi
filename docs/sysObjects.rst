@@ -5,13 +5,13 @@ This package contains every object you can use in sys. An object is a thing that
 objects need to inherit from :py:class:`sysObjects.Tagable.Tagable`.
 
 Modules:
-    * :py:class:`sysObjects.Container`
-    * :py:class:`sysObjects.Data`
-    * :py:class:`sysObjects.Objects`
-    * :py:class:`sysObjects.Profiles`
-    * :py:class:`sysObjects.Scene`
-    * :py:class:`sysObjects.Session`
-    * :py:class:`sysObjects.SessionDirection`
-    * :py:class:`sysObjects.Tagable`
-    * :py:class:`sysObjects.Taskable`
-    * :py:class:`sysObjects.Universe`
+    * :py:mod:`sysObjects.Container`
+    * :py:mod:`sysObjects.Data`
+    * :py:mod:`sysObjects.Objects`
+    * :py:mod:`sysObjects.Profiles`
+    * :py:mod:`sysObjects.Scene`
+    * :py:mod:`sysObjects.Session`
+    * :py:mod:`sysObjects.SessionDirection`
+    * :py:mod:`sysObjects.Tagable`
+    * :py:mod:`sysObjects.Taskable`
+    * :py:mod:`sysObjects.Universe`

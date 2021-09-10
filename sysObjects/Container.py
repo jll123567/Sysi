@@ -4,8 +4,7 @@ Container object.
 Describes a set of boundries that other objects could reside within. Containers are the parents of other containers and
 are offset by their parent.
 
-Classes
-    :class:`Container`
+
 """
 from sysObjects.Tagable import Tagable
 from sysModules.Model import Vector3
@@ -20,7 +19,7 @@ class Container(Tagable):
     The parent holds the parent container and can be ``None``. The origin offset is a :class:`Vector3` with the offset
     from the parent and should be zero when the parent is ``None``. Bounds are a list containing two :class:`Vector3` s
     or None. When the list is [None, None] the container is "Unbounded" and every object is inside of it.
-    Useful for the base container of a :class:`Universe`.
+    Useful for the base container of a :py:class:`sysObjects.Universe.Universe`.
 
     :param str id: The id of this container.
     :param p: The parent container this container is within and offset by.

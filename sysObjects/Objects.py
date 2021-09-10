@@ -1,8 +1,7 @@
 """
 Classes for actual things.
 
-Classes
-    :class:`StaticObject`, :class:`DynamicObject`, :class:`User`
+
 """
 from sysObjects.Data import Data
 from sysObjects.Taskable import Taskable

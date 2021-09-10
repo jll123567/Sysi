@@ -1,8 +1,7 @@
 """
 Module for tagged data storage.
 
-Classes:
-    :class:`Data`
+
 """
 from sysObjects.Tagable import Tagable
 

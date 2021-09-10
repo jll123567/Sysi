@@ -1,9 +1,7 @@
 """
 Profile stuff
 
-Classes:
-    :class:`Profile`
-    :class:`GeneticProfile`
+
 """
 from random import Random
 

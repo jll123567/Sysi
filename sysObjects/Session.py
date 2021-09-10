@@ -1,8 +1,7 @@
 """
 Module for session.
 
-Classes
-    Session(Thread, Tagable)
+
 """
 from sysObjects.Tagable import Tagable
 from sysObjects.Taskable import Taskable
