@@ -15,11 +15,13 @@ class Data(Tagable):
 
     :param str id: The id of this object.
     :param any storage: The data you plan to store.
-    :param dict tags: Tags. Defaults to ``{"id": id, "dataType": None, "relevancy": [0], "interest": [0], "content": []}``
+    :param dict tags: Tags. Defaults to
+        ``{"id": id, "dataType": None, "relevancy": [0], "interest": [0], "content": []}``
 
     """
 
     def __init__(self, id, storage=None, tags=None):
+        """Constructor"""
         super().__init__(tags)
         self.tags['id'] = id
         self.tags["dataType"] = "None"

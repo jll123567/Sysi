@@ -21,7 +21,8 @@ If you plan to use this code for some reason and need help or want a feature fee
    ├ Data<sysObjects_Data>
    ├ Objects<sysObjects_Objects>
    ├ Profiles<sysObjects_Profiles>
-   └ Scene<sysObjects_Scene>
+   ├ Scene<sysObjects_Scene>
+   └ Session<sysObjects_Session>
 
 Indices and tables
 ==================

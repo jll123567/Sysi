@@ -17,51 +17,46 @@ class Session(Thread, Tagable):
     """
     An instance of objects that interact with each-other.
 
-    Like a live Universe.
+    The session contains a list of :py:class:`sysObjects.Taskable.Taskable` s that are updated based on their
+    :py:class:`sysModules.Tasker.Tasker`. Like a live Universe.
 
-    Attributes
-        _ops [Operation]: Operations to execute in current shift.
-        _deleteOnEmptyTasker bool: Toggle to remove objects with empty Taskers from objectList.
-        _killOnEmptySession bool: Toggle to kill thread if objectList is empty.
-        pendRequest bool: Holds weather the Session has been told to pend shifts by directory.
-        pended bool: Holds if the Session is currently pending stuff from the directory.
-        directory Directory: The Directory that this session is within.
-        objectList [Tagable]: The objects in the session.
-            Preferably they are all Taskable.
-        scene Scene: The scene to save shifts to.
-        rules [Operation]: List of operations to run every shift.
-        tags dict: Tags.
+    **Attributes**:
+        * **_ops** (`list`): List of :py:class:`sysModules.Tasker.Operations` to execute in current shift.
+        * **_deleteOnEmptyTasker** (`bool`): Toggle to remove objects with empty
+            :py:class:`sysModules.Tasker.Tasker` s from :attr:`objectList`.
+        * **_killOnEmptySession** (`bool`): Toggle to kill thread if objectList is empty.
+        * **pendRequest** (`bool`): Holds weather the Session has been told to pend shifts by directory.
+        * **pended** (`bool`): Holds if the Session is currently pending stuff from the directory.
+        * **directory** (:py:class:`sysObjects.SessionDirectory.Directory`): The Directory that this session is within.
+        * **objectList** (`list`): The objects in the session.
+            Preferably they are all :py:class:`sysObjects.Taskable.Taskable`.
+        * **scene** (:py:class:`sysObjects.Scene.Scene`): The scene to save :py:class:`sysModules.Tasker.Shift` s to.
+        * **rules** (`list`): List of :py:class:`sysModules.Tasker.Operation`s to run every shift.
+        * **tags** (`dict`): Tags.
 
-    Tags
-        id str: Session's id.
+    **Tags**:
+        * **id** (`str`): Session's id.
             Format: "dr/<directory>/un/<universe this session represents>"
-        errs [BaseException]: Stores all logged exceptions.
-        opLog [tuple]: Stores executed ops.
-            Format: (<function>, <target>, <source>)
-        permissions [whitelist, blacklist]: List of permissions.
+        * **errs** (`list`): Stores all logged exceptions.
+            Format: [:py:class:`BaseException`, ...]
+        * **opLog** (`list`): Stores executed operations.
+            Format: [(`function`, `target`, `source`), ...]
+        * **permissions** (`list`): List of permissions for methods that can be requested of this session.
+            Format: ``[[explicitly allowed method name, ...], [blocked method name, ...]]``
 
-    Methods
-        getObjectFromId(str objectId) -> Tagable: Get the object with a matching id tag.
-        update(): Preform all the operations of a shift.
-        objectOpCollect(): Get operations from objects in objectList.
-        ruleOpCollect(): Get operations from rules.
-        objectOpCheck(Operation op) -> bool: Check an operation from an object and return True if its good and false if
-            its bad.
-        fullOpCheck(Operation op) -> bool: Check an operation from an object or rules and return True if its good and
-            false if its bad.
-        resolve(): Change keywords and ids in Operations to references to the actual objects.
-        execute(Operation op): Take an operation and execute the listed function on the target object or objects.
-        log(): Save details of what happened this shift to various locations.
-        cleanup(): Cleanup the session for the next shift.
-        run(): Obligatory run method.
-            Called with start().
-        addObject(object obj): Tasker callable method to add an object to the session.
-        removeObject(object obj): Tasker callable method to remove an object from the session.
-        importFromUniverse(Universe universe): Assign <universe> as the session's universe and set the objectList and id
-            with <universe>.
-        setupSavedScene(Container cont, str/None sceneId=None, list tl=None, dict tags=None): Create and assign a scene
-            to log to.
-        exportCurrentToUniverse() -> Universe: Take the session's universe and output it.
+    :param str sesId: The session's id. The ``id`` tag is set to this value.
+    :param parentDir: The :py:class:`sysObjects.SessionDirectory.Directory` that this session is in.
+    :type parentDir: :py:class:`sysObjects.SessionDirectory.Directory` or None
+    :param obj: A list of :py:class:`sysObjects.Taskable.Taskable` objects to update.
+        Set to an empty list when ``None``.
+    :type obj: list or None
+    :param uni: The :py:class:`sysObjects.Universe.Universe` to log session actions to.
+    :type uni: :py:class:`sysObjects.Universe.Universe` or None
+    :param rul: A set of :py:class:`sysModules.Tasker.Operation` s to run on each and every object each and every shift.
+        Set to an empty list when ``None``.
+    :type rul: list or None
+    :param tags: Check the tags section for more information.
+    :type tags: dict or None
     """
 
     def __init__(self, sesId, parentDir=None, obj=None, uni=None, rul=None, tags=None):
@@ -103,6 +98,7 @@ class Session(Thread, Tagable):
         self.tags["opLog"] = []
 
     def __str__(self):
+        """Nicer to string method displaying session status."""
         aliveOrDead = "Dead"
         if self.live:
             aliveOrDead = "Alive"
@@ -114,7 +110,7 @@ class Session(Thread, Tagable):
 
         :param str objId: The id to match for.
         :return: The object with matching id.
-        :rtype: Tagable
+        :rtype: :py:class:`sysObjects.Tagable.Tagable`
         """
         for o in self.objectList:
             try:
@@ -168,7 +164,8 @@ class Session(Thread, Tagable):
 
         This is for ops from objects(so not including rules).
 
-        :param Operation op: The operation to check.
+        :param op: The operation to check.
+        :type op: :py:class:`sysModule.Tasker.Operation`
         :return: Operation's validity.
         :rtype: bool
         """
@@ -214,7 +211,8 @@ class Session(Thread, Tagable):
 
         This is for after rules are added and acts as a final check for all ops.
 
-        :param Operation op: The operation to check.
+        :param op: The operation to check.
+        :type op: :py:class:`sysModules.Tasker.Operation`
         :return: Operation's validity.
         :rtype: bool
         """
@@ -226,8 +224,9 @@ class Session(Thread, Tagable):
         """
         Change keywords and ids in Operations to references to the actual objects.
 
-        Please note that due to how this method handles keyword parameters, "\trg", "\src", "\ses", and "\dir" cannot be
-        parameters as they will be replaced with "trg", "src", "ses", and "dir" respectively.
+        Please note that due to how this method handles keyword parameters, "\trg", "\src", "\ses", and "\dir"
+        cannot be :py:class:`sysModules.Tasker.Operation` parameters as they will be replaced with
+        "trg", "src", "ses", and "dir" respectively.
         """
         for op in self._ops:
             if op.target == "none":  # Skip ops that wont run.(none is trg)
@@ -269,7 +268,8 @@ class Session(Thread, Tagable):
         """
         Take an operation and execute the listed function on the target object or objects.
 
-        :param Operation op: Operation to use for execution.
+        :param op: Operation to use for execution.
+        :type op: :py:class:`sysModules.Tasker.Operation`
         """
         if op.target == "none":  # do nothing for none target
             return
@@ -370,23 +370,28 @@ class Session(Thread, Tagable):
         """
         Tasker callable method to add an object to the session.
 
-        :param object obj:
+        :param obj: The object to add.
+        :type obj: :py:class:`sysObjects.Tagable.Tagable`
+        :return: The object that was added.
+        :rtype: :py:class:`sysObjects.Tagable.Tagable`
         """
-        self.objectList.append(obj)
+        return self.objectList.append(obj)
 
     def removeObject(self, obj):
         """
-        Tasker callable method to remove an object from the session.
+        :py:class:`sysModules.Tasker.Tasker` callable method to remove an object from the session.
 
-        :param object obj: object to remove.
+        :param obj: object to remove.
+        :type obj: :py:class:`sysObjects.Tagable.Tagable`
         """
         self.objectList.remove(obj)
 
     def importFromUniverse(self, universe):
         """
-        Assign <universe> as the session's universe and set the objectList and id with <universe>.
+        Assign ``universe`` as the session's universe and set the objectList and id with ``universe``.
 
-        :param Universe universe: Universe to import.
+        :param universe: Universe to import.
+        :type universe: :py:class:`sysObjects.Universe.Universe`
         """
         self.universe = universe
         self.tags["id"] = universe.tags["id"]
@@ -396,10 +401,14 @@ class Session(Thread, Tagable):
         """
         Create and assign a scene to log to.
 
-        :param Container cont: Scene container.
-        :param str/None sceneId: scene's id. Set to None to generate.
-        :param list tl: Timeline info for scene. None for default.
-        :param dict tags: Tags.
+        :param cont: Scene container.
+        :type cont: :py:class:`sysObjects.Container.Container`
+        :param sceneId: scene's id. Set to None to generate.
+        :type sceneId: str or None
+        :param tl: Timeline info for scene. None for default.
+        :type tl: list or None
+        :param tags: Tags.
+        :type tags: dict or None
         """
         if sceneId is not None:
             sId = sceneId
@@ -417,7 +426,7 @@ class Session(Thread, Tagable):
         Take the session's universe and output it.
 
         :return: The updated universe.
-        :rtype: Universe
+        :rtype: :py:class:`sysObjects.Universe.Universe`
         """
         uni = self.universe
         if self.scene is not None:
@@ -430,7 +439,8 @@ class Session(Thread, Tagable):
 
         The list is in a data object with an id of None.
 
-        :param StaticObject requester: The object the made the request.
+        :param requester: The object the made the request.
+        :type requester: :py:class:`sysObjects.Objects.StaticObject`
         """
         ids = []
         for o in self.objectList:
