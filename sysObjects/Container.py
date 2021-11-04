@@ -21,6 +21,12 @@ class Container(Tagable):
     or None. When the list is [None, None] the container is "Unbounded" and every object is inside of it.
     Useful for the base container of a :py:class:`sysObjects.Universe.Universe`.
 
+    **Attributes**:
+        * **tags** (`dict`): Tags.
+        * **parent** (:py:class:`sysObjects.Container.Container`): The container that this container is under.
+        * **originOffset** (:py:class:`sysModules.Model.Vector3`): A :py:class:`sysModules.Model.Vector3` that represents the container's offset from its parent.
+        * **bounds** (`list`): A list with two :py:class:`sysModules.Model.Vector3` that defines a bounding box. If set to [`None`, `None`] the container does not have bounds and is unbounded.
+
     :param str id: The id of this container.
     :param p: The parent container this container is within and offset by.
     :type p: Container or None

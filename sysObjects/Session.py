@@ -21,16 +21,14 @@ class Session(Thread, Tagable):
 
     **Attributes**:
         * **_ops** (`list`): List of :py:class:`sysModules.Tasker.Operations` to execute in current shift.
-        * **_deleteOnEmptyTasker** (`bool`): Toggle to remove objects with empty
-            :py:class:`sysModules.Tasker.Tasker` s from :attr:`objectList`.
+        * **_deleteOnEmptyTasker** (`bool`): Toggle to remove objects with empty :py:class:`sysModules.Tasker.Tasker` s from :attr:`objectList`.
         * **_killOnEmptySession** (`bool`): Toggle to kill thread if objectList is empty.
         * **pendRequest** (`bool`): Holds weather the Session has been told to pend shifts by directory.
         * **pended** (`bool`): Holds if the Session is currently pending stuff from the directory.
         * **directory** (:py:class:`sysObjects.SessionDirectory.Directory`): The Directory that this session is within.
-        * **objectList** (`list`): The objects in the session.
-            Preferably they are all :py:class:`sysObjects.Taskable.Taskable`.
+        * **objectList** (`list`): The objects in the session. Preferably they are all :py:class:`sysObjects.Taskable.Taskable`.
         * **scene** (:py:class:`sysObjects.Scene.Scene`): The scene to save :py:class:`sysModules.Tasker.Shift` s to.
-        * **rules** (`list`): List of :py:class:`sysModules.Tasker.Operation`s to run every shift.
+        * **rules** (`list`): List of :py:class:`sysModules.Tasker.Operation` s to run every shift.
         * **tags** (`dict`): Tags.
 
     **Tags**:

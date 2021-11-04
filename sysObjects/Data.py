@@ -12,6 +12,10 @@ class Data(Tagable):
 
     Inherit from this if you plan to make a more robust object to store your particular type of data.
 
+    **Attributes**:
+        * **tags** (`dict`): Tags.
+        * **storage** (`any`): Stored data, could be anything.
+
     :param str id: The id of this object.
     :param any storage: The data you plan to store.
     :param dict tags: Tags. Defaults to

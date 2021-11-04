@@ -12,7 +12,7 @@ class SessionDirectory(Thread, Tagable):
     """
     A container for Sessions that allows for interactions across sessions.
 
-    Attributes:
+    **Attributes**:
         pendForAll bool: Toggle for pending all sessions or just the necessary ones.
         removeDeadSessions bool: Toggle for removing sessions from sessionList if they are dead.
         killOnSessionsDead bool: Toggle to kill the directory if there are no alive Sessions in sessionList.
