@@ -11,7 +11,7 @@ Modules:
     * :py:mod:`sysObjects.Profiles`
     * :py:mod:`sysObjects.Scene`
     * :py:mod:`sysObjects.Session`
-    * :py:mod:`sysObjects.SessionDirection`
+    * :py:mod:`sysObjects.SessionDirectory`
     * :py:mod:`sysObjects.Tagable`
     * :py:mod:`sysObjects.Taskable`
     * :py:mod:`sysObjects.Universe`

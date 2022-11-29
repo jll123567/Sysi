@@ -13,16 +13,17 @@ If you plan to use this code for some reason and need help or want a feature fee
 ``ledbetterte@gmail.com`` or message me on discord at ``Jill The Something#9287``. Not terribly professional, I know.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents
 
    sysObjects
-   ├ Container<sysObjects_Container>
-   ├ Data<sysObjects_Data>
-   ├ Objects<sysObjects_Objects>
-   ├ Profiles<sysObjects_Profiles>
-   ├ Scene<sysObjects_Scene>
-   └ Session<sysObjects_Session>
+     Container<sysObjects_Container>
+     Data<sysObjects_Data>
+     Objects<sysObjects_Objects>
+     Profiles<sysObjects_Profiles>
+     Scene<sysObjects_Scene>
+     Session<sysObjects_Session>
+     SessionDirectory<sysObjects_SessionDirectory>
 
 Indices and tables
 ==================

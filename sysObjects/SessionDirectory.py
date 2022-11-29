@@ -1,9 +1,11 @@
 """
-Module for the SessionDirectory.
+Container for Sessions that may communicate with eachother.
 
-Classes:
-    SessionDirectory
+Sessions within the same SessionDirectory may communicate and interact with eachother, allowing for objects across
+sessions to interact.
 """
+
+# TODO: Posts should be their own objects. Please...
 from threading import Thread
 from sysObjects.Tagable import Tagable
 
@@ -13,36 +15,33 @@ class SessionDirectory(Thread, Tagable):
     A container for Sessions that allows for interactions across sessions.
 
     **Attributes**:
-        pendForAll bool: Toggle for pending all sessions or just the necessary ones.
-        removeDeadSessions bool: Toggle for removing sessions from sessionList if they are dead.
-        killOnSessionsDead bool: Toggle to kill the directory if there are no alive Sessions in sessionList.
-        sessionList [Session]: List of all sessions that can interact with eachother.
-        posts list: List of all requests made by sessions to the directory.
-        live bool: Weather or not the directory thread should die.
-        tags dict: Tags
+        * **pendForAll** `bool`: Toggle for pending all sessions or just the necessary ones.
+        * **removeDeadSessions** `bool`: Toggle for removing sessions from sessionList if they are dead.
+        * **killOnSessionsDead** `bool`: Toggle to kill the directory if there are no alive Sessions in sessionList.
+        * **sessionList** `list`: List of all (:py:class:`sysObjects.Session.Session`) that can interact with eachother.
+        * **posts** `list`: List of all requests made by sessions to the directory.
+        * **live** `bool`: Weather or not the directory thread should die.
+        * **tags** `dict`: Tags
 
-    Tags:
-        id str: The id.
-        errs [BaseException]: Exceptions raised in the directory.
+    **Tags**:
+        * **id** `str`: The id.
+        * **errs** `list`: List of exceptions raised in the directory.
             Does not contain exceptions raised by sessions.
-        postLog list: Log of posts executed.
+        * **postLog** `list`: Log of posts executed.
             Log format: (function, source id)
-        permissions [whitelist, blacklist]: List of permissions.
+        * **permissions** `[whitelist, blacklist]`: List of permissions.
 
-    Methods:
-        takePost(list post): Take post and add it to posts.
-        handlePost(list post): Handle post.
-        resolve(list post): Replace params in post with intended values.
-        execute(list post): Call a method dependant on post.
-        log(list post): Log post to postLog tag.
-        pendSessions([Session] sessions): Pend all the sessions in sessions.
-        unpendSessions([Session] sessions): Unpend all the sessions in sessions.
-        crossWarp(object obj, Session fromSession, Session toSession, None/Vector3 newPos=None): Move obj from
-            fromSession to toSession possibly with position of newPos.
-        run(): Obligatory run.
+    :param str dirId: The id of this directory.
+    :param ses: List of sessions to start with, defaults to an empty list.
+    :type ses: list, optional
+    :param tags: Tags. The ``id`` tag will be set to ``dirId``.
+    :type tags: dict, optional
     """
 
     def __init__(self, dirId, ses=None, tags=None):
+        """
+        Constructor
+        """
         super().__init__()
         if tags is None:
             self.tags = {}
@@ -79,6 +78,11 @@ class SessionDirectory(Thread, Tagable):
         """
         Take post and add it to posts.
 
+        A post is a `list` with three elements.
+          * `str` **Function**: The function to call as a string. Must be a member of this class, extend it to add more methods.
+          * `list` **Paramaters**: List of parameters to pass to the function.
+          * `str` **Source**: Id of object that made the request.
+
         A Session calls this in its execute().
 
         :param list post: The post to take.
@@ -88,7 +92,7 @@ class SessionDirectory(Thread, Tagable):
 
     def handlePost(self, post):
         """
-        Handle post.
+        Handle a post and remove it from the posts list.
 
         :param list post: Post to handle.
         """
@@ -100,6 +104,8 @@ class SessionDirectory(Thread, Tagable):
     def resolve(self, post):
         """
         Replace params in post with intended values.
+
+        Will replace a string `"src"` with the source object and valid session ids to references to those sessions.
 
         :param list post: Post to resolve parameters of.
         """
@@ -118,7 +124,9 @@ class SessionDirectory(Thread, Tagable):
 
     def execute(self, post):
         """
-        Call a method dependant on post.
+        Call a method dependent on post.
+
+        Exceptions will be logged to this object's "errs" tag.
 
         :param list post: Info for what method to call and with what parameters
         """
@@ -135,7 +143,7 @@ class SessionDirectory(Thread, Tagable):
         """
         Log post to postLog tag.
 
-        :param list post:
+        :param list post: Post to log.
         """
         # Format: (function, source id)
         if isinstance(post[2], str):
@@ -146,11 +154,11 @@ class SessionDirectory(Thread, Tagable):
 
     def pendSessions(self, sessions):
         """
-        Pend all the sessions in sessions.
+        Pend all the sessions in list sessions.
 
         if self.pendForAll is True then pend all sessions in this directory.
 
-        :param [Session] sessions:
+        :param list sessions: The list of sessions to pend.
         """
         if self.pendForAll:  # If enabled: pend ALL sessions.
             sessions = self.sessionList
@@ -166,11 +174,11 @@ class SessionDirectory(Thread, Tagable):
 
     def unpendSessions(self, sessions):
         """
-        Unpend all the sessions in sessions.
+        Unpend all the sessions in list sessions.
 
         If self.pendForAll is True then unpend all sessions in this directory.
 
-        :param [Session] sessions:
+        :param list sessions: List of sessions to unpend.
         """
         if self.pendForAll:  # If enabled: unpend ALL sessions.
             sessions = self.sessionList
@@ -179,7 +187,7 @@ class SessionDirectory(Thread, Tagable):
 
     def crossWarp(self, obj, fromSession, toSession, newPos=None):
         """
-        Move obj from fromSession to toSession possibly with position of newPos.
+        Move obj from fromSession to toSession possibly with position of newPos. This is mostly a test method.
 
         Sessions are pended before action is taken and un-pended afterwards.
         If newPos is None, object's position is unchanged.
@@ -206,10 +214,10 @@ class SessionDirectory(Thread, Tagable):
 
     def run(self):
         """
-        Obligatory run.
+        Obligatory thread run.
 
-        Call with this.start().
-        Starts all sessions when called initially.
+        Call with `this.start()`.
+        Starts all sessions in sessionList when called.
         """
         for ses in self.sessionList:  # Start all sessions
             ses.directory = self
